@@ -1,25 +1,9 @@
-import React, { Component } from 'react';
-import './App.css';
 
+import LoginComponent from './components/Login';
+import React from 'react';
 
-export default class  App extends Component {
-  constructor (){
-    super();
-  }
-  
-  render() {
-    return (<div >    
-      <div className='login_block'> 
-        
-        <input type='text' placeholder='mail'/>
-        <input type='password' placeholder='password'/>
-        <input type='submit'/>
-        
+const App = ()  => {
+   return ( <LoginComponent />);
+};
 
-      </div>
-    </div>);
-  }
-}
-
-
-
+export default App;

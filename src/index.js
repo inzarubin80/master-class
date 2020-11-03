@@ -1,9 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './bootstrap.css';
+
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import firebase from 'firebase/app'
+import firebase from 'firebase'
+
+import { Provider } from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+
+import thunk from 'redux-thunk'
+import rootReducer from './redux/rootReducer';
+
+const logger = store => next => action => {
+  console.log('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  return result
+}
+
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const firebaseConfig = {
   apiKey: "AIzaSyAodUl-wg7JK7tNHyj0_Gg1tB4xEQjTsk8",
@@ -20,10 +39,11 @@ firebase.initializeApp(firebaseConfig);
 
 
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+
+ReactDOM.render(<Provider store={store}> 
+  <App/>
+</Provider>
+,
   document.getElementById('root')
 );
 

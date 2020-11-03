@@ -1,0 +1,31 @@
+export const SET_CURRENTDATE      = 'APP/SET_CURRENTDATE';
+export const SET_CURRENTMONTH     = 'APP/SET_CURRENTMONTH';
+
+
+export const SET_SELECT_PARTNER     = 'APP/SET_SELECT_PARTNER';
+export const SET_SELECT_PROJECT     = 'APP/SET_SELECT_PROJECT';
+
+
+export const EDIT_EVENT           = 'APP/EDIT_EVENT';
+export const ADD_EVENT            = 'APP/ADD_EVENT';
+export const DEL_EVENT            = 'APP/DEL_EVENT';
+
+
+export const FETCH_SAVE_EVENT_REQUEST      = 'APP/FETCH_SAVE_EVENT_REQUEST';
+export const FETCH_SAVE_EVENT_FAILURE      = 'APP/FETCH_SAVE_EVENT_FAILURE';
+
+export const FETCH_EVENTS_REQUEST      = 'APP/FETCH_EVENTS_REQUEST';
+export const FETCH_EVENTS_FAILURE      = 'APP/FETCH_EVENTS_FAILURE';
+export const FETCH_EVENTS_SUCCESS      = 'APP/FETCH_EVENTS_SUCCESS';
+
+export const LOGIN_SUCCESS       = 'USER/LOGIN_SUCCESS';
+export const LOGIN_REQUEST       = 'USER/LOGIN_REQUEST';
+export const LOGIN_FAILURE       = 'USER/LOGIN_FAILURE';
+export const LOGIN_LOGOUT        = 'USER/LOGIN_LOGOUT';
+
+
+export const SET_USERNAME        = 'USER/SET_USERNAME';
+export const SET_PASSWORD        = 'USER/SET_PASЫWORD';
+
+
+
