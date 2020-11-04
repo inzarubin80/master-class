@@ -1,7 +1,11 @@
-import { db, auth } from './firebase';
+import { db, auth } from '../firebase';
 
 /* Auth */
 export function logInUser(email, password) {
+
+    console.log(email);
+    console.log(password);
+    
     return auth.signInWithEmailAndPassword(email, password);
 }
 
@@ -10,6 +14,10 @@ export function signOutUser() {
 }
 
 export function registerUser(email, password) {
+
+    console.log(email);
+    console.log(password);
+    
     return auth.createUserWithEmailAndPassword(email, password);
 }
 

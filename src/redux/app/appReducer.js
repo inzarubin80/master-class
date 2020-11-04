@@ -1,3 +1,4 @@
+/*
 import { SET_CURRENTDATE, EDIT_EVENT, ADD_EVENT, FETCH_EVENTS_SUCCESS, SET_CURRENTMONTH, DEL_EVENT } from '../types'
 
 
@@ -69,3 +70,5 @@ export default (state = initialState, action) => {
             return state
     }
 }
+
+*/

@@ -1,3 +1,4 @@
+/*
 import {
 
   SET_CURRENTDATE,
@@ -12,7 +13,7 @@ import {
   FETCH_EVENTS_FAILURE
 
 } from '../types'
-
+*/
 
 //import { getEvents, saveEvent } from '../../api/EventDataService';
 /*
