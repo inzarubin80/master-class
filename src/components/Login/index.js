@@ -13,7 +13,6 @@ export default function LoginComponent() {
 
     const [key, setKey] = useState('login');
 
-   
     const handleLogInButtonClick = () => {
         if (username && password) {
             logInUser(username, password)
@@ -33,7 +32,7 @@ export default function LoginComponent() {
         <div>
             <div className="form-signin">
 
-                <h1 className="text-center">{(key==='login')?'Вход':'Регистрация'}</h1>
+                <h3 className="text-center">{(key==='login')?'Вход':'Регистрация'}</h3>
 
                 <div className="form-group">
                     <input type="email" className="form-control" placeholder="Enter email" value={username} onChange={event => dispatch(setUserName(event.target.value))} />
@@ -52,7 +51,7 @@ export default function LoginComponent() {
                 <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="selectMode"
                     id="controlled-tab-example"
                     activeKey={key}
-                    onSelect={(k) => { setKey(k)}}>
+                    onSelect={(k) => { setKey(k)}}> 
 
 
                     <Tab eventKey="login" title="Я уже зарегистрирован">
