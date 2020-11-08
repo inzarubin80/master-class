@@ -2,7 +2,10 @@ import React, {Component} from 'react'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 import HeaderComponent from './components/HeaderComponent'
-import MasterСlasses from './pages/MasterСlasses'
+import ListMasterClasses from './pages/ListMasterClasses'
+import FooterComponent from './components/FooterComponent'
+import ClassForm from './components/ClassForm'
+
 
 import Auth from './pages/Auth'
 
@@ -14,17 +17,17 @@ const MasterClass = ()=> {
                 <Router>
                     <>
                         <HeaderComponent/>
+                        
                         <Switch>
 
-                            <Route path="/" exact component={MasterСlasses}/>
-                            
-                            <Route path="/classes" exact component={MasterСlasses}/>
-                            
+                            <Route path="/" exact component={ListMasterClasses}/>
+                            <Route path="/classes" exact component={ListMasterClasses}/>
                             <Route path="/login" component={Auth}/>
-
+                            <Route path="/class/:id" component={ClassForm}/>
                               
                         </Switch>
                       
+                        <FooterComponent/>
                        
                     </>
                 </Router>

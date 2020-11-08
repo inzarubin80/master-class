@@ -1,13 +1,12 @@
 import { Component } from "react";
-
 import { Link } from "react-router-dom";
 import React from "react";
-
 class HeaderComponent extends Component {
     render() {
 
 
         return (
+            
             <header>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <ul className="navbar-nav">
@@ -17,7 +16,6 @@ class HeaderComponent extends Component {
 
                     <ul className="nav navbar-nav nav-flex-icons ml-auto">
                          <li><Link className="nav-link" to="/login">Профиль</Link></li>
-                         <li><Link className="nav-link" to="/contacts">Контакты</Link></li>
                     </ul>
 
                 </nav>

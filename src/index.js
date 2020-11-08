@@ -26,18 +26,7 @@ const store = createStore(rootReducer, applyMiddleware(thunk));
 
 store.dispatch(initAuth());
 
-setTimeout(
-  ()=>{
-    ReactDOM.render(<Provider store={store}> 
-      <App/>
-    </Provider>
-    ,
-      document.getElementById('root')
-    );
-  }, 
-2000);
-
-
-
-
+ReactDOM.render(<Provider store={store}> 
+  <App/>
+</Provider> , document.getElementById('root'));
 reportWebVitals();

@@ -3,7 +3,9 @@ import './index.css';
 
 
 const divStyle = {
-    maxWidth: '400px'
+    maxWidth: '540px',
+    minWidth: '500px'
+
 };
 
 const MasterClasses = () => {

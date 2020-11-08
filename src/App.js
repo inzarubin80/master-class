@@ -1,16 +1,17 @@
 
 import AppMasterClass from './AppMasterClass';
 import React, { useEffect } from 'react';
-import { initAuth } from './redux/user/userActions';
-import { useDispatch } from 'react-redux';
+
+//import { initAuth } from './redux/user/userActions';
+//import { useDispatch } from 'react-redux';
 
 
 const App = () => {
  
-   const dispatch = useDispatch();
+   ///const dispatch = useDispatch();
   
    useEffect(() => {
-      dispatch(initAuth());
+     // dispatch(initAuth());
    }, []);
 
    return (<div>

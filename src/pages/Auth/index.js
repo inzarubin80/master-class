@@ -6,7 +6,7 @@ import Account from '../../components/Account'
 export default function Auth() {
 
     const user = useSelector(state => state.user.user);
-    
+    console.log(user);
     return (
 
         <div>

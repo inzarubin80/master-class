@@ -68,16 +68,34 @@ export function getListTodos(listId) {
         });          
 }
 
-export function createTodo(data) {
-    return db.collection('todos').add({
-        ...data,
-        completed: false
+export function createMasterClass(data) {
+   /*
+    return db.collection('masterClass').add({
+        ...data
     })
         .then(docRef => docRef.get())
         .then(doc => ({
             id: doc.id,
             ...doc.data()
         }));
+*/
+
+//console.log(db);
+
+return db.ref('masterClass').push({
+    ...data
+}).then(docRef=> {console.log(docRef); docRef.on('value', (snapshot)=>{console.log(snapshot.val())})})
+
+
+//then(docRef => docRef.get())
+  
+/*
+.then(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+*/
+
 }
 
 export function updateTodo(todoId, data) {
