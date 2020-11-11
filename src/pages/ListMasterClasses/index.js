@@ -2,6 +2,9 @@ import React, { useState, useEffect} from 'react'
 import MasterСlass from '../MasterСlass';
 import { db} from '../../firebase';
 
+import { InfiniteLoader, List } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
 
 const ListMasterClasses = (props) => {
         
