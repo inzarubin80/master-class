@@ -10,7 +10,7 @@ const TestList = () => {
     setTimeout(() => {
       setListItems(prevState => ([...prevState, ...Array.from(Array(4).keys(), n => n + prevState.length + 1)]));
       setIsFetching(false);
-    }, 1000);
+    }, 500);
   
 }
 

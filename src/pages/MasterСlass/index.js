@@ -13,15 +13,15 @@ const divStyle = {
 const MasterClasses = (props) => {
 
    
-    console.log('входящий key ' + props.id);
+    //console.log('входящий key ' + props.id);
 
-    console.log(props);
+  //  console.log(props);
 
     return (
        
         // <div className="MasterClasses" key={props.key}>
 
-<li  className="MasterClasses"  key={props.id}>
+<li  className="MasterClasses" >
 
 
             <div className="card" style={divStyle}>

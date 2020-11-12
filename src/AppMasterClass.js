@@ -24,11 +24,11 @@ const MasterClass = ()=> {
                         
                         <Switch>
 
-                            <Route path="/" exact component={TestList}/>
+                            <Route path="/" exact component={ListMasterClasses}/>
                            
                            {/* <Route path="/classes" exact component={ListMasterClasses}/>*/}
                             
-                            <Route path="/classes" exact component={TestList}/>
+                            <Route path="/classes" exact component={ListMasterClasses}/>
 
 
                             <Route path="/login" component={Auth}/>
