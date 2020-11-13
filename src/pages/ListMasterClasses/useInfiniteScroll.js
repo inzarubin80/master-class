@@ -18,9 +18,21 @@ const useInfiniteScroll = (callback) => {
   
   function handleScroll() {
 
-  
+
+    console.log('handleScroll');
+
+  /*
+    console.log("document.documentElement.clientHeight  + document.documentElement.scrollTop = " 
+    + (document.documentElement.clientHeight  + document.documentElement.scrollTop));
+
+    console.log("document.documentElement.scrollHeight = " + document.documentElement.scrollHeight);
+
+*/
    
-    if (document.documentElement.clientHeight  + document.documentElement.scrollTop < document.documentElement.scrollHeight  || isFetching) return;
+    if (Math.ceil(document.documentElement.clientHeight  + document.documentElement.scrollTop) < document.documentElement.scrollHeight  || isFetching) {
+      return;
+    }
+    console.log("Прикрутили в конец");
     setIsFetching(true);
   }
 

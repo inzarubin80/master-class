@@ -16,57 +16,68 @@ const ListMasterClasses = (props) => {
 
     const [data, setData] = useState([]);
 
-    const fetchMoreListItems = () => {
-    
+
+    const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
+
+    function fetchMoreListItems() {
+
 
         let firstKnownKey;
 
-        if (data.length){
-            firstKnownKey = data[data.length-1].id;
+        if (data.length) {
+            firstKnownKey = data[data.length - 1].id;
         }
 
         console.log("начальный ключ  -----------------" + firstKnownKey);
 
         if (firstKnownKey) {
-          
-            console.log("начальный ключ  *************" + firstKnownKey);
-            
-            refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(10).once('child_added',  (childSnapshot, prevChildKey) => {
 
+          //  console.log("начальный ключ  *************" + firstKnownKey);
 
-                if (firstKnownKey != childSnapshot.key ) {
-      
-                    console.log("Выводим ******" + childSnapshot.key);
-                    setData((prevState) => { return [{ ...childSnapshot.val(), id: childSnapshot.key }, ...prevState] });
-                    setIsFetching(false);
-    
-                   }
+            refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(10).once('value', function (snapshot) {
 
-    
-            }
-            );
+                let page_ = [];
+
+                snapshot.forEach( (childSnapshot) =>{
+               
+                    let key = childSnapshot.key;
+                    let childData = childSnapshot.val();
+
+                    if (firstKnownKey != key) {
+                       console.log("Выводим ******" + childSnapshot.key);
+                       page_.unshift({...childData, id: key});
+                    }
+                });
+
+               
+
+                if (page_.length){
+                    setData((prevState) => { return [...prevState, ... page_] });
+                }
+
+                setIsFetching(false);
+                console.log(page_);
+               
+
+            });
         }
         else {
 
-            console.log("определеяем начальный ключ  -----------------");
-            
-            refMasterClass.orderByKey().limitToLast(3).on('child_added',  (childSnapshot, prevChildKey) => {
+         //   console.log("определеяем начальный ключ  -----------------");
+
+            refMasterClass.orderByKey().limitToLast(3).on('child_added', (childSnapshot, prevChildKey) => {
 
 
-                console.log(childSnapshot.val());
-                
-                    console.log("Выводим ******" + childSnapshot.key);
-                    setData((prevState) => { return [{ ...childSnapshot.val(), id: childSnapshot.key }, ...prevState] });
-                    setIsFetching(false);
-                
-    
+                console.log("Выводим ******" + childSnapshot.key);
+                setData((prevState) => { return [{ ...childSnapshot.val(), id: childSnapshot.key }, ...prevState] });
+                setIsFetching(false);
+
+
             }
             );
         }
 
     }
-
-
 
     useEffect(() => {
 
@@ -77,15 +88,16 @@ const ListMasterClasses = (props) => {
     });
 
 
-    
-const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
-
     console.log(data);
 
     return (<div >
         <div className="ListMasterClasses">
             <button className="btn btn-success" onClick={() => { props.history.push(`/class/-1`) }}>Добавить</button>
         </div>
+
+
+        {/*isFetching && 'Fetching more list items...'*/}
+
 
         {data.map((item, index) => <MasterСlass
             NameMasterClass={item.NameMasterClass}
@@ -97,7 +109,7 @@ const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
 
         }
 
-        {isFetching && 'Fetching more list items...'}
+        {/*isFetching && 'Fetching more list items...'*/}
 
     </div>);
 
