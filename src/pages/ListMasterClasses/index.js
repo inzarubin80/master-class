@@ -101,8 +101,14 @@ const ListMasterClasses = (props) => {
 
         {data.map((item, index) => <MasterСlass
             NameMasterClass={item.NameMasterClass}
-            ImagesMasterClass={"https://i1.photo.2gis.com/images/branch/0/30258560050669905_3b47_300x300.jpg"}
-            key={item.id}
+          //  ImagesMasterClass={"https://i1.photo.2gis.com/images/branch/0/30258560050669905_3b47_300x300.jpg"}
+            
+         // ImagesMasterClass={"https://firebasestorage.googleapis.com/v0/b/master-class-com.appspot.com/o/images%2F1605376965882_Screenshot_3.png?alt=media&token=7a58c597-5e86-4856-ba5d-97d9956f2bf4"}
+
+         ImagesMasterClass = {item.ImgMasterClass}
+
+
+          key={item.id}
             DescriptionMasterClass={item.DescriptionMasterClass}
 
         />)
