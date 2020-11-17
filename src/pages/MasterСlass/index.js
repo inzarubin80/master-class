@@ -3,7 +3,7 @@ import './index.css';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import {Img} from 'react-image'
 
 
 const MasterClasses = (props) => {
@@ -36,7 +36,7 @@ const MasterClasses = (props) => {
 
                 <Slider {...settings}>
                     
-                {(props.images && props.images.length) &&  props.images.map((item)=>(<div> <img className="card-img-top" src={item.src} alt="Card image cap" /> </div>))}                    
+                {(props.images && props.images.length) &&  props.images.map((item)=>(<div> <Img className="card-img-top" src={item.src} alt="Card image cap" /> </div>))}                    
 
                 </Slider>
 

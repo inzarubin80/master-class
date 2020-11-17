@@ -23,15 +23,23 @@ body {
   -webkit-box-pack: center;
   justify-content: center;
   padding-top: 40px;
-
+  
+  /*max-height: 10%;
+  min-height: 10%;
+ */
  
 }
 
 .card{
+  display: flex;
 
-  max-width: 100px;
-  min-width: 500px;
+ /* max-width: 100%;
+  min-width: 100%;
   
+  max-height: 10%;
+  min-height: 10%;
+  */
+
 }
 
 .card-img-top{
