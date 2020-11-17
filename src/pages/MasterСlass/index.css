@@ -3,8 +3,16 @@ body {
   height: 100%;
 }
 
+.slick-list, .slick-track { touch-action:pan-y; }
+
+.sortable-handler {
+  touch-action: none;
+}
+
 
 .MasterClasses {
+
+
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
@@ -15,6 +23,14 @@ body {
   -webkit-box-pack: center;
   justify-content: center;
   padding-top: 40px;
+
+ 
+}
+
+.card{
+
+  max-width: 100px;
+  min-width: 500px;
   
 }
 
