@@ -4,15 +4,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const divStyle = {
-    maxWidth: '100px',
-    minWidth: '500px'
-};
+
 
 const MasterClasses = (props) => {
 
     
     const settings = {
+
+
         dots: true,
         lazyLoad: true,
         infinite: true,
