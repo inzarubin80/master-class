@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { createMasterClass } from '../../api/firebaseApi'
 import Image from 'react-bootstrap/Image'
@@ -9,57 +9,27 @@ import { storage } from '../../firebase'
 const divStyle = {
     maxWidth: '540px',
     minWidth: '500px'
-
 };
 
-
-class Thumb extends React.Component {
-    state = {
-      loading: false,
-      thumb: undefined,
-    };
-  
-    componentWillReceiveProps(nextProps) {
-      if (!nextProps.file) { return; }
-  
-      this.setState({ loading: true }, () => {
-        let reader = new FileReader();
-  
-        reader.onloadend = () => {
-          this.setState({ loading: false, thumb: reader.result });
-        };
-  
-        reader.readAsDataURL(nextProps.file);
-      });
-    }
-  
-    render() {
-      const { file } = this.props;
-      const { loading, thumb } = this.state;
-  
-      if (!file) { return null; }
-  
-      if (loading) { return <p>loading...</p>; }
-  
-      return (<img src={thumb}
-        alt={file.name}
-        className="img-thumbnail mt-2"
-        height={200}
-        width={200} />);
-    }
-  }
 
 const ClassForm = (props) => {
 
     const onSubmit = (values) => {
 
-        createMasterClass({NameMasterClass: values.NameMasterClass, 
-            DescriptionMasterClass: values.DescriptionMasterClass, 
-            DateMasterClass: values.DateMasterClass, 
-            ImgMasterClass: values.ImgMasterClass, 
-            keyMaster:values.keyMaster}, values.file)
+        const addFiles = values.images.filter((item)=>{return !item.del && item.local}).map((item) => {return {filename:item.key, file:item.file}})
+        const removeFiles = values.images.filter((item)=>{return item.del && !item.local}).map((item) => {return {filename:item.key}})
+        
+        createMasterClass({
+            NameMasterClass: values.NameMasterClass,
+            DescriptionMasterClass: values.DescriptionMasterClass,
+            DateMasterClass: values.DateMasterClass,
+            keyMaster: values.keyMaster,
+            images: values.images.filter((item)=>{return !item.del}).map((item) => {return {filename:item.key, src:item.src}})
+            
+        }, addFiles, removeFiles)
 
     }
+
 
     return (
         <div>
@@ -69,8 +39,10 @@ const ClassForm = (props) => {
                 <h3>Мастер класс</h3>
 
                 <Formik
-                    initialValues={{ NameMasterClass: '', DescriptionMasterClass: '', DateMasterClass: '', file:null, ImgMasterClass: '', 
-                    keyMaster: uuid()}}
+                    initialValues={{
+                        NameMasterClass: '', DescriptionMasterClass: '', DateMasterClass: '', 
+                        keyMaster: uuid(), images: []
+                    }}
                     onSubmit={onSubmit}
                     validateOnChange={false}
                     validateOnBlur={false}
@@ -109,30 +81,54 @@ const ClassForm = (props) => {
 
                                 <div className="form-group">
 
-                                    <label for="file">Картинка</label>
-                                    <input id="file" name="file" type="file" onChange={(event) => {
 
-                                        const file = event.currentTarget.files[0];
-                                        props.setFieldValue("file", file);
+                                    <input multiple name="file" type="file" style={{ display__: 'none' }} accept="image/png, image/jpeg" onChange={(event) => {
 
-                                        /*
-                                        const imageRef = storage.ref('images').child(props.values.keyMaster);
+                                        console.log(event.currentTarget.files);
+                                        let images_ = [];
 
-                                        imageRef.put(file).then(function (snapshot) {
-                                    
-                                            snapshot.ref.getDownloadURL().then(function (ImgMasterClass) {
-                                                props.setFieldValue("ImgMasterClass", ImgMasterClass);
-                                            });
-                                    
-                                        });
-                                        */
+                                        for (let i = 0; i < event.currentTarget.files.length; i++) {
+
+                                            images_.unshift({ file: event.currentTarget.files[i], src: URL.createObjectURL(event.currentTarget.files[i]), key: uuid(), del: false, local:true });
+
+                                        }
+
+                                        props.setFieldValue("images", [...images_, ...props.values.images]);
 
 
-                                    }}/>
+                                    }} />
+
+
+
                                 </div>
 
-                               {!props.values.file && <Image className="card-img-top" src= {props.values.ImgMasterClass} style = {divStyle} alt="Card image cap" />}
-                               {props.values.file && <Thumb file={props.values.file} />}
+
+                                {props.values.images.filter((item)=>{return !item.del}).map((item, index) => (<li key={item.key} className="form-group">
+
+                                    <img src={item.src} style={divStyle} className="img-thumbnail mt-2" />
+                                    <button className="btn btn-success" onClick={() => {
+                                        console.log(item.key)
+
+                                        props.setFieldValue("images", props.values.images.map((item_) => {
+
+                                            if (item_.key == item.key) {
+                                                return { ...item_, del: true }
+                                            }
+
+                                            else {
+                                                return item_;
+                                            }
+                                        }
+                                        )
+                                        );
+
+
+                                    }}>Удалить</button>
+
+                                </li>))}
+
+
+
 
 
                                 <button className="btn btn-success" type="submit">Save</button>

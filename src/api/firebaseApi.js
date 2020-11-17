@@ -68,60 +68,87 @@ export function getListTodos(listId) {
         });
 }
 
-export function createMasterClass(data, file) {
-    let key;
+export function createMasterClass(data, addFiles, removeFiles) {
 
-    const imageRef = storage.ref('images').child(data.keyMaster);
+    console.log('Записываемый объект', data);
+    console.log('Добавляемые файлы', addFiles);
+    console.log('Удаляемые файлы', removeFiles);
 
-    if (file) {
 
-        imageRef.put(file).then(function (snapshot) {
+    if (!addFiles.length) {
 
-            snapshot.ref.getDownloadURL().then(function (ImgMasterClass) {
+        console.log('data',  data);
+        addMasterClass(data);
+    }
+    else {
 
-                data.ImgMasterClass = ImgMasterClass;
+        let urls = {};
 
-                db.ref('masterClass').push({
-                    ...data
-                }).then(docRef => {
-                    docRef.on('value',
-                        (snapshot) => {
-                            key = snapshot.key;
+        for (let i = 0; i < addFiles.length; i++) {
 
-                        })
-                })
+            const imageRef = storage.ref('images').child(addFiles[i].filename);
 
+            imageRef.put(addFiles[i].file).then(function (snapshot) {
+
+                snapshot.ref.getDownloadURL().then(function (URL) {
+
+                    urls[addFiles[i].filename] = URL;
+
+                    console.log('urls', urls);
+
+
+                    if (i == (addFiles.length - 1)) {
+
+                       
+                        const images = data.images.map((item) => {
+                            if ([item.filename] in urls) {
+                                return { filename: item.filename, src: urls[item.filename] };
+                            }
+                            else {
+                                 return item 
+                                }
+                        }
+                        );
+
+                        console.log('data images',  images);
+                        addMasterClass({...data, images:images});
+
+                    }
+
+                });
 
             });
 
-        });
+        }
     }
 
-    else {
+    removeFiles.forEach((element) => remveMasterClassPicture(element.filename));
 
-        db.ref('masterClass').push({
-            ...data
-        }).then(docRef => {
-            docRef.on('value',
-                (snapshot) => {
-                    key = snapshot.key;
+}
 
-                })
-        })
-    }
+const addMasterClass = (data) => {
 
+    db.ref('masterClass').push({
+        ...data
+    }).then(docRef => {
+        docRef.on('value',
+            (snapshot) => {
+            })
+    })
 
 
 
 }
 
-const saveMasterClassPicture = (fileName, file) => {
+const remveMasterClassPicture = (fileName) => {
 
     const imageRef = storage.ref('images').child(fileName);
 
-    imageRef.put(file).then(function (snapshot) {
+    imageRef.removeFiles.then(function (snapshot) {
 
-        snapshot.ref.getDownloadURL().then(function (ImgMasterClass) {
+        snapshot.ref.getDownloadURL().then(function (URL) {
+
+            console.log(URL);
 
         });
 
