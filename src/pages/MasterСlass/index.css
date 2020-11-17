@@ -27,18 +27,26 @@ body {
   /*max-height: 10%;
   min-height: 10%;
  */
- 
+
 }
 
 .card{
   display: flex;
 
- /* max-width: 100%;
-  min-width: 100%;
+  max-width: 80%;
+ 
+  /* min-width: 50%;*/
+
+
+
+  /*max-height: 100px;*/
   
-  max-height: 10%;
-  min-height: 10%;
-  */
+  /*min-height: 1%;*/
+
+
+  
+  
+
 
 }
 
