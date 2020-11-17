@@ -68,7 +68,7 @@ export function getListTodos(listId) {
         });
 }
 
-export function createMasterClass(data, addFiles, removeFiles) {
+export async function createMasterClass(data, addFiles, removeFiles) {
 
     console.log('Записываемый объект', data);
     console.log('Добавляемые файлы', addFiles);
@@ -86,11 +86,11 @@ export function createMasterClass(data, addFiles, removeFiles) {
 
         for (let i = 0; i < addFiles.length; i++) {
 
-            const imageRef = storage.ref('images').child(addFiles[i].filename);
+            const  imageRef = storage.ref('images').child(addFiles[i].filename);
 
-            imageRef.put(addFiles[i].file).then(function (snapshot) {
+            await imageRef.put(addFiles[i].file).then(function (snapshot) {
 
-                snapshot.ref.getDownloadURL().then(function (URL) {
+                  snapshot.ref.getDownloadURL().then(function (URL) {
 
                     urls[addFiles[i].filename] = URL;
 
@@ -99,12 +99,17 @@ export function createMasterClass(data, addFiles, removeFiles) {
 
                     if (i == (addFiles.length - 1)) {
 
+
+                        console.log('urls __i', urls);
                        
                         const images = data.images.map((item) => {
                             if ([item.filename] in urls) {
+
+                                console.log('Есть', item.filename);
                                 return { filename: item.filename, src: urls[item.filename] };
                             }
                             else {
+                                console.log('Нет', item.filename);
                                  return item 
                                 }
                         }
