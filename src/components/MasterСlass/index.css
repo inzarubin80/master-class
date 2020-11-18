@@ -33,9 +33,9 @@ body {
 .card{
   display: flex;
 
- /*max-width: 95%;
-  min-width: 27%;
-*/
+  max-width: 95%;
+  min-width: 90%;
+
   /*max-height: 100px;*/
   /*min-height: 1%;*/
 
