@@ -68,29 +68,29 @@ export function getListTodos(listId) {
         });
 }
 
-export async function createMasterClass(data, addFiles, removeFiles) {
+export async function createMasterClass(data, addFiles, removeFiles, key) {
 
-    console.log('Записываемый объект', data);
-    console.log('Добавляемые файлы', addFiles);
-    console.log('Удаляемые файлы', removeFiles);
-
+    console.log('data', data);
+    console.log('addFiles', addFiles);
+    console.log('removeFiles', removeFiles);
+    console.log('key', key);
 
     if (!addFiles.length) {
-
-        console.log('data',  data);
-        addMasterClass(data);
+        console.log('data', data);
+        saveMasterClass(key, data);
     }
+    
     else {
 
         let urls = {};
 
         for (let i = 0; i < addFiles.length; i++) {
 
-            const  imageRef = storage.ref('images').child(addFiles[i].filename);
+            const imageRef = storage.ref('images').child(addFiles[i].filename);
 
             await imageRef.put(addFiles[i].file).then(function (snapshot) {
 
-                  snapshot.ref.getDownloadURL().then(function (URL) {
+                snapshot.ref.getDownloadURL().then(function (URL) {
 
                     urls[addFiles[i].filename] = URL;
 
@@ -101,7 +101,7 @@ export async function createMasterClass(data, addFiles, removeFiles) {
 
 
                         console.log('urls __i', urls);
-                       
+
                         const images = data.images.map((item) => {
                             if ([item.filename] in urls) {
 
@@ -110,13 +110,14 @@ export async function createMasterClass(data, addFiles, removeFiles) {
                             }
                             else {
                                 console.log('Нет', item.filename);
-                                 return item 
-                                }
+                                return item
+                            }
                         }
                         );
+                        
 
-                        console.log('data images',  images);
-                        addMasterClass({...data, images:images});
+                        saveMasterClass(key, {...data, images:images});
+
 
                     }
 
@@ -131,33 +132,53 @@ export async function createMasterClass(data, addFiles, removeFiles) {
 
 }
 
-const addMasterClass = (data) => {
+const saveMasterClass = (key, data) => {
+    
+    console.log('data', data);
+    console.log('key', key);
 
-    db.ref('masterClass').push({
-        ...data
-    }).then(docRef => {
-        docRef.on('value',
-            (snapshot) => {
-            })
-    })
+    if (key) {
 
+        const ref = db.ref('masterClass/' + key);
+
+        console.log('ref', ref);
+
+        ref.set(data, function(error) {
+            if (error) {
+              // The write failed...
+            } else {
+              // Data saved successfully!
+            }
+          });
+    }
+    else {
+
+        db.ref('masterClass').push(data).then(docRef => {
+            docRef.on('value',
+                (snapshot) => {
+                })
+        })
+
+    }
 
 
 }
 
+
 const remveMasterClassPicture = (fileName) => {
+
+   // console.log('remveMasterClassPicture fileName ', fileName);
+
 
     const imageRef = storage.ref('images').child(fileName);
 
-    imageRef.removeFiles.then(function (snapshot) {
+    imageRef.delete().then(function() {
+        // File deleted successfully
+      }).catch(function(error) {
+        // Uh-oh, an error occurred!
+      });
 
-        snapshot.ref.getDownloadURL().then(function (URL) {
 
-            console.log(URL);
-
-        });
-
-    });
 
 }
 

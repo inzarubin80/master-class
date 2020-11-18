@@ -2,16 +2,16 @@ import React, {Component} from 'react'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 import HeaderComponent from './components/HeaderComponent'
-import ListMasterClasses from './pages/ListMasterClasses'
+import ListMasterClasses from './components/ListMasterClasses'
 
-import TestList from './pages/TestList'
+import TestList from './components/TestList'
 
 import FooterComponent from './components/FooterComponent'
 import ClassForm from './components/ClassForm'
 
 
 
-import Auth from './pages/Auth'
+import Auth from './components/Auth'
 
 const MasterClass = ()=> {
     

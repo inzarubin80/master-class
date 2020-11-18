@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react'
 import MasterСlass from '../MasterСlass';
 import { db } from '../../firebase';
 import useInfiniteScroll from "./useInfiniteScroll";
-
-
 import 'react-virtualized/styles.css'; // only needs to be imported once
-
 
 
 
@@ -15,7 +12,6 @@ const ListMasterClasses = (props) => {
     const refMasterClass = db.ref('masterClass');
 
     const [data, setData] = useState([]);
-
 
     const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
 
@@ -48,8 +44,6 @@ const ListMasterClasses = (props) => {
                        page_.unshift({...childData, id: key});
                     }
                 });
-
-               
 
                 if (page_.length){
                     setData((prevState) => { return [...prevState, ... page_] });
@@ -87,6 +81,9 @@ const ListMasterClasses = (props) => {
         }
     });
 
+    const updateMasterClassClicked = (id) => {
+       props.history.push(`/class/${id}`)        
+    }
 
     console.log(data);
 
@@ -97,18 +94,21 @@ const ListMasterClasses = (props) => {
         </div>
 
 
-        {data.map((item, index) => <MasterСlass
+        {data.map((item, index) => (<MasterСlass
         
+            key = {item.id}
+
           NameMasterClass={item.NameMasterClass}
         
           ImagesMasterClass = {item.ImgMasterClass}
 
+          updateMasterClassClicked = {()=> updateMasterClassClicked(item.id)}
 
-          key={item.id}
+        
           DescriptionMasterClass={item.DescriptionMasterClass}
 
           images = {item.images}
-        />)
+        />))
 
         }
 

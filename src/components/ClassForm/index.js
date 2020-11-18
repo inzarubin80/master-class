@@ -1,18 +1,37 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { createMasterClass } from '../../api/firebaseApi'
-import Image from 'react-bootstrap/Image'
 import uuid from 'react-uuid'
 
-import { storage } from '../../firebase'
+import { db } from '../../firebase';
+
 
 const divStyle = {
     maxWidth: '540px',
     minWidth: '500px'
 };
 
-
 const ClassForm = (props) => {
+
+    const [id, setId] = useState(props.match.params.id);
+    const [data, setData] = useState(null);
+
+    React.useEffect(() => {
+
+        if (id !==-1){
+            db.ref('masterClass/' + id ).once('value').then(function(snapshot) {
+                
+                const val = snapshot.val();
+                console.log('val', val);
+                setData(val);
+
+              });     
+        }
+
+      
+
+    }, [id]);
+
 
     const onSubmit = (values) => {
 
@@ -22,14 +41,18 @@ const ClassForm = (props) => {
         createMasterClass({
             NameMasterClass: values.NameMasterClass,
             DescriptionMasterClass: values.DescriptionMasterClass,
-            DateMasterClass: values.DateMasterClass,
-            keyMaster: values.keyMaster,
+            DateMasterClass: values.DateMasterClass?values.DateMasterClass:'',
             images: values.images.filter((item)=>{return !item.del}).map((item) => {return {filename:item.key, src:item.src}})
             
-        }, addFiles, removeFiles)
+        },  addFiles, removeFiles, data?id:'');
+
+
+        props.history.push('/classes');
+        
 
     }
 
+    console.log('data', data);
 
     return (
         <div>
@@ -40,8 +63,9 @@ const ClassForm = (props) => {
 
                 <Formik
                     initialValues={{
-                        NameMasterClass: '', DescriptionMasterClass: '', DateMasterClass: '', 
-                        keyMaster: uuid(), images: []
+                        NameMasterClass: data ? data.NameMasterClass:'', 
+                        DescriptionMasterClass: data?data.DescriptionMasterClass:'', 
+                        images: (data&&data.images)?data.images.map((item)=>{return {file:'', src:item.src, key: item.filename, del: false, local:false} }):[]
                     }}
                     onSubmit={onSubmit}
                     validateOnChange={false}

@@ -1,7 +1,7 @@
 import React  from 'react';
 import {useSelector } from 'react-redux';
-import Login from '../../components/Login'
-import Account from '../../components/Account'
+import Login from '../Login'
+import Account from '../Account'
 
 export default function Auth() {
 
