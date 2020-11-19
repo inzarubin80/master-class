@@ -1,4 +1,9 @@
 import { db, auth, storage } from '../firebase';
+import { useDispatch } from 'react-redux'
+
+import {setSaveFailure, setSaveSUCCESS, setSaveRequest} from '../redux/app/appActions';
+
+const dispatch = useDispatch();
 
 /* Auth */
 export function logInUser(email, password) {
@@ -26,57 +31,12 @@ export function initAuth(onAuth) {
 }
 
 
-/* DB */
-export function getLists() {
-    return db.collection('lists')
-        .get()
-        .then(snapshot => {
-            const items = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-
-            return items;
-        });
-}
-
-export function getTodos() {
-    return db.collection('todos')
-        .where('listId', '==', '')
-        .get()
-        .then(snapshot => {
-            const items = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-
-            return items;
-        });
-}
-
-export function getListTodos(listId) {
-    return db.collection('todos')
-        .where('listId', '==', listId)
-        .get()
-        .then(snapshot => {
-            const items = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-
-            return items;
-        });
-}
 
 export async function createMasterClass(data, addFiles, removeFiles, key) {
 
-    console.log('data', data);
-    console.log('addFiles', addFiles);
-    console.log('removeFiles', removeFiles);
-    console.log('key', key);
+    dispatch(setSaveRequest);
 
     if (!addFiles.length) {
-        console.log('data', data);
         saveMasterClass(key, data);
     }
     
@@ -94,22 +54,16 @@ export async function createMasterClass(data, addFiles, removeFiles, key) {
 
                     urls[addFiles[i].filename] = URL;
 
-                    console.log('urls', urls);
-
-
+                  
                     if (i == (addFiles.length - 1)) {
 
-
-                        console.log('urls __i', urls);
 
                         const images = data.images.map((item) => {
                             if ([item.filename] in urls) {
 
-                                console.log('Есть', item.filename);
                                 return { filename: item.filename, src: urls[item.filename] };
                             }
                             else {
-                                console.log('Нет', item.filename);
                                 return item
                             }
                         }
@@ -121,7 +75,7 @@ export async function createMasterClass(data, addFiles, removeFiles, key) {
 
                     }
 
-                });
+                }).catch( );
 
             });
 
@@ -133,9 +87,6 @@ export async function createMasterClass(data, addFiles, removeFiles, key) {
 }
 
 const saveMasterClass = (key, data) => {
-    
-    console.log('data', data);
-    console.log('key', key);
 
     if (key) {
 
@@ -147,21 +98,18 @@ const saveMasterClass = (key, data) => {
             if (error) {
               // The write failed...
             } else {
-              // Data saved successfully!
+                
+                dispatch(setSaveSUCCESS);
+
             }
           });
     }
     else {
 
         db.ref('masterClass').push(data).then(docRef => {
-            docRef.on('value',
-                (snapshot) => {
-                })
+            dispatch(setSaveSUCCESS);
         })
-
     }
-
-
 }
 
 

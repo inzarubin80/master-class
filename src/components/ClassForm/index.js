@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { createMasterClass } from '../../api/firebaseApi'
 import uuid from 'react-uuid'
+import { useSelector, useDispatch } from 'react-redux'
+
 
 import { db } from '../../firebase';
 
@@ -15,6 +17,11 @@ const ClassForm = (props) => {
 
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
+
+    const dispatch = useDispatch();
+    
+    const uploading = useSelector(state => state.APP.uploading);
+    const error = useSelector(state => state.APP.error);
 
     React.useEffect(() => {
 
@@ -48,7 +55,7 @@ const ClassForm = (props) => {
 
 
         props.history.push('/classes');
-        
+
 
     }
 

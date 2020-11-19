@@ -20,14 +20,6 @@ const useInfiniteScroll = (callback) => {
 
 
     console.log('handleScroll');
-
-  /*
-    console.log("document.documentElement.clientHeight  + document.documentElement.scrollTop = " 
-    + (document.documentElement.clientHeight  + document.documentElement.scrollTop));
-
-    console.log("document.documentElement.scrollHeight = " + document.documentElement.scrollHeight);
-
-*/
    
     if (Math.ceil(document.documentElement.clientHeight  + document.documentElement.scrollTop) < document.documentElement.scrollHeight  || isFetching) {
       return;

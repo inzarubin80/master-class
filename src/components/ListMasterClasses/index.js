@@ -8,7 +8,6 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const ListMasterClasses = (props) => {
 
-
     const refMasterClass = db.ref('masterClass');
 
     const [data, setData] = useState([]);
@@ -28,7 +27,6 @@ const ListMasterClasses = (props) => {
 
         if (firstKnownKey) {
 
-          //  console.log("начальный ключ  *************" + firstKnownKey);
 
             refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(10).once('value', function (snapshot) {
 
@@ -56,8 +54,6 @@ const ListMasterClasses = (props) => {
             });
         }
         else {
-
-         //   console.log("определеяем начальный ключ  -----------------");
 
             refMasterClass.orderByKey().limitToLast(3).on('child_added', (childSnapshot, prevChildKey) => {
 

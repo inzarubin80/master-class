@@ -1,68 +1,30 @@
-/*
-import { SET_CURRENTDATE, EDIT_EVENT, ADD_EVENT, FETCH_EVENTS_SUCCESS, SET_CURRENTMONTH, DEL_EVENT } from '../types'
-
-
+import {
+    FETCH_SAVE_ClASS_REQUEST,
+    FETCH_SAVE_ClASS_FAILURE,
+    FETCH_SAVE_ClASS_SUCCESS
+  } from '../types'
 
 
 const initialState = {
-
-    events: [], 
-    currentMonth: new Date(),
-    currentId: 0,
+    uploading: false, 
+    error: ''
    };
 
 export default (state = initialState, action) => {
 
     switch (action.type) {
 
-        case SET_CURRENTDATE: {
-            return Object.assign({}, state, {
-                currentDate: action.payload
-            })
+        case FETCH_SAVE_ClASS_REQUEST: {
+            return {...state, uploading:true, error: ''}
         }
 
-        case SET_CURRENTMONTH: {
-            return Object.assign({}, state, {
-                currentMonth: action.payload
-            })
+        case FETCH_SAVE_ClASS_SUCCESS: {
+            return {...state, uploading:false}     
         }
 
-        case EDIT_EVENT: {
-
-            return Object.assign({}, state, {
-                events: state.events.map(event => {
-                    if (event.id !== action.payload.id) {
-                        return event
-                    }
-
-                    return Object.assign({}, event, {
-                        date: action.payload.date,
-                        title: action.payload.title,
-                        duration: action.payload.duration,
-                        summary: action.payload.summary,
-                        partner: action.payload.partner,
-                        project: action.payload.project
-
-                    })
-                })
-            })
+        case FETCH_SAVE_ClASS_FAILURE: {
+            return {...state, uploading:false, error:action.payload}   
         }
-
-        case ADD_EVENT: {
-
-            return { ...state, events: [...state.events, action.payload] }
-        }
-
-        case DEL_EVENT: {
-
-            console.log('DEL_EVENT');
-
-            return { ...state, events: state.events.filter(item => item.id !== action.payload.id)}
-        }
-
-        case FETCH_EVENTS_SUCCESS:
-
-            return { ...state, events: action.payload }
 
 
         default:
@@ -71,4 +33,3 @@ export default (state = initialState, action) => {
     }
 }
 
-*/
