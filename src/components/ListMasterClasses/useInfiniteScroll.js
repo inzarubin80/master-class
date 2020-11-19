@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const wrappedElement = document.getElementById('root');
+
 const useInfiniteScroll = (callback) => {
   const [isFetching, setIsFetching] = useState(false);
 
@@ -16,25 +18,21 @@ const useInfiniteScroll = (callback) => {
   }, [isFetching]);
 
   
-  function handleScroll() {
 
-
-    console.log('handleScroll');
-
-  /*
-    console.log("document.documentElement.clientHeight  + document.documentElement.scrollTop = " 
-    + (document.documentElement.clientHeight  + document.documentElement.scrollTop));
-
-    console.log("document.documentElement.scrollHeight = " + document.documentElement.scrollHeight);
-
-*/
+  const isBottom = () => {
    
-    if (Math.ceil(document.documentElement.clientHeight  + document.documentElement.scrollTop) < document.documentElement.scrollHeight  || isFetching) {
-      return;
-    }
-    console.log("Прикрутили в конец");
-    setIsFetching(true);
+    return (Math.floor(wrappedElement.getBoundingClientRect().bottom) <= window.innerHeight);
+
   }
+
+  function handleScroll() {    
+   if (!isBottom() || isFetching) {
+    return;
+  }
+  console.log("Прикрутили в конец");
+  setIsFetching(true);
+  }
+  
 
   return [isFetching, setIsFetching];
 };
