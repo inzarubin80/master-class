@@ -7,7 +7,8 @@ import {
 
 const initialState = {
     uploading: false, 
-    error: ''
+    error: '',
+    success:false
    };
 
 export default (state = initialState, action) => {
@@ -25,7 +26,6 @@ export default (state = initialState, action) => {
         case FETCH_SAVE_ClASS_FAILURE: {
             return {...state, uploading:false, error:action.payload}   
         }
-
 
         default:
 

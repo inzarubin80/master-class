@@ -1,9 +1,6 @@
 import { db, auth, storage } from '../firebase';
-import { useDispatch } from 'react-redux'
+import {setSaveFailure, setSaveSUCCESS} from '../redux/app/appActions'
 
-import {setSaveFailure, setSaveSUCCESS, setSaveRequest} from '../redux/app/appActions';
-
-const dispatch = useDispatch();
 
 /* Auth */
 export function logInUser(email, password) {
@@ -32,12 +29,13 @@ export function initAuth(onAuth) {
 
 
 
-export async function createMasterClass(data, addFiles, removeFiles, key) {
+export async function createMasterClass(data, addFiles, removeFiles, key, dispatch) {
+    
+    console.log('createMasterClass');
 
-    dispatch(setSaveRequest);
 
     if (!addFiles.length) {
-        saveMasterClass(key, data);
+        saveMasterClass(key, data, dispatch);
     }
     
     else {
@@ -55,7 +53,7 @@ export async function createMasterClass(data, addFiles, removeFiles, key) {
                     urls[addFiles[i].filename] = URL;
 
                   
-                    if (i == (addFiles.length - 1)) {
+                    if (i === (addFiles.length - 1)) {
 
 
                         const images = data.images.map((item) => {
@@ -70,7 +68,7 @@ export async function createMasterClass(data, addFiles, removeFiles, key) {
                         );
                         
 
-                        saveMasterClass(key, {...data, images:images});
+                        saveMasterClass(key, {...data, images:images}, dispatch);
 
 
                     }
@@ -86,7 +84,10 @@ export async function createMasterClass(data, addFiles, removeFiles, key) {
 
 }
 
-const saveMasterClass = (key, data) => {
+const saveMasterClass = (key, data, dispatch) => {
+
+    console.log('dispatch',dispatch);
+
 
     if (key) {
 
@@ -96,19 +97,29 @@ const saveMasterClass = (key, data) => {
 
         ref.set(data, function(error) {
             if (error) {
-              // The write failed...
+                
+                dispatch(setSaveFailure(error));
+
             } else {
                 
-                dispatch(setSaveSUCCESS);
+                dispatch(setSaveSUCCESS());
 
             }
           });
     }
     else {
 
-        db.ref('masterClass').push(data).then(docRef => {
-            dispatch(setSaveSUCCESS);
-        })
+        db.ref('masterClass').push(data, function(error) {
+            if (error) {
+                
+                dispatch(setSaveFailure(error));
+
+            } else {
+                
+                dispatch(setSaveSUCCESS());
+
+            }
+          });
     }
 }
 

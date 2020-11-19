@@ -1,12 +1,9 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 import HeaderComponent from './components/HeaderComponent'
 import ListMasterClasses from './components/ListMasterClasses'
 
-import TestList from './components/TestList'
-
-import FooterComponent from './components/FooterComponent'
 import ClassForm from './components/ClassForm'
 
 

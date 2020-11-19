@@ -37,7 +37,7 @@ const ListMasterClasses = (props) => {
                     let key = childSnapshot.key;
                     let childData = childSnapshot.val();
 
-                    if (firstKnownKey != key) {
+                    if (firstKnownKey !== key) {
                        console.log("Выводим ******" + childSnapshot.key);
                        page_.unshift({...childData, id: key});
                     }

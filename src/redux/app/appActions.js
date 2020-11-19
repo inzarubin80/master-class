@@ -4,6 +4,14 @@ import {
   FETCH_SAVE_ClASS_SUCCESS
 } from '../types'
 
+import  { createMasterClass }  from '../../api/firebaseApi'
+
+export const setSaveRequest = () => {
+  return {
+    type: FETCH_SAVE_ClASS_REQUEST
+  };
+};
+
 export const setSaveFailure = (error) => {
   return {
     type: FETCH_SAVE_ClASS_FAILURE,
@@ -17,9 +25,17 @@ export const setSaveSUCCESS = () => {
   };
 };
 
-export const setSaveRequest = () => {
-  return {
-    type: FETCH_SAVE_ClASS_REQUEST
-  };
-};
 
+
+export const saveMasterClass = (data, addFiles, removeFiles, key ) => {
+ 
+  console.log('saveMasterClass');
+
+  return (dispatch, getState) => {
+    
+    console.log('saveMasterClass outer');
+    createMasterClass(data, addFiles, removeFiles, key, dispatch);
+
+  };
+
+}

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { createMasterClass } from '../../api/firebaseApi'
+import { saveMasterClass } from '../../redux/app/appActions'
 import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
-
-
+import {setSaveRequest} from '../../redux/app/appActions' 
+import { Spinner, ProgressBar } from 'react-bootstrap';
 import { db } from '../../firebase';
 
 
@@ -15,13 +15,16 @@ const divStyle = {
 
 const ClassForm = (props) => {
 
+
+    const dispatch = useDispatch();
+
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
 
-    const dispatch = useDispatch();
     
-    const uploading = useSelector(state => state.APP.uploading);
-    const error = useSelector(state => state.APP.error);
+    const uploading = useSelector(state => state.app.uploading);
+    const error = useSelector(state => state.app.error);
+
 
     React.useEffect(() => {
 
@@ -34,32 +37,36 @@ const ClassForm = (props) => {
 
               });     
         }
-
-      
-
     }, [id]);
 
 
+    React.useEffect(() => {
+      if  (!uploading && !error) {
+        //props.history.push(`/classes`)
+      }
+
+    }, [uploading]);
+
     const onSubmit = (values) => {
+
+        dispatch(setSaveRequest());
 
         const addFiles = values.images.filter((item)=>{return !item.del && item.local}).map((item) => {return {filename:item.key, file:item.file}})
         const removeFiles = values.images.filter((item)=>{return item.del && !item.local}).map((item) => {return {filename:item.key}})
         
-        createMasterClass({
+        const Data = {
             NameMasterClass: values.NameMasterClass,
             DescriptionMasterClass: values.DescriptionMasterClass,
             DateMasterClass: values.DateMasterClass?values.DateMasterClass:'',
             images: values.images.filter((item)=>{return !item.del}).map((item) => {return {filename:item.key, src:item.src}})
             
-        },  addFiles, removeFiles, data?id:'');
+        };
 
-
-        props.history.push('/classes');
-
+        dispatch(saveMasterClass(Data,  addFiles, removeFiles, data?id:''));
 
     }
 
-    console.log('data', data);
+   // console.log('data', data);
 
     return (
         <div>
@@ -67,6 +74,8 @@ const ClassForm = (props) => {
             <div className="container">
 
                 <h3>Мастер класс</h3>
+
+                 {uploading &&   <h5>...идет загрузка</h5>}
 
                 <Formik
                     initialValues={{
