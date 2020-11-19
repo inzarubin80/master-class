@@ -24,7 +24,7 @@ const logger = store => next => action => {
 
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
-//store.dispatch(initAuth());
+store.dispatch(initAuth());
 
 ReactDOM.render(<Provider store={store}> 
   <App/>

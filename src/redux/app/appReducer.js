@@ -7,8 +7,7 @@ import {
 
 const initialState = {
     uploading: false, 
-    error: '',
-    success:false
+    error: ''
    };
 
 export default (state = initialState, action) => {

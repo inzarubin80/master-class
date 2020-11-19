@@ -27,14 +27,14 @@ export const setSaveSUCCESS = () => {
 
 
 
-export const saveMasterClass = (data, addFiles, removeFiles, key ) => {
+export const saveMasterClass = (data, addFiles, removeFiles, key, goToClasses ) => {
  
   console.log('saveMasterClass');
 
   return (dispatch, getState) => {
     
     console.log('saveMasterClass outer');
-    createMasterClass(data, addFiles, removeFiles, key, dispatch);
+    createMasterClass(data, addFiles, removeFiles, key, dispatch, goToClasses);
 
   };
 

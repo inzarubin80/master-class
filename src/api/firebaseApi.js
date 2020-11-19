@@ -29,13 +29,13 @@ export function initAuth(onAuth) {
 
 
 
-export async function createMasterClass(data, addFiles, removeFiles, key, dispatch) {
+export async function createMasterClass(data, addFiles, removeFiles, key, dispatch, goToClasses) {
     
     console.log('createMasterClass');
 
 
     if (!addFiles.length) {
-        saveMasterClass(key, data, dispatch);
+        saveMasterClass(key, data, dispatch, goToClasses);
     }
     
     else {
@@ -68,7 +68,7 @@ export async function createMasterClass(data, addFiles, removeFiles, key, dispat
                         );
                         
 
-                        saveMasterClass(key, {...data, images:images}, dispatch);
+                        saveMasterClass(key, {...data, images:images}, dispatch, goToClasses);
 
 
                     }
@@ -84,7 +84,7 @@ export async function createMasterClass(data, addFiles, removeFiles, key, dispat
 
 }
 
-const saveMasterClass = (key, data, dispatch) => {
+const saveMasterClass = (key, data, dispatch, goToClasses) => {
 
     console.log('dispatch',dispatch);
 
@@ -99,11 +99,12 @@ const saveMasterClass = (key, data, dispatch) => {
             if (error) {
                 
                 dispatch(setSaveFailure(error));
-
+                
             } else {
                 
                 dispatch(setSaveSUCCESS());
-
+                goToClasses();
+                
             }
           });
     }
@@ -117,6 +118,8 @@ const saveMasterClass = (key, data, dispatch) => {
             } else {
                 
                 dispatch(setSaveSUCCESS());
+                goToClasses();
+                
 
             }
           });

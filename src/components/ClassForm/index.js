@@ -20,6 +20,7 @@ const ClassForm = (props) => {
 
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
+    const [isSubmit, setisSubmit] = useState(false);
 
     
     const uploading = useSelector(state => state.app.uploading);
@@ -40,15 +41,13 @@ const ClassForm = (props) => {
     }, [id]);
 
 
-    React.useEffect(() => {
-      if  (!uploading && !error) {
-        //props.history.push(`/classes`)
-      }
-
-    }, [uploading]);
+    const goToClasses = () => {
+        props.history.push(`/classes`)
+    };
 
     const onSubmit = (values) => {
 
+        setisSubmit(true);
         dispatch(setSaveRequest());
 
         const addFiles = values.images.filter((item)=>{return !item.del && item.local}).map((item) => {return {filename:item.key, file:item.file}})
@@ -62,7 +61,7 @@ const ClassForm = (props) => {
             
         };
 
-        dispatch(saveMasterClass(Data,  addFiles, removeFiles, data?id:''));
+        dispatch(saveMasterClass(Data,  addFiles, removeFiles, data?id:'', goToClasses));
 
     }
 
