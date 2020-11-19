@@ -7,8 +7,8 @@ class HeaderComponent extends Component {
 
         return (
             
-            <header>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <header id = 'header'>
+                <nav  className="navbar navbar-expand-lg navbar-light bg-light">
                     <ul className="navbar-nav">
                         <li><Link className="nav-link" to="/classes">Мастер классы</Link></li>
                     </ul>
