@@ -76,6 +76,9 @@ const ClassForm = (props) => {
 
                  {uploading &&   <h5>...идет загрузка</h5>}
 
+                 {uploading && <ProgressBar now={60} />}
+
+
                 <Formik
                     initialValues={{
                         NameMasterClass: data ? data.NameMasterClass:'', 
