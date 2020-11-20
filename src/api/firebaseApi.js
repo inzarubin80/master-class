@@ -98,6 +98,7 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
         ref.set(data, function(error) {
             if (error) {
                 
+                console.log('error', error.message);
                 dispatch(setSaveFailure(error));
                 
             } else {
@@ -113,7 +114,7 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
         db.ref('masterClass').push(data, function(error) {
             if (error) {
                 
-                dispatch(setSaveFailure(error));
+                dispatch(setSaveFailure(error.message));
 
             } else {
                 
