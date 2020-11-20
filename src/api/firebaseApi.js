@@ -73,9 +73,9 @@ export async function createMasterClass(data, addFiles, removeFiles, key, dispat
 
                     }
 
-                }).catch( );
+                }).catch( (error) =>{dispatch(setSaveFailure(error.message))});
 
-            });
+            }).catch( (error) =>{dispatch(setSaveFailure(error.message))});
 
         }
     }

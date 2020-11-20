@@ -77,7 +77,9 @@ const ClassForm = (props) => {
                  {uploading &&   <h5>...идет загрузка</h5>}
 
                  {uploading && <ProgressBar now={60} />}
-
+                
+                 {error &&  <h5> Ошибка {error} </h5>}
+                 
 
                 <Formik
                     initialValues={{
