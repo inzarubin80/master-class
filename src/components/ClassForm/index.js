@@ -38,7 +38,7 @@ const ClassForm = (props) => {
         center: [56.009097, 37.472180],
         zoom: 13,
     };
-    
+
     const coordinates = [
         [56.009097, 37.472180]
     ];
@@ -104,13 +104,10 @@ const ClassForm = (props) => {
             <div className="container">
 
                 <h3>Мастер класс</h3>
-               
-                {uploading && <h5>...идет загрузка</h5>}                         
+
+                {uploading && <h5>...идет загрузка</h5>}
                 {error && <Alert variant={'danger'}>{error}</Alert>}
 
-                <button className="btn btn-primary btn-lg btn-block" type="submit">
-                    Опубликовать 
-                </button>
 
 
                 <Formik
@@ -128,6 +125,12 @@ const ClassForm = (props) => {
                     {
                         (props) => (
                             <Form>
+
+
+                                <button className="btn btn-primary btn-lg btn-block" type="submit">
+                                    Опубликовать
+                </button>
+
                                 <ErrorMessage name="description" component="div"
                                     className="alert alert-warning" />
                                 <ErrorMessage name="targetDate" component="div"
@@ -157,14 +160,14 @@ const ClassForm = (props) => {
                                 </fieldset>
 
                                 <fieldset className="form-group">
-                                <label>Место проведения</label>
-                                <YMaps>
+                                    <label>Место проведения</label>
+                                    <YMaps>
 
 
-                                    <Map defaultState={mapData}>
-                                        {coordinates.map(coordinate => <Placemark geometry={coordinate} />)}
-                                    </Map>
-                                </YMaps>
+                                        <Map defaultState={mapData}>
+                                            {coordinates.map(coordinate => <Placemark geometry={coordinate} />)}
+                                        </Map>
+                                    </YMaps>
 
                                 </fieldset>
 
@@ -190,37 +193,37 @@ const ClassForm = (props) => {
 
 
                                 </div>
-                              
-                                    
+
+
                                 <Slider {...settings}>
-                                {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
+                                    {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
 
-                                    <img src={item.src} style={divStyle} className="card-img-top" />
-                                    <button  type="button" className="btn btn-secondary btn-lg btn-block" onClick={() => {
-                                        console.log(item.key)
+                                        <img src={item.src} style={divStyle} className="card-img-top" />
+                                        <button type="button" className="btn btn-secondary btn-lg btn-block" onClick={() => {
+                                            console.log(item.key)
 
-                                        props.setFieldValue("images", props.values.images.map((item_) => {
+                                            props.setFieldValue("images", props.values.images.map((item_) => {
 
-                                            if (item_.key == item.key) {
-                                                return { ...item_, del: true }
+                                                if (item_.key == item.key) {
+                                                    return { ...item_, del: true }
+                                                }
+
+                                                else {
+                                                    return item_;
+                                                }
                                             }
-
-                                            else {
-                                                return item_;
-                                            }
-                                        }
-                                        )
-                                        );
+                                            )
+                                            );
 
 
-                                    }}>Удалить картинку</button>
+                                        }}>Удалить картинку</button>
 
-                                </div>))}
+                                    </div>))}
                                 </Slider>
-                        
 
 
-                              
+
+
                             </Form>
                         )
                     }
