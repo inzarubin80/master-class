@@ -4,7 +4,7 @@ import { saveMasterClass } from '../../redux/app/appActions'
 import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
 import {setSaveRequest} from '../../redux/app/appActions' 
-import { Spinner, ProgressBar } from 'react-bootstrap';
+import { Alert, ProgressBar } from 'react-bootstrap';
 import { db } from '../../firebase';
 
 
@@ -78,7 +78,9 @@ const ClassForm = (props) => {
 
                  {uploading && <ProgressBar now={60} />}
                 
-                 {error &&  <h5> Ошибка {error} </h5>}
+                 {error &&  <Alert  variant={'danger'}>
+                 {error}
+                    </Alert>}
                  
 
                 <Formik

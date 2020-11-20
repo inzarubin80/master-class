@@ -99,7 +99,7 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
             if (error) {
                 
                 console.log('error', error.message);
-                dispatch(setSaveFailure(error));
+                dispatch(setSaveFailure(error.message));
                 
             } else {
                 
