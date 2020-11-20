@@ -3,8 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { saveMasterClass } from '../../redux/app/appActions'
 import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
-import {setSaveRequest} from '../../redux/app/appActions' 
-import { Alert, ProgressBar } from 'react-bootstrap';
+import { setSaveRequest } from '../../redux/app/appActions'
+import { Alert, ProgressBar, Spinner} from 'react-bootstrap';
 import { db } from '../../firebase';
 
 
@@ -20,52 +20,56 @@ const ClassForm = (props) => {
 
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
-    const [isSubmit, setisSubmit] = useState(false);
+ 
 
-    
+
     const uploading = useSelector(state => state.app.uploading);
     const error = useSelector(state => state.app.error);
 
 
     React.useEffect(() => {
 
-        if (id !==-1){
-            db.ref('masterClass/' + id ).once('value').then(function(snapshot) {
-                
+        if (id !== -1) {
+            db.ref('masterClass/' + id).once('value').then(function (snapshot) {
+
                 const val = snapshot.val();
                 console.log('val', val);
                 setData(val);
 
-              });     
+            });
         }
     }, [id]);
 
 
+
+ 
     const goToClasses = () => {
         props.history.push(`/classes`)
     };
 
     const onSubmit = (values) => {
 
-        setisSubmit(true);
+        if (uploading) {
+            return;
+        }
         dispatch(setSaveRequest());
 
-        const addFiles = values.images.filter((item)=>{return !item.del && item.local}).map((item) => {return {filename:item.key, file:item.file}})
-        const removeFiles = values.images.filter((item)=>{return item.del && !item.local}).map((item) => {return {filename:item.key}})
-        
+        const addFiles = values.images.filter((item) => { return !item.del && item.local }).map((item) => { return { filename: item.key, file: item.file } })
+        const removeFiles = values.images.filter((item) => { return item.del && !item.local }).map((item) => { return { filename: item.key } })
+
         const Data = {
             NameMasterClass: values.NameMasterClass,
             DescriptionMasterClass: values.DescriptionMasterClass,
-            DateMasterClass: values.DateMasterClass?values.DateMasterClass:'',
-            images: values.images.filter((item)=>{return !item.del}).map((item) => {return {filename:item.key, src:item.src}})
-            
+            DateMasterClass: values.DateMasterClass ? values.DateMasterClass : '',
+            images: values.images.filter((item) => { return !item.del }).map((item) => { return { filename: item.key, src: item.src } })
+
         };
 
-        dispatch(saveMasterClass(Data,  addFiles, removeFiles, data?id:'', goToClasses));
+        dispatch(saveMasterClass(Data, addFiles, removeFiles, data ? id : '', goToClasses));
 
     }
 
-   // console.log('data', data);
+    // console.log('data', data);
 
     return (
         <div>
@@ -74,20 +78,20 @@ const ClassForm = (props) => {
 
                 <h3>Мастер класс</h3>
 
-                 {uploading &&   <h5>...идет загрузка</h5>}
+                {uploading && <h5>...идет загрузка</h5>}
 
-                 {uploading && <ProgressBar now={60} />}
-                
-                 {error &&  <Alert  variant={'danger'}>
-                 {error}
-                    </Alert>}
-                 
+                {uploading && <ProgressBar now={100} />}
+
+                {error && <Alert variant={'danger'}>
+                    {error}
+                </Alert>}
+
 
                 <Formik
                     initialValues={{
-                        NameMasterClass: data ? data.NameMasterClass:'', 
-                        DescriptionMasterClass: data?data.DescriptionMasterClass:'', 
-                        images: (data&&data.images)?data.images.map((item)=>{return {file:'', src:item.src, key: item.filename, del: false, local:false} }):[]
+                        NameMasterClass: data ? data.NameMasterClass : '',
+                        DescriptionMasterClass: data ? data.DescriptionMasterClass : '',
+                        images: (data && data.images) ? data.images.map((item) => { return { file: '', src: item.src, key: item.filename, del: false, local: false } }) : []
                     }}
                     onSubmit={onSubmit}
                     validateOnChange={false}
@@ -135,7 +139,7 @@ const ClassForm = (props) => {
 
                                         for (let i = 0; i < event.currentTarget.files.length; i++) {
 
-                                            images_.unshift({ file: event.currentTarget.files[i], src: URL.createObjectURL(event.currentTarget.files[i]), key: uuid(), del: false, local:true });
+                                            images_.unshift({ file: event.currentTarget.files[i], src: URL.createObjectURL(event.currentTarget.files[i]), key: uuid(), del: false, local: true });
 
                                         }
 
@@ -149,7 +153,7 @@ const ClassForm = (props) => {
                                 </div>
 
 
-                                {props.values.images.filter((item)=>{return !item.del}).map((item, index) => (<li key={item.key} className="form-group">
+                                {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<li key={item.key} className="form-group">
 
                                     <img src={item.src} style={divStyle} className="img-thumbnail mt-2" />
                                     <button className="btn btn-success" onClick={() => {
@@ -173,11 +177,13 @@ const ClassForm = (props) => {
 
                                 </li>))}
 
+                                <button className="btn btn-success" type="submit">
 
-
-
-
-                                <button className="btn btn-success" type="submit">Save</button>
+                                    Опубликовать
+                                    {<Spinner animation="border" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </Spinner>}
+                                </button>
                             </Form>
                         )
                     }

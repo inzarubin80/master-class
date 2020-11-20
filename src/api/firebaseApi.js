@@ -28,6 +28,17 @@ export function initAuth(onAuth) {
 }
 
 
+const  setfailure = (dispatch, err) =>
+{
+
+    dispatch(setSaveFailure(err));
+
+    setTimeout(() => {
+        dispatch(setSaveFailure('')); 
+    }, 3000);
+
+
+}
 
 export async function createMasterClass(data, addFiles, removeFiles, key, dispatch, goToClasses) {
     
@@ -73,9 +84,9 @@ export async function createMasterClass(data, addFiles, removeFiles, key, dispat
 
                     }
 
-                }).catch( (error) =>{dispatch(setSaveFailure(error.message))});
+                }).catch( (error) =>{setfailure(dispatch, error.message)});
 
-            }).catch( (error) =>{dispatch(setSaveFailure(error.message))});
+            }).catch( (error) =>{setfailure(dispatch, error.message)});
 
         }
     }
@@ -99,8 +110,8 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
             if (error) {
                 
                 console.log('error', error.message);
-                dispatch(setSaveFailure(error.message));
-                
+              //  dispatch(setSaveFailure(error.message));
+                setfailure(dispatch, error.message)
             } else {
                 
                 dispatch(setSaveSUCCESS());
@@ -114,8 +125,8 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
         db.ref('masterClass').push(data, function(error) {
             if (error) {
                 
-                dispatch(setSaveFailure(error.message));
-
+              //  dispatch(setSaveFailure(error.message));
+                setfailure(dispatch, error.message)
             } else {
                 
                 dispatch(setSaveSUCCESS());
