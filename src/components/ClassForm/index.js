@@ -4,9 +4,9 @@ import { saveMasterClass } from '../../redux/app/appActions'
 import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSaveRequest } from '../../redux/app/appActions'
-import { Alert, ProgressBar, Spinner} from 'react-bootstrap';
+import { Alert, ProgressBar, Spinner } from 'react-bootstrap';
 import { db } from '../../firebase';
-
+import { YMaps, Map } from 'react-yandex-maps';
 
 const divStyle = {
     maxWidth: '540px',
@@ -20,7 +20,7 @@ const ClassForm = (props) => {
 
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
- 
+
 
 
     const uploading = useSelector(state => state.app.uploading);
@@ -42,7 +42,7 @@ const ClassForm = (props) => {
 
 
 
- 
+
     const goToClasses = () => {
         props.history.push(`/classes`)
     };
@@ -107,6 +107,8 @@ const ClassForm = (props) => {
                                 <ErrorMessage name="targetDate" component="div"
                                     className="alert alert-warning" />
 
+
+                             
                                 <fieldset className="form-group">
                                     <label>Наименование</label>
                                     <Field className="form-control" type="text" name="NameMasterClass" />
@@ -128,6 +130,12 @@ const ClassForm = (props) => {
                                     <Field className="form-control" type="number" name="numberSeats" />
                                 </fieldset>
 
+                                <YMaps>
+                                    <div>
+                                       Место проведения.
+                                       <Map defaultState={{ center: [55.75, 37.57], zoom: 9 }} />
+                                    </div>
+                                </YMaps>
 
                                 <div className="form-group">
 
