@@ -6,12 +6,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setSaveRequest } from '../../redux/app/appActions'
 import { Alert, ProgressBar, Spinner } from 'react-bootstrap';
 import { db } from '../../firebase';
-import { YMaps, Map } from 'react-yandex-maps';
+import { YMaps, Map, Placemark } from 'react-yandex-maps';
 
 const divStyle = {
     maxWidth: '540px',
     minWidth: '500px'
 };
+
+
 
 const ClassForm = (props) => {
 
@@ -26,6 +28,15 @@ const ClassForm = (props) => {
     const uploading = useSelector(state => state.app.uploading);
     const error = useSelector(state => state.app.error);
 
+
+    const mapData = {
+        center: [56.009097, 37.472180],
+        zoom: 13,
+    };
+    
+    const coordinates = [
+        [56.009097, 37.472180]
+    ];
 
     React.useEffect(() => {
 
@@ -108,7 +119,7 @@ const ClassForm = (props) => {
                                     className="alert alert-warning" />
 
 
-                             
+
                                 <fieldset className="form-group">
                                     <label>Наименование</label>
                                     <Field className="form-control" type="text" name="NameMasterClass" />
@@ -130,12 +141,17 @@ const ClassForm = (props) => {
                                     <Field className="form-control" type="number" name="numberSeats" />
                                 </fieldset>
 
+                                <fieldset className="form-group">
+                                <label>Место проведения</label>
                                 <YMaps>
-                                    <div>
-                                       Место проведения.
-                                       <Map defaultState={{ center: [55.75, 37.57], zoom: 9 }} />
-                                    </div>
+
+
+                                    <Map defaultState={mapData}>
+                                        {coordinates.map(coordinate => <Placemark geometry={coordinate} />)}
+                                    </Map>
                                 </YMaps>
+
+                                </fieldset>
 
                                 <div className="form-group">
 
