@@ -14,8 +14,8 @@ import "slick-carousel/slick/slick-theme.css";
 
 
 const divStyle = {
-    maxWidth: '35%',
-    minWidth: '35%'
+    maxWidth: '90%',
+    minWidth: '90%'
 };
 
 
@@ -185,7 +185,7 @@ const ClassForm = (props) => {
 
 
                                 </div>
-                                <div>
+                              
                                     
                                 <Slider {...settings}>
                                 {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
@@ -212,7 +212,7 @@ const ClassForm = (props) => {
 
                                 </div>))}
                                 </Slider>
-                                </div>
+                        
 
 
                                 {uploading && <h5>...идет загрузка</h5>}
@@ -223,7 +223,7 @@ const ClassForm = (props) => {
                                     {error}
                                 </Alert>}
 
-                                
+
                                 <button className="btn btn-primary btn-lg btn-block" type="submit">
 
                                     Опубликовать мастер класс
