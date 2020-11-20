@@ -104,8 +104,13 @@ const ClassForm = (props) => {
             <div className="container">
 
                 <h3>Мастер класс</h3>
-
                
+                {uploading && <h5>...идет загрузка</h5>}                         
+                {error && <Alert variant={'danger'}>{error}</Alert>}
+
+                <button className="btn btn-primary btn-lg btn-block" type="submit">
+                    Опубликовать 
+                </button>
 
 
                 <Formik
@@ -191,7 +196,7 @@ const ClassForm = (props) => {
                                 {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
 
                                     <img src={item.src} style={divStyle} className="card-img-top" />
-                                    <button  type="button" className="btn btn-outline-danger" onClick={() => {
+                                    <button  type="button" className="btn btn-secondary btn-lg btn-block" onClick={() => {
                                         console.log(item.key)
 
                                         props.setFieldValue("images", props.values.images.map((item_) => {
@@ -215,20 +220,7 @@ const ClassForm = (props) => {
                         
 
 
-                                {uploading && <h5>...идет загрузка</h5>}
-
-                                {uploading && <ProgressBar now={100} />}
-
-                                {error && <Alert variant={'danger'}>
-                                    {error}
-                                </Alert>}
-
-
-                                <button className="btn btn-primary btn-lg btn-block" type="submit">
-
-                                    Опубликовать мастер класс
-                                   
-                                </button>
+                              
                             </Form>
                         )
                     }
