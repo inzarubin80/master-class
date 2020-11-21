@@ -4,7 +4,7 @@ import { saveMasterClass } from '../../redux/app/appActions'
 import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSaveRequest } from '../../redux/app/appActions'
-import { Alert, ProgressBar, Spinner } from 'react-bootstrap';
+import { Alert, ProgressBar, Spinner, Button  } from 'react-bootstrap';
 import { db } from '../../firebase';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
 
@@ -159,17 +159,7 @@ const ClassForm = (props) => {
                                     <Field className="form-control" type="number" name="numberSeats" />
                                 </fieldset>
 
-                                <fieldset className="form-group">
-                                    <label>Место проведения</label>
-                                    <YMaps>
-
-
-                                        <Map defaultState={mapData}>
-                                            {coordinates.map(coordinate => <Placemark geometry={coordinate} />)}
-                                        </Map>
-                                    </YMaps>
-
-                                </fieldset>
+                              
 
                                 <div className="form-group">
 
@@ -199,7 +189,7 @@ const ClassForm = (props) => {
                                     {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
 
                                         <img src={item.src} style={divStyle} className="card-img-top" />
-                                        <button type="button" className="btn btn-secondary btn-lg btn-block" onClick={() => {
+                                        <Button type="button" variant="outline-danger" onClick={() => {
                                             console.log(item.key)
 
                                             props.setFieldValue("images", props.values.images.map((item_) => {
@@ -216,12 +206,23 @@ const ClassForm = (props) => {
                                             );
 
 
-                                        }}>Удалить картинку</button>
+                                        }}>Удалить картинку</Button>
 
                                     </div>))}
                                 </Slider>
 
 
+                                <fieldset className="form-group">
+                                    <label>Место проведения</label>
+                                    <YMaps>
+
+
+                                        <Map defaultState={mapData}>
+                                            {coordinates.map(coordinate => <Placemark geometry={coordinate} />)}
+                                        </Map>
+                                    </YMaps>
+
+                                </fieldset>
 
 
                             </Form>
