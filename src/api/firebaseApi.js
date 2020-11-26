@@ -106,11 +106,10 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
 
         console.log('ref', ref);
 
-        ref.set(data, function(error) {
+        ref.set({basicData:data}, function(error) {
             if (error) {
                 
                 console.log('error', error.message);
-              //  dispatch(setSaveFailure(error.message));
                 setfailure(dispatch, error.message)
             } else {
                 
@@ -122,11 +121,9 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
     }
     else {
 
-        db.ref('masterClass').push(data, function(error) {
+        db.ref('masterClass').push({basicData:data}, function(error) {
             if (error) {
-                
-              //  dispatch(setSaveFailure(error.message));
-                setfailure(dispatch, error.message)
+                    setfailure(dispatch, error.message)
             } else {
                 
                 dispatch(setSaveSUCCESS());
@@ -136,6 +133,38 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
             }
           });
     }
+}
+
+
+export const masterClassReservation = (key, uid) => {
+
+    const ref = db.ref('masterClass/' + key);
+    
+    ref.transaction((masterClass) => {
+      if (masterClass) {
+        if (masterClass.reservation && masterClass.reservation[uid]) {
+            masterClass.reservation[uid] = null;
+        } else {
+        
+          
+          if (!masterClass.reservation) {
+            masterClass.reservation = {};
+          }
+    
+
+          if (Object.keys(masterClass.reservation).length < masterClass.basicData.numberSeats)
+          {
+           
+            console.log("masterClass.numberSeats", masterClass.numberSeats);
+            masterClass.reservation[uid] = true;
+          
+        }
+         
+
+        }
+      }
+      return masterClass;
+    });
 }
 
 

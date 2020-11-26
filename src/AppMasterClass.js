@@ -1,9 +1,8 @@
 import React from 'react'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-
 import HeaderComponent from './components/HeaderComponent'
 import ListMasterClasses from './components/ListMasterClasses'
-
+import ScreenMasterClass from './components/ScreenMasterClass'
 import ClassForm from './components/ClassForm'
 
 
@@ -29,7 +28,11 @@ const MasterClass = ()=> {
 
 
                             <Route path="/login" component={Auth}/>
-                            <Route path="/class/:id" component={ClassForm}/>
+                      
+                            <Route path="/classes/:id" component={ScreenMasterClass}/>
+
+                            <Route path="/change/:id" component={ClassForm}/>
+                            
                               
                         </Switch>
                       

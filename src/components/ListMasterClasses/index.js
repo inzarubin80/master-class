@@ -3,8 +3,7 @@ import MasterСlass from '../MasterСlass';
 import { db } from '../../firebase';
 import useInfiniteScroll from "./useInfiniteScroll";
 import 'react-virtualized/styles.css'; // only needs to be imported once
-
-
+import {masterClassReservation} from '../../api/firebaseApi';
 
 const ListMasterClasses = (props) => {
 
@@ -55,6 +54,8 @@ const ListMasterClasses = (props) => {
         }
         else {
 
+            
+
             refMasterClass.orderByKey().limitToLast(3).on('child_added', (childSnapshot, prevChildKey) => {
 
 
@@ -71,39 +72,54 @@ const ListMasterClasses = (props) => {
 
     useEffect(() => {
 
-        if (!data.length) {
-
-            fetchMoreListItems();
-        }
-    });
+       fetchMoreListItems();
+        
+    }, []);
 
     const updateMasterClassClicked = (id) => {
-       props.history.push(`/class/${id}`)        
+       props.history.push(`/change/${id}`)        
     }
+
+    const masterСlassReserve = (id) => {
+        
+        console.log(1+"1");
+        console.log("1" + 1);
+        
+        console.log(id);
+        masterClassReservation(id, "Зарубин")
+
+     }
+
+     const masterСlassViewing = (id) =>{
+        props.history.push(`/classes/${id}`);
+    }
+
 
     console.log(data);
 
     return (<div >
 
         <div className="ListMasterClasses">
-            <button className="btn btn-success" onClick={() => { props.history.push(`/class/-1`) }}>Добавить</button>
+            <button className="btn btn-success" onClick={() => { props.history.push(`/change/-1`) }}>Добавить</button>
         </div>
 
 
         {data.map((item, index) => (<MasterСlass
         
-            key = {item.id}
-
-          NameMasterClass={item.NameMasterClass}
-        
-          ImagesMasterClass = {item.ImgMasterClass}
-
+        key = {item.id}
+          NameMasterClass={item.basicData.NameMasterClass}
+          
           updateMasterClassClicked = {()=> updateMasterClassClicked(item.id)}
+         
+          masterСlassViewing = {()=> masterСlassViewing(item.id)}
 
-        
-          DescriptionMasterClass={item.DescriptionMasterClass}
+          masterСlassReserve = {()=> masterСlassReserve(item.id)}
 
-          images = {item.images}
+          DescriptionMasterClass={item.basicData.DescriptionMasterClass}
+          
+          
+          DateMasterClass={item.basicData.DateMasterClass}
+          images = {item.basicData.images}
         />))
 
         }

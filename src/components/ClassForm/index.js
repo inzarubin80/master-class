@@ -27,9 +27,6 @@ const ClassForm = (props) => {
 
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
-
-
-
     const uploading = useSelector(state => state.app.uploading);
     const error = useSelector(state => state.app.error);
 
@@ -88,6 +85,9 @@ const ClassForm = (props) => {
             NameMasterClass: values.NameMasterClass,
             DescriptionMasterClass: values.DescriptionMasterClass,
             DateMasterClass: values.DateMasterClass ? values.DateMasterClass : '',
+            
+            numberSeats: values.numberSeats ? values.numberSeats : 0,
+            
             images: values.images.filter((item) => { return !item.del }).map((item) => { return { filename: item.key, src: item.src } })
 
         };
@@ -95,8 +95,6 @@ const ClassForm = (props) => {
         dispatch(saveMasterClass(Data, addFiles, removeFiles, data ? id : '', goToClasses));
 
     }
-
-    // console.log('data', data);
 
     return (
         <div>
@@ -112,9 +110,11 @@ const ClassForm = (props) => {
 
                 <Formik
                     initialValues={{
-                        NameMasterClass: data ? data.NameMasterClass : '',
-                        DescriptionMasterClass: data ? data.DescriptionMasterClass : '',
-                        images: (data && data.images) ? data.images.map((item) => { return { file: '', src: item.src, key: item.filename, del: false, local: false } }) : []
+                        NameMasterClass: data ? data.basicData.NameMasterClass : '',
+                        DescriptionMasterClass: data ? data.basicData.DescriptionMasterClass : '',
+                        images: (data && data.basicData.images) ? data.basicData.images.map((item) => { return { file: '', src: item.src, key: item.filename, del: false, local: false } }) : [],
+                        numberSeats:data ? data.basicData.numberSeats : '',
+                   
                     }}
                     onSubmit={onSubmit}
                     validateOnChange={false}
@@ -129,7 +129,7 @@ const ClassForm = (props) => {
 
                                 <button className="btn btn-primary btn-lg btn-block" type="submit">
                                     Опубликовать
-                </button>
+                                </button>
 
                                 <ErrorMessage name="description" component="div"
                                     className="alert alert-warning" />
@@ -146,7 +146,8 @@ const ClassForm = (props) => {
 
                                 <fieldset className="form-group">
                                     <label>Описание</label>
-                                    <Field className="form-control" type="text" name="DescriptionMasterClass" />
+                                    <Field className="form-control" type="text" name="DescriptionMasterClass" component="textarea"/>
+                                    
                                 </fieldset>
 
                                 <fieldset className="form-group">
@@ -159,7 +160,6 @@ const ClassForm = (props) => {
                                     <Field className="form-control" type="number" name="numberSeats" />
                                 </fieldset>
 
-                              
 
                                 <div className="form-group">
 

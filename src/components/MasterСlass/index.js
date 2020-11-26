@@ -10,7 +10,7 @@ const MasterClasses = (props) => {
 
     const settings = {
         dots: true,
-        lazyLoad: true,
+        lazyLoad: false,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
@@ -21,34 +21,30 @@ const MasterClasses = (props) => {
     return (
 
 
-        <div className="MasterClasses">
+        <div className="MasterClasses" onClick={props.masterСlassViewing}>
 
 
-            <div className="card" >
+            <div className="card">
 
-                <div className="card-header">
-                    {props.NameMasterClass}
-                </div>
+                {(props.images && props.images.length) && <img className="card-img-top" src={props.images[0].src} alt="Card image cap" />}
 
-
-                <Slider {...settings}>
-
-                    {(props.images && props.images.length) && props.images.map((item) => (<div key={item.src}> <img className="card-img-top" src={item.src} alt="Card image cap" /> </div>))}
-
-                </Slider>
+                <h5 className="card-title">{props.NameMasterClass}</h5>
+                <p className="card-text">{props.DescriptionMasterClass}</p>
 
 
+                <ul className="list-group list-group-flush">
 
-                <div className="card-body">
+                    <li className="list-group-item">Цена: 1000</li>
+                    <li className="list-group-item">Дата: {props.DateMasterClass}</li>
+                </ul>
 
-                    <p className="card-text">{props.DescriptionMasterClass}</p>
-
-                </div>
-
-                <button type="submit" className="btn btn-primary btn-block" onClick={props.updateMasterClassClicked}>Изменить</button>
-
+                
 
             </div>
+
+
+            <button type="submit" className="btn btn-primary" onClick={props.updateMasterClassClicked}>Изменить</button>
+            
 
         </div>
     );
