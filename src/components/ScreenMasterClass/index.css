@@ -1,65 +1,22 @@
-html,
-body {
-  height: 100%;
+.masterClass {
+
+ /* max-width: 35%;
+  min-width: 35%;
+*/
+display: flex;
+text-align: center;
 }
 
-.slick-list, .slick-track { touch-action:pan-y; }
 
+.img_{
 
-
-
-.MasterClasses {
-
-
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  padding-top: 40px;
-
-  cursor:pointer;
-  
-  
+ /* max-width: 90%;*/
 
 }
-
-.card{
-  
-  display: flex;
-
-  /*max-width: 95%;
- /* min-width: 95%;
-
-  /*max-height: 100px;*/
-  /*min-height: 1%;*/
-
-
-
-
+.card-img-top {
+ 
+  /*max-width: 90%;
+ min-width: 90%;
+*/
 }
-
-.aws-btn {
-
-  --slider-height-percentage: 60%;
-  --slider-transition-duration: 700ms;
-  --organic-arrow-thickness: 4px;
-  --organic-arrow-border-radius: 0px;
-  --organic-arrow-height: 40px;
-  --organic-arrow-color: #d5d5d5;
-  --control-button-width: 10%;
-  --control-button-height: 25%;
-  --control-button-background: transparent;
-  --control-bullet-color: #fafafa;
-  --control-bullet-active-color: #d5d5d5;
-  --loader-bar-color: #851515;
-  --loader-bar-height: 6px;
-  }
-  
-.card-img-top{
-  /*padding: 10px;*/
-}
+.slick-prev { left: 6% !important; z-index: 1; } .slick-next { right: 6% !important; z-index: 1; }

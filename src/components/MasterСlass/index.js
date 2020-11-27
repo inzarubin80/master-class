@@ -19,33 +19,16 @@ const MasterClasses = (props) => {
     };
 
     return (
-
-
-        <div className="MasterClasses" onClick={props.masterСlassViewing}>
-
-
-            <div className="card">
-
-                {(props.images && props.images.length) && <img className="card-img-top" src={props.images[0].src} alt="Card image cap" />}
-
-                <h5 className="card-title">{props.NameMasterClass}</h5>
-                <p className="card-text">{props.DescriptionMasterClass}</p>
-
-
-                <ul className="list-group list-group-flush">
-
-                    <li className="list-group-item">Цена: 1000</li>
-                    <li className="list-group-item">Дата: {props.DateMasterClass}</li>
-                </ul>
-
-                
-
+        <div className="MasterClasses">
+            <div className="card" onClick={props.masterСlassViewing}>
+            <div class="card-header">
+            {props.NameMasterClass}
             </div>
 
-
-            <button type="submit" className="btn btn-primary" onClick={props.updateMasterClassClicked}>Изменить</button>
-            
-
+                {(props.images && props.images.length) && <img className="card-img-top" src={props.images[0].src} alt="Card image cap" />}
+              
+            </div>
+        <button type="submit" className="btn btn-primary" onClick={props.updateMasterClassClicked}>Изменить</button>
         </div>
     );
 }
