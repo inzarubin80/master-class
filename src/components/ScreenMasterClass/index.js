@@ -94,11 +94,12 @@ const ScreenMasterClass = (props) => {
 
     </Slider>
 
+    <a href="#" className="btn btn-primary">Зарезервировать</a>
 
     <div className="card-body">
     <h5 className="card-title">{data.basicData.NameMasterClass}</h5>
     <p className="card-text">{data.basicData.DescriptionMasterClass}</p>
-    <a href="#" className="btn btn-primary">Зарезервировать</a>
+   
     </div>
 
 
