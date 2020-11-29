@@ -136,7 +136,7 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
 }
 
 
-export const masterСlassAddReserve = (key, uid) => {
+export const masterСlassСhangeReserve = (key, uid) => {
 
     const ref = db.ref('masterClass/' + key);
     

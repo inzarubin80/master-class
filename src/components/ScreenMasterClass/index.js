@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './index.css';
-import { masterСlassAddReserve } from '../../api/firebaseApi';
+import { masterСlassСhangeReserve } from '../../api/firebaseApi';
 import Slider from "react-slick";
 import { MasterClass, createMasterClassFromVal } from "../../model/mastreClass"
 
@@ -54,9 +54,9 @@ const ScreenMasterClass = (props) => {
 
 
 
-    const masterСlassAddReserveHandler = () => {
+    const masterСlassСhangeReserveHandler = () => {
 
-        masterСlassAddReserve(id, props.uid);
+        masterСlassСhangeReserve(id, props.uid);
 
     }
 
@@ -71,7 +71,7 @@ const ScreenMasterClass = (props) => {
 
         </Slider>
 
-        <button className="btn btn-primary" onClick={masterСlassAddReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
+        <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
 
         <div className="card-body">
             <h5 className="card-title">{data.NameMasterClass}</h5>
