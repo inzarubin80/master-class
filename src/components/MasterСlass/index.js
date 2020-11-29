@@ -21,9 +21,16 @@ const MasterClasses = (props) => {
     return (
         <div className="MasterClasses">
             <div className="card" onClick={props.masterСlassViewing}>
-            <div class="card-header">
-            {props.NameMasterClass}
+         
+            <div className="card-header">
+            
+
+             {props.NameMasterClass}
+
+            
+            
             </div>
+
 
                 {(props.images && props.images.length) && <img className="card-img-top" src={props.images[0].src} alt="Card image cap" />}
               

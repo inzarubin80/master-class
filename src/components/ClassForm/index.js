@@ -61,6 +61,15 @@ const ClassForm = (props) => {
                 setData(val);
 
             });
+
+
+            //Выключаем подписку
+        //https://reactjs.org/docs/hooks-effect.html
+        //componentDidMount 
+        return () => {
+            db.ref('masterClass/' + id).off();
+          };
+          
         }
     }, [id]);
 

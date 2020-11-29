@@ -3,7 +3,7 @@ import MasterСlass from '../MasterСlass';
 import { db } from '../../firebase';
 import useInfiniteScroll from "./useInfiniteScroll";
 import 'react-virtualized/styles.css'; // only needs to be imported once
-import {masterClassReservation} from '../../api/firebaseApi';
+
 
 const ListMasterClasses = (props) => {
 
@@ -80,15 +80,6 @@ const ListMasterClasses = (props) => {
        props.history.push(`/change/${id}`)        
     }
 
-    const masterСlassReserve = (id) => {
-        
-        console.log(1+"1");
-        console.log("1" + 1);
-        
-        console.log(id);
-        masterClassReservation(id, "Зарубин")
-
-     }
 
      const masterСlassViewing = (id) =>{
         props.history.push(`/classes/${id}`);
@@ -106,15 +97,14 @@ const ListMasterClasses = (props) => {
 
         {data.map((item, index) => (<MasterСlass
         
-        key = {item.id}
+            key = {item.id}
           NameMasterClass={item.basicData.NameMasterClass}
           
           updateMasterClassClicked = {()=> updateMasterClassClicked(item.id)}
          
           masterСlassViewing = {()=> masterСlassViewing(item.id)}
 
-          masterСlassReserve = {()=> masterСlassReserve(item.id)}
-
+         
           DescriptionMasterClass={item.basicData.DescriptionMasterClass}
           
           

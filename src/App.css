@@ -12,3 +12,4 @@
   justify-content: space-around;
 }
 
+.slick-list, .slick-track { touch-action:pan-y; }

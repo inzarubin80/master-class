@@ -1,119 +1,97 @@
 import React, { useState } from "react";
 
-import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './index.css';
-
+import { masterСlassAddReserve } from '../../api/firebaseApi';
 import Slider from "react-slick";
+import { MasterClass, createMasterClassFromVal } from "../../model/mastreClass"
 
 import { db } from '../../firebase';
+import { connect } from 'react-redux'
 
+const config = {
+    arrows: true,
+    dots: true,
+    infinite: true,
+    speed: 500,
+    autoplay: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    draggable: true
 
-
+};
 
 
 const ScreenMasterClass = (props) => {
 
-
-
-    const SampleNextArrow = (props) => {
-        const { className, style, onClick } = props;
-        return (
-          <div
-            className={className}
-            style={{ ...style, display: "block", background: "red" }}
-            onClick={onClick}
-          />
-        );
-      }
-      
-      const SamplePrevArrow = (props)=> {
-        const { className, style, onClick } = props;
-        return (
-          <div
-            className={className}
-            style={{ ...style, display: "block", background: "green" }}
-            onClick={onClick}
-          />
-        );
-      }
-
-    const config = {
-        arrows: true,
-        dots: true,
-        infinite: true,
-        //centerMode: true,
-        speed: 500,
-        autoplay: false,
-        slidesToShow: 1,
-        slidesToScroll: 1
-        
-
-      };
-
-
-    
-      
-
-
-     
     const [settings, setSettings] = useState(config);
-
-    
     const [id, setId] = useState(props.match.params.id);
-    const [data, setData] = useState({basicData: 
-        {images:[],
-        NameMasterClass:'',
-        DescriptionMasterClass:''}
-    });
-    
+    const [data, setData] = useState(new MasterClass());
+
+
     React.useEffect(() => {
 
-        if (id !== -1) {
-            db.ref('masterClass/' + id).on('value', function (snapshot) {
+        //"Создаем подписку"
+        db.ref('masterClass/' + id).on('value', function (snapshot) {
+            const val = snapshot.val();
+            setData(createMasterClassFromVal(id, val));
+        });
 
-                const val = snapshot.val();
-                console.log('val', val);
-                setData(val);
+        //Выключаем подписку
+        //https://reactjs.org/docs/hooks-effect.html
+        //componentDidMount 
+        return () => {
+            db.ref('masterClass/' + id).off();
+          };
 
-            });
-        }
+
     }, [id]);
 
 
-    if (data)
-    console.log(data.basicData.images);
-
-    return (
 
 
-        <div className="card_">
-        <Slider {...config}>
 
-        {(data.basicData.images && data.basicData.images.length) && data.basicData.images.map((item) => (<div key={item.src}> <img  src={item.src}  className='card-img-top'/> </div>))}
+    const masterСlassAddReserveHandler = () => {
 
-    </Slider>
+        masterСlassAddReserve(id, props.uid);
 
-    <a href="#" className="btn btn-primary">Зарезервировать</a>
+    }
 
-    <div className="card-body">
-    <h5 className="card-title">{data.basicData.NameMasterClass}</h5>
-    <p className="card-text">{data.basicData.DescriptionMasterClass}</p>
-   
+
+    console.log("ScreenMasterClass", id);
+
+
+    return (<div className="card">
+        <Slider {...settings}>
+
+            {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
+
+        </Slider>
+
+        <button className="btn btn-primary" onClick={masterСlassAddReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
+
+        <div className="card-body">
+            <h5 className="card-title">{data.NameMasterClass}</h5>
+            <p className="card-text">{data.DescriptionMasterClass}</p>
+        </div>
+
+
+        <ul className="list-group list-group-flush">
+            <li className="list-group-item">Свободных мет: {data.vacancies}</li>
+            <li className="list-group-item">Цена: 1000</li>
+            <li className="list-group-item">Дата: {data.DateMasterClass}</li>
+        </ul>
+
     </div>
-
-
-    <ul className="list-group list-group-flush">
-
-    <li className="list-group-item">Цена: 1000</li>
-    <li className="list-group-item">Дата: {data.basicData.DateMasterClass}</li>
-    </ul>
-
-    </div>
-
-
 
     );
 }
 
-export default ScreenMasterClass;
+const mapStateToProps = state => {
+    return {
+        uid: state.user.uid
+    }
+}
+
+export default connect(mapStateToProps)(ScreenMasterClass);

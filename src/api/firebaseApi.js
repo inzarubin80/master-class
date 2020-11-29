@@ -136,15 +136,21 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
 }
 
 
-export const masterClassReservation = (key, uid) => {
+export const masterСlassAddReserve = (key, uid) => {
 
     const ref = db.ref('masterClass/' + key);
     
     ref.transaction((masterClass) => {
       if (masterClass) {
+        
         if (masterClass.reservation && masterClass.reservation[uid]) {
+            
+            console.log("Сняли резерв");
+
             masterClass.reservation[uid] = null;
-        } else {
+
+        } 
+        else {
         
           
           if (!masterClass.reservation) {
@@ -155,7 +161,10 @@ export const masterClassReservation = (key, uid) => {
           if (Object.keys(masterClass.reservation).length < masterClass.basicData.numberSeats)
           {
            
-            console.log("masterClass.numberSeats", masterClass.numberSeats);
+            console.log("Установили резерв");
+            console.log("masterClass", masterClass);
+            console.log("masterClass.basicData.numberSeats",  masterClass.basicData.numberSeats);
+        
             masterClass.reservation[uid] = true;
           
         }

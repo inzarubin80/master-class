@@ -5,6 +5,7 @@ const  initialState = {
     username:   '',
     password: '',
     err:'',
+    uid:''
   
 };
 
@@ -15,13 +16,17 @@ export default (state = initialState, action) => {
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                user: action.payload.user
+                user: action.payload.user,
+                uid: action.payload.user.uid,
+                
             };
 
         case LOGIN_LOGOUT:
             return {
                 ...state,
-                user: null
+                user: null,
+                uid:'',
+
             };
 
         
