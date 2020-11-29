@@ -42,6 +42,8 @@ const ScreenMasterClass = (props) => {
         //https://reactjs.org/docs/hooks-effect.html
         //componentDidMount 
         return () => {
+
+            console.log("Отменяем подписку **************** " + id);
             db.ref('masterClass/' + id).off();
           };
 
