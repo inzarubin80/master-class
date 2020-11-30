@@ -56,8 +56,12 @@ const ScreenMasterClass = (props) => {
 
     const masterСlassСhangeReserveHandler = () => {
 
-        masterСlassСhangeReserve(id, props.uid);
-
+        if (!props.uid){
+            props.history.push(`/login`);
+        }
+        else {
+            masterСlassСhangeReserve(id, props.uid);
+        }
     }
 
 
