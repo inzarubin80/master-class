@@ -73,7 +73,7 @@ const ClassForm = (props) => {
 
     React.useEffect(() => {
 
-        if (id !== -1) {
+        if (id != -1) {
            
             db.ref('masterClass/' + id).once('value').then(function (snapshot) {
 
