@@ -4,14 +4,10 @@ import { saveMasterClass } from '../../redux/app/appActions'
 import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSaveRequest } from '../../redux/app/appActions'
-import { Alert, ProgressBar, Spinner, Button  } from 'react-bootstrap';
+import { Alert, ProgressBar, Spinner, Button } from 'react-bootstrap';
 import { db } from '../../firebase';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
-
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
+import { MasterClass, createMasterClassFromVal } from "../../model/mastreClass"
 
 const divStyle = {
     maxWidth: '90%',
@@ -20,13 +16,37 @@ const divStyle = {
 
 
 
+const validateField = (value) => {
+
+    console.log('validateNameMasterClass');
+    let error = '';
+    if (!value) {
+        error = 'Требуется заполнение';
+    }
+    return error;
+}
+
+const  validateForm = (props) => {
+
+    const errors = {};
+
+    if (props.images.filter((item) => { return !item.del }).length===0)
+    {
+        errors.images = "Требуется выбрать файлы";
+    }
+
+    return errors;
+
+}
+
+
 const ClassForm = (props) => {
 
 
     const dispatch = useDispatch();
 
     const [id, setId] = useState(props.match.params.id);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(new MasterClass());
     const uploading = useSelector(state => state.app.uploading);
     const error = useSelector(state => state.app.error);
 
@@ -54,22 +74,30 @@ const ClassForm = (props) => {
     React.useEffect(() => {
 
         if (id !== -1) {
+           
             db.ref('masterClass/' + id).once('value').then(function (snapshot) {
 
+
+                console.log(id);
+                console.log(id !== -1);
                 const val = snapshot.val();
-                console.log('val', val);
-                setData(val);
+
+
+                console.log(val);
+
+
+                setData(createMasterClassFromVal(id,  val));
 
             });
 
 
             //Выключаем подписку
-        //https://reactjs.org/docs/hooks-effect.html
-        //componentDidMount 
-        return () => {
-            db.ref('masterClass/' + id).off();
-          };
-          
+            //https://reactjs.org/docs/hooks-effect.html
+            //componentDidMount 
+            return () => {
+                db.ref('masterClass/' + id).off();
+            };
+
         }
     }, [id]);
 
@@ -94,9 +122,9 @@ const ClassForm = (props) => {
             NameMasterClass: values.NameMasterClass,
             DescriptionMasterClass: values.DescriptionMasterClass,
             DateMasterClass: values.DateMasterClass ? values.DateMasterClass : '',
-            
+
             numberSeats: values.numberSeats ? values.numberSeats : 0,
-            
+
             images: values.images.filter((item) => { return !item.del }).map((item) => { return { filename: item.key, src: item.src } })
 
         };
@@ -115,20 +143,19 @@ const ClassForm = (props) => {
                 {uploading && <h5>...идет загрузка</h5>}
                 {error && <Alert variant={'danger'}>{error}</Alert>}
 
-
-
                 <Formik
                     initialValues={{
-                        NameMasterClass: data ? data.basicData.NameMasterClass : '',
-                        DescriptionMasterClass: data ? data.basicData.DescriptionMasterClass : '',
-                        images: (data && data.basicData.images) ? data.basicData.images.map((item) => { return { file: '', src: item.src, key: item.filename, del: false, local: false } }) : [],
-                        numberSeats:data ? data.basicData.numberSeats : '',
-                   
+                        NameMasterClass: data.NameMasterClass,
+                        DescriptionMasterClass:  data.DescriptionMasterClass,
+                        DateMasterClass:data.DateMasterClass,
+                        images: data.images.map((item) => { return { file: '', src: item.src, key: item.filename, del: false, local: false } }),
+                        numberSeats: data.numberSeats,
+
                     }}
                     onSubmit={onSubmit}
                     validateOnChange={false}
                     validateOnBlur={false}
-                    validate={() => { }}
+                    validate={validateForm}
                     enableReinitialize={true}
                 >
                     {
@@ -146,27 +173,33 @@ const ClassForm = (props) => {
                                     className="alert alert-warning" />
 
 
+                                {console.log('errors',props.errors)}
 
                                 <fieldset className="form-group">
                                     <label>Наименование</label>
-                                    <Field className="form-control" type="text" name="NameMasterClass" />
+                                    <Field className="form-control" type="text" name="NameMasterClass" validate={validateField} />
+                                    {props.errors.NameMasterClass && props.touched.NameMasterClass && <Alert variant={'danger'}>{props.errors.NameMasterClass}</Alert>}
                                 </fieldset>
 
 
                                 <fieldset className="form-group">
                                     <label>Описание</label>
-                                    <Field className="form-control" type="text" name="DescriptionMasterClass" component="textarea"/>
-                                    
+                                    <Field className="form-control" type="text" name="DescriptionMasterClass" component="textarea" validate={validateField} />
+                                    {props.errors.DescriptionMasterClass && props.touched.DescriptionMasterClass && <Alert variant={'danger'}>{props.errors.DescriptionMasterClass}</Alert>}
+
                                 </fieldset>
 
                                 <fieldset className="form-group">
                                     <label>Дата проведения</label>
-                                    <Field className="form-control" type="date" name="DateMasterClass" />
+                                    <Field className="form-control" type="date" name="DateMasterClass" validate={validateField} />
+                                    {props.errors.DateMasterClass && props.touched.DateMasterClass && <Alert variant={'danger'}>{props.errors.DateMasterClass}</Alert>}
                                 </fieldset>
+
 
                                 <fieldset className="form-group">
                                     <label>Количество мест</label>
-                                    <Field className="form-control" type="number" name="numberSeats" />
+                                    <Field className="form-control" type="number" name="numberSeats" validate={validateField} />
+                                    {props.errors.numberSeats && props.touched.numberSeats && <Alert variant={'danger'}>{props.errors.numberSeats}</Alert>}
                                 </fieldset>
 
 
@@ -190,35 +223,37 @@ const ClassForm = (props) => {
                                     }} />
 
 
+                                {props.errors.images && <Alert variant={'danger'}>{props.errors.images}</Alert>}
+
 
                                 </div>
 
 
-                                <Slider {...settings}>
-                                    {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
 
-                                        <img src={item.src} style={divStyle} className="card-img-top" />
-                                        <Button type="button" variant="outline-danger" onClick={() => {
-                                            console.log(item.key)
+                                {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
 
-                                            props.setFieldValue("images", props.values.images.map((item_) => {
+                                    <img src={item.src} style={divStyle} className="card-img-top" />
+                                    <Button type="button" variant="outline-danger" onClick={() => {
+                                        console.log(item.key)
 
-                                                if (item_.key == item.key) {
-                                                    return { ...item_, del: true }
-                                                }
+                                        props.setFieldValue("images", props.values.images.map((item_) => {
 
-                                                else {
-                                                    return item_;
-                                                }
+                                            if (item_.key == item.key) {
+                                                return { ...item_, del: true }
                                             }
-                                            )
-                                            );
+
+                                            else {
+                                                return item_;
+                                            }
+                                        }
+                                        )
+                                        );
 
 
-                                        }}>Удалить картинку</Button>
+                                    }}>Удалить картинку</Button>
 
-                                    </div>))}
-                                </Slider>
+                                </div>))}
+
 
 
                                 <fieldset className="form-group">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import MasterСlass from '../MasterСlass';
+import ListItemMasterСlass from '../ListItemMasterСlass';
 import { db } from '../../firebase';
 import useInfiniteScroll from "./useInfiniteScroll";
 import 'react-virtualized/styles.css'; // only needs to be imported once
@@ -95,7 +95,7 @@ const ListMasterClasses = (props) => {
         </div>
 
 
-        {data.map((item, index) => (<MasterСlass
+        {data.map((item, index) => (<ListItemMasterСlass
         
             key = {item.id}
           NameMasterClass={item.basicData.NameMasterClass}

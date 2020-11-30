@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 
 
-const MasterClasses = (props) => {
+const ListItemMasterСlass = (props) => {
 
     const settings = {
         dots: true,
@@ -40,4 +40,4 @@ const MasterClasses = (props) => {
     );
 }
 
-export default MasterClasses;
+export default ListItemMasterСlass;
