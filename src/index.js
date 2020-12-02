@@ -22,7 +22,7 @@ const logger = store => next => action => {
   return result
 }
 
-const store = createStore(rootReducer, applyMiddleware(thunk, logger));
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 store.dispatch(initAuth());
 

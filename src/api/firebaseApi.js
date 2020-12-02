@@ -5,9 +5,6 @@ import {setSaveFailure, setSaveSUCCESS} from '../redux/app/appActions'
 /* Auth */
 export function logInUser(email, password) {
 
-    console.log(email);
-    console.log(password);
-
     return auth.signInWithEmailAndPassword(email, password);
 }
 
@@ -24,6 +21,8 @@ export function registerUser(email, password) {
 }
 
 export function initAuth(onAuth) {
+
+
     auth.onAuthStateChanged(onAuth);
 }
 
@@ -194,16 +193,3 @@ const remveMasterClassPicture = (fileName) => {
 
 }
 
-
-export function updateTodo(todoId, data) {
-    return db.collection('todos').doc(todoId).update(data)
-        .then(() => ({
-            id: todoId,
-            ...data
-        }));
-}
-
-export function deleteTodo(todoId) {
-    return db.collection('todos').doc(todoId).delete()
-        .then(() => todoId);
-}

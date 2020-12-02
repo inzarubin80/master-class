@@ -20,7 +20,11 @@ export function registerUser(email, password) {
 }
 
 export function initAuth() {
+
   return dispatch => api.initAuth(user => {
+
+    console.log('Внутри авторизации------');
+    
       return user ? dispatch({
           type: LOGIN_SUCCESS,
           payload: {

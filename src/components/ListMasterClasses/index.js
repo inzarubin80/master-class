@@ -56,7 +56,7 @@ const ListMasterClasses = (props) => {
 
             
 
-            refMasterClass.orderByKey().limitToLast(3).on('child_added', (childSnapshot, prevChildKey) => {
+            refMasterClass.orderByKey().limitToLast(50).on('child_added', (childSnapshot, prevChildKey) => {
 
 
                 console.log("Выводим ******" + childSnapshot.key);
