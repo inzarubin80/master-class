@@ -35,7 +35,7 @@ const ListMasterClasses = (props) => {
         if (firstKnownKey) {
 
             
-            refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(2).once('value', function (snapshot) {
+            refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(5).once('value', function (snapshot) {
 
                 let page_ = [];
 
