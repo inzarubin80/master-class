@@ -19,7 +19,10 @@ const ListMasterClasses = (props) => {
 
     function fetchMoreListItems() {
 
-        setIntersecting(false);
+       // setIntersecting(false);
+       
+       setTimeout(() => {setIntersecting(false) }, 1000);
+
 
         console.log('fetchMoreListItems******************************');
 
@@ -126,8 +129,13 @@ const ListMasterClasses = (props) => {
     
         <div className='EndLoader' ref = {ref}>
              
-            {isIntersecting && <h1>...</h1>}
+            
+            {isIntersecting && <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>}
 
+
+           
         </div>
 
     </div>);

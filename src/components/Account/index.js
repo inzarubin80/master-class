@@ -9,7 +9,7 @@ export default function Account() {
 
         <div>
         
-            <h3>Личный кабинет {user.email}</h3>
+            <h5>{user.email}</h5>
             <button type="submit" className="btn btn-primary btn-block" onClick={signOutUser}>Выйти</button>
 
         </div>
