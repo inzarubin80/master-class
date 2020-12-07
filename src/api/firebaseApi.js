@@ -99,7 +99,7 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
     console.log('dispatch',dispatch);
 
 
-    if (key) {
+    if (key && key!='-1') {
 
         const ref = db.ref('masterClass/' + key);
 

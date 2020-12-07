@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import ListItemMasterСlass from '../ListItemMasterСlass';
 import { db } from '../../firebase';
-import useInfiniteScroll from "./useInfiniteScroll";
-import 'react-virtualized/styles.css'; // only needs to be imported once
+//import 'react-virtualized/styles.css'; // only needs to be imported once
+import useIntersect from "./useIntersect";
+
 
 
 const ListMasterClasses = (props) => {
@@ -11,9 +12,16 @@ const ListMasterClasses = (props) => {
 
     const [data, setData] = useState([]);
 
-    const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
+    const ref = useRef();
+
+    const [isIntersecting,  setIntersecting] = useIntersect(ref, "1%");
+
 
     function fetchMoreListItems() {
+
+        setIntersecting(false);
+
+        console.log('fetchMoreListItems******************************');
 
 
         let firstKnownKey;
@@ -22,12 +30,12 @@ const ListMasterClasses = (props) => {
             firstKnownKey = data[data.length - 1].id;
         }
 
-        console.log("начальный ключ  -----------------" + firstKnownKey);
+       
 
         if (firstKnownKey) {
 
-
-            refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(10).once('value', function (snapshot) {
+            
+            refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(2).once('value', function (snapshot) {
 
                 let page_ = [];
 
@@ -37,7 +45,7 @@ const ListMasterClasses = (props) => {
                     let childData = childSnapshot.val();
 
                     if (firstKnownKey !== key) {
-                       console.log("Выводим ******" + childSnapshot.key);
+                    
                        page_.unshift({...childData, id: key});
                     }
                 });
@@ -45,36 +53,38 @@ const ListMasterClasses = (props) => {
                 if (page_.length){
                     setData((prevState) => { return [...prevState, ... page_] });
                 }
-
-                setIsFetching(false);
-                console.log(page_);
                
 
             });
+        
+
         }
         else {
 
             
 
-            refMasterClass.orderByKey().limitToLast(50).on('child_added', (childSnapshot, prevChildKey) => {
+            refMasterClass.orderByKey().limitToLast(2).on('child_added', (childSnapshot, prevChildKey) => {
 
-
-                console.log("Выводим ******" + childSnapshot.key);
+                
                 setData((prevState) => { return [{ ...childSnapshot.val(), id: childSnapshot.key }, ...prevState] });
-                setIsFetching(false);
 
-
+           
             }
             );
         }
 
+
+      
+
     }
 
     useEffect(() => {
-
-       fetchMoreListItems();
         
-    }, []);
+        if (isIntersecting){
+            fetchMoreListItems();
+        }
+    
+    }, [isIntersecting]);
 
     const updateMasterClassClicked = (id) => {
        props.history.push(`/change/${id}`)        
@@ -86,8 +96,7 @@ const ListMasterClasses = (props) => {
     }
 
 
-    console.log(data);
-
+   
     return (<div >
 
         <div className="ListMasterClasses">
@@ -114,7 +123,12 @@ const ListMasterClasses = (props) => {
 
         }
 
-        {/*isFetching && 'Fetching more list items...'*/}
+    
+        <div className='EndLoader' ref = {ref}>
+             
+            {isIntersecting && <h1>...</h1>}
+
+        </div>
 
     </div>);
 
