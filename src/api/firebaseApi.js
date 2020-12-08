@@ -133,11 +133,9 @@ const saveMasterClass = (key, data, dispatch, goToClasses) => {
     }
 }
 
-
 export const masterСlassСhangeReserve = (key, uid) => {
 
     const ref = db.ref('masterClass/' + key);
-
     ref.transaction((masterClass) => {
         if (masterClass) {
 
