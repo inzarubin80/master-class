@@ -1,25 +1,22 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import './index.css';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import useIntersect from "../ListMasterClasses/useIntersect";
 
 
 
 const ListItemMasterСlass = (props) => {
 
-    const settings = {
-        dots: true,
-        lazyLoad: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        initialSlide: 0
-    };
+ 
+   const ref = React.useRef();
+
+   const [isIntersecting] = useIntersect(ref, "1%", true);
+   
+    console.log(props.NameMasterClass);
+    console.log("isIntersecting", isIntersecting);
+    
 
     return (
-        <div className="MasterClasses">
+        <div className="MasterClasses" ref={ref}>
             <div className="card" onClick={props.masterСlassViewing}>
          
             <div className="card-header">
@@ -32,7 +29,7 @@ const ListItemMasterСlass = (props) => {
             </div>
 
 
-                {(props.images && props.images.length) && <img className="card-img-top" src={props.images[0].src} alt="Card image cap" />}
+                {(props.images && props.images.length) && <img className="card-img-top" src={isIntersecting?props.images[0].src:''} alt="Card image cap" />}
               
             </div>
         <button type="submit" className="btn btn-primary" onClick={props.updateMasterClassClicked}>Изменить</button>
