@@ -1,13 +1,19 @@
 import {
     FETCH_SAVE_ClASS_REQUEST,
     FETCH_SAVE_ClASS_FAILURE,
-    FETCH_SAVE_ClASS_SUCCESS
+    FETCH_SAVE_ClASS_SUCCESS,
+    ADD_ClASS_END,
+    ADD_ClASS_START
+
   } from '../types'
 
 
 const initialState = {
+    
     uploading: false, 
-    error: ''
+    error: '',
+    masterClasses:[]
+
    };
 
 export default (state = initialState, action) => {
@@ -24,6 +30,14 @@ export default (state = initialState, action) => {
 
         case FETCH_SAVE_ClASS_FAILURE: {
             return {...state, uploading:false, error:action.payload}   
+        }
+
+        case ADD_ClASS_END: {
+            return {...state, masterClasses:[...state.masterClasses, ...action.payload]}  
+        }
+
+        case ADD_ClASS_START: {
+            return {...state, masterClasses:[...action.payload, ...state.masterClasses]}   
         }
 
         default:

@@ -1,6 +1,8 @@
-export const EDIT_EVENT           = 'APP/EDIT_EVENT';
-export const ADD_EVENT            = 'APP/ADD_EVENT';
-export const DEL_EVENT            = 'APP/DEL_EVENT';
+
+
+export const ADD_ClASS_END              = 'APP/ADD_ClASS_END';
+export const ADD_ClASS_START            = 'APP/ADD_ClASS_START';
+
 
 export const FETCH_SAVE_ClASS_REQUEST      = 'APP/FETCH_SAVE_ClASS_REQUEST';
 export const FETCH_SAVE_ClASS_FAILURE      = 'APP/FETCH_SAVE_ClASS_FAILURE';

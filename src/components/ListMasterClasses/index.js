@@ -2,85 +2,33 @@ import React, { useState, useEffect, useRef } from 'react'
 import ListItemMasterСlass from '../ListItemMasterСlass';
 import { db } from '../../firebase';
 import useIntersect from "./useIntersect";
-import LazyLoad from 'react-lazyload';
+
+import { useSelector, useDispatch } from 'react-redux'
+import {getMasterClass} from '../../redux/app/appActions'
+
 
 
 const ListMasterClasses = (props) => {
 
     const refMasterClass = db.ref('masterClass');
 
-    const [data, setData] = useState([]);
+   // const [data, setData] = useState([]);
+
+    const masterClasses = useSelector(state => state.app.masterClasses);
 
     const ref = useRef();
 
     const [isIntersecting, setIntersecting] = useIntersect(ref, "1%");
 
-
-    function fetchMoreListItems() {
-
-        // setIntersecting(false);
-
-        setTimeout(() => { setIntersecting(false) }, 1000);
-
-
-        // console.log('fetchMoreListItems******************************');
-
-
-        let firstKnownKey;
-
-        if (data.length) {
-            firstKnownKey = data[data.length - 1].id;
-        }
-
-
-
-        if (firstKnownKey) {
-
-
-            refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(100).once('value', function (snapshot) {
-
-                let page_ = [];
-
-                snapshot.forEach((childSnapshot) => {
-
-                    let key = childSnapshot.key;
-                    let childData = childSnapshot.val();
-
-                    if (firstKnownKey !== key) {
-
-                        page_.unshift({ ...childData, id: key });
-                    }
-                });
-
-                if (page_.length) {
-                    setData((prevState) => { return [...prevState, ...page_] });
-                }
-
-
-            });
-
-
-        }
-        else {
-
-            refMasterClass.orderByKey().limitToLast(3).on('child_added', (childSnapshot, prevChildKey) => {
-
-                setData((prevState) => { return [{ ...childSnapshot.val(), id: childSnapshot.key }, ...prevState] });
-
-
-            }
-            );
-        }
-
-
-
-
-    }
+    const dispatch = useDispatch();
 
     useEffect(() => {
 
         if (isIntersecting) {
-            fetchMoreListItems();
+           // fetchMoreListItems();
+
+           dispatch(getMasterClass());
+
         }
 
     }, [isIntersecting]);
@@ -95,7 +43,6 @@ const ListMasterClasses = (props) => {
     }
 
 
-
     return (<div >
 
         <div className="ListMasterClasses">
@@ -103,17 +50,19 @@ const ListMasterClasses = (props) => {
         </div>
 
 
-        {data.map((item, index) => (
+        {masterClasses.map((item, index) => (
          
                 <ListItemMasterСlass
-
               
-                    NameMasterClass={item.basicData.NameMasterClass}
+                    NameMasterClass={item.NameMasterClass}
                     updateMasterClassClicked={() => updateMasterClassClicked(item.id)}
                     masterСlassViewing={() => masterСlassViewing(item.id)}
-                    DescriptionMasterClass={item.basicData.DescriptionMasterClass}
-                    DateMasterClass={item.basicData.DateMasterClass}
-                    images={item.basicData.images}
+                    DescriptionMasterClass={item.DescriptionMasterClass}
+                    DateMasterClass={item.DateMasterClass}
+                    images={item.images}
+                    image={item.image}
+                    key = {item.id}
+                         
                 />
         
          
@@ -123,14 +72,9 @@ const ListMasterClasses = (props) => {
 
 
         <div className='EndLoader' ref={ref}>
-
-
             {isIntersecting && <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
             </div>}
-
-
-
         </div>
 
     </div>);

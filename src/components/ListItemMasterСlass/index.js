@@ -6,30 +6,26 @@ import useIntersect from "../ListMasterClasses/useIntersect";
 
 const ListItemMasterСlass = (props) => {
 
- 
+
    const ref = React.useRef();
 
-   const [isIntersecting] = useIntersect(ref, "1%", true);
+   const [isIntersecting] = useIntersect(ref, "10%", true);
    
     console.log(props.NameMasterClass);
     console.log("isIntersecting", isIntersecting);
     
 
     return (
-        <div className="MasterClasses" ref={ref}>
-            <div className="card" onClick={props.masterСlassViewing}>
+        <div className="MasterClasses" ref={ref} >
+            <div className="card" onClick={props.masterСlassViewing} style={{minHeight:'300px'}}>
          
             <div className="card-header">
-            
-
              {props.NameMasterClass}
-
-            
-            
             </div>
 
 
-                {(props.images && props.images.length) && <img className="card-img-top" src={isIntersecting?props.images[0].src:''} alt="Card image cap" />}
+            <img className="card-img-top" src={isIntersecting?props.image:''} alt="Card image cap" />
+
               
             </div>
         <button type="submit" className="btn btn-primary" onClick={props.updateMasterClassClicked}>Изменить</button>
