@@ -1,6 +1,6 @@
 import { db, auth, storage } from '../firebase';
-import { setSaveFailure, setSaveSUCCESS, addClassesEnd, addClassesStart} from '../redux/app/appActions'
-import { createMasterClassFromVal }  from '../model/mastreClass'
+import { setSaveFailure, setSaveSUCCESS, addClassesEnd, addClassesStart } from '../redux/app/appActions'
+import { createMasterClassFromVal } from '../model/mastreClass'
 
 /* Auth */
 export function logInUser(email, password) {
@@ -183,57 +183,42 @@ const remveMasterClassPicture = (fileName) => {
 }
 
 
-export const fetchMasterClas = (firstKnownKey, dispatch) =>{
+export const fetchMasterClas = (firstKnownKey, dispatch) => {
 
-    const refMasterClass =  db.ref('masterClass');
+    const refMasterClass = db.ref('masterClass');
 
+    let qwery;
     if (firstKnownKey) {
+        qwery = refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(100);
+    } else {
+        qwery = refMasterClass.orderByKey().limitToLast(100);
+    }
 
-        refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(10).once('value', function (snapshot) {
+    qwery.once('value', function (snapshot) {
 
-            let payload = [];
+        let payload = [];
 
-            snapshot.forEach((childSnapshot) => {
+        snapshot.forEach((childSnapshot) => {
 
-                let key = childSnapshot.key;
-                let childData = childSnapshot.val();
+            let key = childSnapshot.key;
+            let childData = childSnapshot.val();
 
-                if (firstKnownKey !== key) {
-
-                    payload.unshift(createMasterClassFromVal(key, childData));
-                }
-            });
-
-            if (payload.length) {
-
-               dispatch(addClassesEnd(payload));
+            if (firstKnownKey !== key) {
+                payload.unshift(createMasterClassFromVal(key, childData));
             }
         });
-    }
-    
-    else {
 
-
-        refMasterClass.orderByKey().limitToLast(3).once('value', function (snapshot) {
-
-            let payload = [];
-
-            snapshot.forEach((childSnapshot) => {
-
-                let key = childSnapshot.key;
-                let childData = childSnapshot.val();
-
-                if (firstKnownKey !== key) {
-                    payload.unshift(createMasterClassFromVal(key, childData));
-                }
-            });
-            if (payload.length) {
-
+        if (payload.length) {
+            if (firstKnownKey) {
+                dispatch(addClassesEnd(payload));
+            }
+            else {
                 dispatch(addClassesStart(payload));
-     
             }
-        });
-    }
+
+        }
+    });
+
 }
 
 
