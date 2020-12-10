@@ -5,9 +5,9 @@ import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSaveRequest } from '../../redux/app/appActions'
 import { Alert, ProgressBar, Spinner, Button } from 'react-bootstrap';
-import { db } from '../../firebase';
+import { getMasterClassById } from '../../api/firebaseApi';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
-import { MasterClass, createMasterClassFromVal } from "../../model/mastreClass"
+import { MasterClass} from "../../model/mastreClass"
 
 const divStyle = {
     maxWidth: '90%',
@@ -17,6 +17,8 @@ const divStyle = {
 
 
 const validateField = (value) => {
+
+    return '';
 
     console.log('validateNameMasterClass');
     let error = '';
@@ -29,6 +31,8 @@ const validateField = (value) => {
 const  validateForm = (props) => {
 
     const errors = {};
+    
+    return errors;
 
     if (props.images.filter((item) => { return !item.del }).length===0)
     {
@@ -44,7 +48,6 @@ const ClassForm = (props) => {
 
 
     const dispatch = useDispatch();
-
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(new MasterClass());
     const uploading = useSelector(state => state.app.uploading);
@@ -74,32 +77,11 @@ const ClassForm = (props) => {
     React.useEffect(() => {
 
         if (id != '-1') {
-           
-            db.ref('masterClass/' + id).once('value').then(function (snapshot) {
 
-
-                console.log(id);
-                console.log(id !== -1);
-                const val = snapshot.val();
-
-
-                console.log(val);
-
-
-                setData(createMasterClassFromVal(id,  val));
-
-            });
-
-
-            //Выключаем подписку
-            //https://reactjs.org/docs/hooks-effect.html
-            //componentDidMount 
-            return () => {
-                db.ref('masterClass/' + id).off();
-            };
+            getMasterClassById(props.match.params.id).then(masterClass=> setData(masterClass)).catch(error => console.log(error));
 
         }
-    }, [id]);
+    }, []);
 
 
 
@@ -111,7 +93,7 @@ const ClassForm = (props) => {
     const onSubmit = (values) => {
 
         if (uploading) {
-            return;
+          //  return;
         }
         dispatch(setSaveRequest());
 

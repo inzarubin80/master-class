@@ -3,7 +3,7 @@ import {useSelector } from 'react-redux';
 import Login from '../Login'
 import Account from '../Account'
 
-export default function Auth() {
+export default function Auth(props) {
 
     const user = useSelector(state => state.user.user);
     console.log(user);
@@ -11,7 +11,7 @@ export default function Auth() {
 
         <div>
        
-           {user && <Account/>}
+           {user && <Account history = {props.history}/>}
            {!user && <Login/>}
            
         </div>

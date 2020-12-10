@@ -32,23 +32,21 @@ const ScreenMasterClass = (props) => {
 
     React.useEffect(() => {
 
-        //"Создаем подписку"
-        db.ref('masterClass/' + id).on('value', function (snapshot) {
-            const val = snapshot.val();
-            setData(createMasterClassFromVal(id, val));
+
+        const unsub = db.collection('masterClass').doc(id).onSnapshot(docSnapshot => {
+            
+            console.log(docSnapshot);
+            setData(createMasterClassFromVal(docSnapshot.id, docSnapshot.data()));
+
+
+        }, err => {
+            console.log(`Encountered error: ${err}`);
         });
 
-        //Выключаем подписку
-        //https://reactjs.org/docs/hooks-effect.html
-        //componentDidMount 
         return () => {
-
-            console.log("Отменяем подписку **************** " + id);
-            db.ref('masterClass/' + id).off();
-          };
-
-
-    }, [id]);
+            unsub();
+        };
+    }, []);
 
 
 
@@ -56,7 +54,7 @@ const ScreenMasterClass = (props) => {
 
     const masterСlassСhangeReserveHandler = () => {
 
-        if (!props.uid){
+        if (!props.uid) {
             props.history.push(`/login`);
         }
         else {

@@ -1,18 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, {useEffect, useRef } from 'react'
 import ListItemMasterСlass from '../ListItemMasterСlass';
-import { db } from '../../firebase';
+
 import useIntersect from "./useIntersect";
 
 import { useSelector, useDispatch } from 'react-redux'
-import {getMasterClass} from '../../redux/app/appActions'
+import {getLists} from '../../redux/app/appActions'
 
 
 
 const ListMasterClasses = (props) => {
-
-    const refMasterClass = db.ref('masterClass');
-
-   // const [data, setData] = useState([]);
 
     const masterClasses = useSelector(state => state.app.masterClasses);
 
@@ -24,19 +20,13 @@ const ListMasterClasses = (props) => {
 
     useEffect(() => {
 
-        if (isIntersecting) {
-           // fetchMoreListItems();
-
-           dispatch(getMasterClass());
-
-        }
-
-    }, [isIntersecting]);
-
+           dispatch(getLists());
+       
+    }, []);
+    
     const updateMasterClassClicked = (id) => {
         props.history.push(`/change/${id}`)
     }
-
 
     const masterСlassViewing = (id) => {
         props.history.push(`/classes/${id}`);
@@ -45,9 +35,7 @@ const ListMasterClasses = (props) => {
 
     return (<div >
 
-        <div className="ListMasterClasses">
-            <button className="btn btn-success" onClick={() => { props.history.push(`/change/-1`) }}>Добавить</button>
-        </div>
+       
 
 
         {masterClasses.map((item, index) => (
@@ -62,7 +50,7 @@ const ListMasterClasses = (props) => {
                     images={item.images}
                     image={item.image}
                     key = {item.id}
-                         
+
                 />
         
          
@@ -71,13 +59,16 @@ const ListMasterClasses = (props) => {
         }
 
 
+    {/*
+
         <div className='EndLoader' ref={ref}>
             {isIntersecting && <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
             </div>}
         </div>
-
+*/}
     </div>);
+
 
 }
 

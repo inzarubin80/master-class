@@ -1,6 +1,5 @@
 import { db, auth, storage } from '../firebase';
-import { setSaveFailure, setSaveSUCCESS, addClassesEnd, addClassesStart } from '../redux/app/appActions'
-import { createMasterClassFromVal } from '../model/mastreClass'
+import { MasterClass, createMasterClassFromVal } from '../model/mastreClass';
 
 /* Auth */
 export function logInUser(email, password) {
@@ -21,156 +20,77 @@ export function registerUser(email, password) {
 }
 
 export function initAuth(onAuth) {
-
-
     auth.onAuthStateChanged(onAuth);
 }
 
 
-const setfailure = (dispatch, err) => {
+export async function addFiles(filename, file) {
 
-    dispatch(setSaveFailure(err));
-
-    setTimeout(() => {
-        dispatch(setSaveFailure(''));
-    }, 3000);
-
+    return storage.ref('images').child(filename).put(file)
+        .then(snapshot => (snapshot.ref.getDownloadURL()));
 
 }
 
-export async function createMasterClass(data, addFiles, removeFiles, key, dispatch, goToClasses) {
-
-    console.log('createMasterClass');
 
 
-    if (!addFiles.length) {
-        saveMasterClass(key, data, dispatch, goToClasses);
-    }
+export const addMasterClass = (data) => {
 
-    else {
-
-        let urls = {};
-
-        for (let i = 0; i < addFiles.length; i++) {
-
-            const imageRef = storage.ref('images').child(addFiles[i].filename);
-
-            await imageRef.put(addFiles[i].file).then(function (snapshot) {
-
-                snapshot.ref.getDownloadURL().then(function (URL) {
-
-                    urls[addFiles[i].filename] = URL;
-
-
-                    if (i === (addFiles.length - 1)) {
-
-
-                        const images = data.images.map((item) => {
-                            if ([item.filename] in urls) {
-
-                                return { filename: item.filename, src: urls[item.filename] };
-                            }
-                            else {
-                                return item
-                            }
-                        }
-                        );
-
-
-                        saveMasterClass(key, { ...data, images: images }, dispatch, goToClasses);
-
-
-                    }
-
-                }).catch((error) => { setfailure(dispatch, error.message) });
-
-            }).catch((error) => { setfailure(dispatch, error.message) });
-
-        }
-    }
-
-    removeFiles.forEach((element) => remveMasterClassPicture(element.filename));
+    return db.collection('masterClass').add({ basicData: data })
+        .then(docRef => docRef.get())
+        .then(doc => (createMasterClassFromVal(doc.id, doc.data())));
 
 }
 
-const saveMasterClass = (key, data, dispatch, goToClasses) => {
+export const updateMasterClass = (id, data) => {
 
-    console.log('dispatch', dispatch);
+    return db.collection('masterClass').doc(id).update({ basicData: data }).then(() => ({
+        id: id,
+        ...data
+    }));
 
-
-    if (key && key != '-1') {
-
-        const ref = db.ref('masterClass/' + key);
-
-        console.log('ref', ref);
-
-        ref.set({ basicData: data }, function (error) {
-            if (error) {
-
-                console.log('error', error.message);
-                setfailure(dispatch, error.message)
-            } else {
-
-                dispatch(setSaveSUCCESS());
-                goToClasses();
-
-            }
-        });
-    }
-    else {
-
-        db.ref('masterClass').push({ basicData: data }, function (error) {
-            if (error) {
-                setfailure(dispatch, error.message)
-            } else {
-
-                dispatch(setSaveSUCCESS());
-                goToClasses();
-
-
-            }
-        });
-    }
 }
 
-export const masterСlassСhangeReserve = (key, uid) => {
 
-    const ref = db.ref('masterClass/' + key);
-    ref.transaction((masterClass) => {
-        if (masterClass) {
+export function deleteMasterClass(Id) {
+    return db.collection('masterClass').doc(Id).delete()
+        .then(() => Id);
+}
+
+export const masterСlassСhangeReserve = async (key, uid) => {
+
+    const ref = db.collection('masterClass').doc(key);
+    try {
+        const res = await db.runTransaction(async t => {
+            const doc = await t.get(ref);
+
+            const  masterClass = createMasterClassFromVal(key, doc.data())
 
             if (masterClass.reservation && masterClass.reservation[uid]) {
+                
+                delete masterClass.reservation[uid];
 
-                console.log("Сняли резерв");
-
-                masterClass.reservation[uid] = null;
-
+                await t.update(ref, { reservation: masterClass.reservation });
             }
             else {
-
 
                 if (!masterClass.reservation) {
                     masterClass.reservation = {};
                 }
-
-
-                if (Object.keys(masterClass.reservation).length < masterClass.basicData.numberSeats) {
-
-                    console.log("Установили резерв");
-                    console.log("masterClass", masterClass);
-                    console.log("masterClass.basicData.numberSeats", masterClass.basicData.numberSeats);
-
+                if (Object.keys(masterClass.reservation).length < masterClass.numberSeats) {
+                    
                     masterClass.reservation[uid] = true;
+                    await t.update(ref, { reservation: masterClass.reservation });
 
                 }
-
-
             }
-        }
-        return masterClass;
-    });
-}
 
+        });
+
+        console.log('Transaction success', res);
+    } catch (e) {
+        console.log('Transaction failure:', e);
+    }
+}
 
 const remveMasterClassPicture = (fileName) => {
 
@@ -180,42 +100,23 @@ const remveMasterClassPicture = (fileName) => {
     });
 }
 
+export const getLists = () => {
+    return db.collection('masterClass')
 
-export const fetchMasterClas = (firstKnownKey, dispatch) => {
+        //.where()
 
-    const refMasterClass = db.ref('masterClass');
+        .orderBy('basicData.DateMasterClass', 'desc')
 
-    let qwery;
-    if (firstKnownKey) {
-        qwery = refMasterClass.orderByKey().endAt(firstKnownKey).limitToLast(100);
-    } else {
-        qwery = refMasterClass.orderByKey().limitToLast(100);
-    }
-
-    qwery.once('value', function (snapshot) {
-
-        let payload = [];
-
-        snapshot.forEach((childSnapshot) => {
-
-            let key = childSnapshot.key;
-            let childData = childSnapshot.val();
-
-            if (firstKnownKey !== key) {
-                payload.unshift(createMasterClassFromVal(key, childData));
-            }
+        .get()
+        .then(snapshot => {
+            const items = snapshot.docs.map(doc => (createMasterClassFromVal(doc.id, doc.data())));
+            return items;
         });
+}
 
-        if (payload.length) {
-            if (firstKnownKey) {
-                dispatch(addClassesEnd(payload));
-            }
-            else {
-                dispatch(addClassesStart(payload));
-            }
+export const getMasterClassById = (id) => {
 
-        }
-    });
+    return db.collection('masterClass').doc(id).get().then(snapshot => createMasterClassFromVal(snapshot.id, snapshot.data()));
 
 }
 

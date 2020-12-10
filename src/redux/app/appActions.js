@@ -2,11 +2,14 @@ import {
   FETCH_SAVE_ClASS_REQUEST,
   FETCH_SAVE_ClASS_FAILURE,
   FETCH_SAVE_ClASS_SUCCESS,
-  ADD_ClASS_END,
-  ADD_ClASS_START
+  ADD_ClASS,
+  UPDATE_ClASS,
+  GET_LISTS_ClASSES
+
 } from '../types'
 
-import  { createMasterClass, fetchMasterClas }  from '../../api/firebaseApi'
+ import * as api  from '../../api/firebaseApi'
+
 
 export const setSaveRequest = () => {
   return {
@@ -17,7 +20,7 @@ export const setSaveRequest = () => {
 export const setSaveFailure = (error) => {
   return {
     type: FETCH_SAVE_ClASS_FAILURE,
-    payload:error 
+    payload: error
   };
 };
 
@@ -28,48 +31,78 @@ export const setSaveSUCCESS = () => {
 };
 
 
+export const saveMasterClass = (data, filesToAdd, removeFiles, key, goToClasses) => {
 
+  return async (dispatch, getState) => {
 
-export const addClassesEnd = (masterСlasses) => {
-  return {
-    type: ADD_ClASS_END,
-    payload:masterСlasses 
-  };
-};
-
-export const addClassesStart = (masterСlasses) => {
-  return {
-    type: ADD_ClASS_START,
-    payload:masterСlasses 
-  };
-};
-
-
-export const saveMasterClass = (data, addFiles, removeFiles, key, goToClasses ) => {
- 
-  console.log('saveMasterClass');
-
-  return (dispatch, getState) => {
     
-    createMasterClass(data, addFiles, removeFiles, key, dispatch, goToClasses);
-
-  };
-}
-
-export const getMasterClass = () => {
   
-  return (dispatch, getState) => {
-    
-    const masterСlasses = getState().app.masterClasses;
-  
-    let firstKnownKey = '';
+    let urls = {};
 
-    if (masterСlasses.length) {
-      firstKnownKey = masterСlasses[masterСlasses.length - 1].id;
+    //грузим последовательно файлы
+    for (let i = 0; i < filesToAdd.length; i++) {
+      await api.addFiles(filesToAdd[i].filename, filesToAdd[i].file).then(url => {
+        urls[filesToAdd[i].filename] = url;
+      })
+        .catch(error => dispatch(setSaveFailure(error)));
     }
 
-    fetchMasterClas(firstKnownKey, dispatch);
+    if (Object.keys(urls).length !== filesToAdd.length ){
+      return;
+    }
 
+    const images = data.images.map((item) => {
+      if ([item.filename] in urls) {
+        return { filename: item.filename, src: urls[item.filename] };
+      }
+      else {
+        return item
+      }
+    });
+
+
+    if (!key || key == '-1') {
+      api.addMasterClass({ ...data, images: images }).then(masterClass => {
+
+        console.log(masterClass);
+
+       // goToClasses();
+
+        dispatch({ type: ADD_ClASS, payload: masterClass })
+        
+        goToClasses();
+
+      }
+
+      ).catch(error => setSaveFailure(error));
+    }
+    else {
+      api.updateMasterClass(key, { ...data, images: images}).then(masterClass => {
+
+       dispatch({ type: UPDATE_ClASS, payload: masterClass})
+       goToClasses();
+        
+      }
+      ).catch(error => setSaveFailure(error));    
+    }
+
+  }
+}
+
+export const getLists = () => {
+
+  return (dispatch, getState) => {
+    
+    return api.getLists()
+    .then(lists => (
+       
+      dispatch({type: GET_LISTS_ClASSES, payload: lists})
+      
+      
+      ));
+
+
+  
   };
 
 }

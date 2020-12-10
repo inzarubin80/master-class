@@ -8,7 +8,13 @@ export default (ref, rootMargin = '0px', one = false) => {
     useEffect(() => {
       const observer = new IntersectionObserver(
         ([entry]) => {
-            setIntersecting((prev)=>{return one&&prev?prev:entry.isIntersecting} ); 
+           
+          setIntersecting(entry.isIntersecting); 
+
+            if (one && entry.isIntersecting) {
+              observer.unobserve(ref.current);
+            }
+
         },
         {
           rootMargin

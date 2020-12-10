@@ -8,12 +8,9 @@ const ListItemMasterСlass = (props) => {
 
 
    const ref = React.useRef();
-
    const [isIntersecting] = useIntersect(ref, "10%", true);
    
-    console.log(props.NameMasterClass);
-    console.log("isIntersecting", isIntersecting);
-    
+
 
     return (
         <div className="MasterClasses" ref={ref} >

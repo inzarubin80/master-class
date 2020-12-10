@@ -1,7 +1,10 @@
 
 
-export const ADD_ClASS_END              = 'APP/ADD_ClASS_END';
-export const ADD_ClASS_START            = 'APP/ADD_ClASS_START';
+export const ADD_ClASS              = 'APP/ADD_ClASS';
+export const UPDATE_ClASS           = 'APP/UPDATE_ClASS';
+
+
+export const GET_LISTS_ClASSES         = 'APP/GET_LISTS_ClASSES';
 
 
 export const FETCH_SAVE_ClASS_REQUEST      = 'APP/FETCH_SAVE_ClASS_REQUEST';
