@@ -1,12 +1,14 @@
-import { LOGIN_SUCCESS, LOGIN_LOGOUT, SET_USERNAME, SET_PASSWORD } from '../types'
+import { LOGIN_SUCCESS, LOGIN_LOGOUT, SET_USERNAME, SET_PASSWORD, SET_ROLES } from '../types'
 
 const  initialState = {
+    
     user:  null ,
     username:   '',
     password: '',
     err:'',
-    uid:''
-  
+    uid:'',
+    userRoles: {roles:[], subscriptionRoles:null}
+
 };
 
 export default (state = initialState, action) => {
@@ -16,17 +18,25 @@ export default (state = initialState, action) => {
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                user: action.payload.user,
-                uid: action.payload.user.uid,
+                user: action.payload,
+                uid: action.payload.uid,
                 
             };
+        
+            case SET_ROLES:
+                return {
+                    ...state,
+                    userRoles: action.payload
+                    
+                };
+                
 
         case LOGIN_LOGOUT:
             return {
                 ...state,
                 user: null,
                 uid:'',
-
+                userRoles: {roles:[], subscriptionRoles:null}
             };
 
         

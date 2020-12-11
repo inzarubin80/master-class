@@ -1,5 +1,5 @@
 import { db, auth, storage } from '../firebase';
-import { MasterClass, createMasterClassFromVal } from '../model/mastreClass';
+import {createMasterClassFromVal } from '../model/mastreClass';
 
 /* Auth */
 export function logInUser(email, password) {
@@ -120,5 +120,8 @@ export const getMasterClassById = (id) => {
 
 }
 
-
+export const getUserInfo = (uid) => {
+    return db.collection('userRoles').doc(uid).collection('roles');
+ 
+}
 

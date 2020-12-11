@@ -27,14 +27,14 @@ const ScreenMasterClass = (props) => {
 
     const [settings, setSettings] = useState(config);
     const [id, setId] = useState(props.match.params.id);
-    const [data, setData] = useState(new MasterClass());
+    const [data, setData] = useState(null);
 
 
     React.useEffect(() => {
 
 
         const unsub = db.collection('masterClass').doc(id).onSnapshot(docSnapshot => {
-            
+
             console.log(docSnapshot);
             setData(createMasterClassFromVal(docSnapshot.id, docSnapshot.data()));
 
@@ -65,31 +65,37 @@ const ScreenMasterClass = (props) => {
 
     console.log("ScreenMasterClass", id);
 
+    if (data) {
+        return (<div className="card">
+            <Slider {...settings}>
 
-    return (<div className="card">
-        <Slider {...settings}>
+                {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
 
-            {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
+            </Slider>
 
-        </Slider>
+            <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
 
-        <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
+            <div className="card-body">
+                <h5 className="card-title">{data.NameMasterClass}</h5>
+                <p className="card-text">{data.DescriptionMasterClass}</p>
+            </div>
 
-        <div className="card-body">
-            <h5 className="card-title">{data.NameMasterClass}</h5>
-            <p className="card-text">{data.DescriptionMasterClass}</p>
+
+            <ul className="list-group list-group-flush">
+                <li className="list-group-item">Свободных мет: {data.vacancies}</li>
+                <li className="list-group-item">Цена: 1000</li>
+                <li className="list-group-item">Дата: {data.DateMasterClass}</li>
+            </ul>
+
         </div>
 
+        )
+    }
 
-        <ul className="list-group list-group-flush">
-            <li className="list-group-item">Свободных мет: {data.vacancies}</li>
-            <li className="list-group-item">Цена: 1000</li>
-            <li className="list-group-item">Дата: {data.DateMasterClass}</li>
-        </ul>
+    else {
+        return (<div></div>)
+    }
 
-    </div>
-
-    );
 }
 
 const mapStateToProps = state => {

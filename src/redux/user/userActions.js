@@ -2,7 +2,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_LOGOUT,
   SET_PASSWORD,
-  SET_USERNAME
+  SET_USERNAME,
+  SET_ROLES
 } from '../types'
 
 import * as api from '../../api/firebaseApi';
@@ -21,19 +22,36 @@ export function registerUser(email, password) {
 
 export function initAuth() {
 
-  return dispatch => api.initAuth(user => {
+  return (dispatch, getState) => {api.initAuth((user) => {
 
-    console.log('Внутри авторизации------');
+
+  
     
-      return user ? dispatch({
-          type: LOGIN_SUCCESS,
-          payload: {
-              user
-          }
-      }) : dispatch({
-          type: LOGIN_LOGOUT
-      });
+    if (user)
+    {  
+
+       dispatch({type: LOGIN_SUCCESS, payload: user});
+
+       const subscriptionRoles = api.getUserInfo(user.uid).onSnapshot(docSnapshot => {
+
+      const roles = docSnapshot.docs.map(doc => (doc.id));
+      dispatch({type: SET_ROLES, payload: {roles, subscriptionRoles}})
+
+      } );
+    }
+    else {
+
+      const subscriptionRoles = getState().user.userRoles.subscriptionRoles;
+      if (subscriptionRoles) {
+          subscriptionRoles();
+      }
+      
+      dispatch({type: LOGIN_LOGOUT})
+
+    };
+
   });
+}
 }
 
 

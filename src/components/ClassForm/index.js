@@ -14,8 +14,6 @@ const divStyle = {
     minWidth: '90%'
 };
 
-
-
 const validateField = (value) => {
 
     return '';

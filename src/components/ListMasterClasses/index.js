@@ -11,6 +11,8 @@ import {getLists} from '../../redux/app/appActions'
 const ListMasterClasses = (props) => {
 
     const masterClasses = useSelector(state => state.app.masterClasses);
+    
+    
 
     const ref = useRef();
 
