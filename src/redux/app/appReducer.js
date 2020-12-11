@@ -31,7 +31,7 @@ export default (state = initialState, action) => {
 
         case ADD_ClASS: {
          
-            return {...state,  masterClasses:[...state.masterClasses, action.payload]}
+            return {...state, uploading: false,  masterClasses:[...state.masterClasses, action.payload]}
         }
 
         case GET_LISTS_ClASSES: {
@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
 
         case UPDATE_ClASS: {
             return {
-                ...state, masterClasses: state.masterClasses.map(
+                ...state, uploading: false, masterClasses: state.masterClasses.map(
                     (item) => {
                         if (item.id == action.payload.id) {
                             return {...item, base:action.payload}
