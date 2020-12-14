@@ -35,9 +35,11 @@ export async function addFiles(filename, file) {
 
 export const addMasterClass = (data) => {
 
+
     return db.collection('masterClass').add({ basicData: data })
         .then(docRef => docRef.get())
         .then(doc => (createMasterClassFromVal(doc.id, doc.data())));
+
 
 }
 
