@@ -36,7 +36,7 @@ export async function addFiles(filename, file) {
 export const addMasterClass = (data) => {
 
 
-    return db.collection('masterClass').add({ basicData: data })
+    return db.collection('masterClass').add({ basicData: data, reservation:{}})
         .then(docRef => docRef.get())
         .then(doc => (createMasterClassFromVal(doc.id, doc.data())));
 
@@ -68,16 +68,11 @@ export const masterСlassСhangeReserve = async (key, uid) => {
             const  masterClass = createMasterClassFromVal(key, doc.data())
 
             if (masterClass.reservation && masterClass.reservation[uid]) {
-                
                 delete masterClass.reservation[uid];
-
-                await t.update(ref, { reservation: masterClass.reservation });
+               await t.update(ref, { reservation: masterClass.reservation });
             }
             else {
 
-                if (!masterClass.reservation) {
-                    masterClass.reservation = {};
-                }
                 if (Object.keys(masterClass.reservation).length < masterClass.numberSeats) {
                     
                     masterClass.reservation[uid] = true;
