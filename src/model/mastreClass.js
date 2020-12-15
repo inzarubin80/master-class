@@ -1,27 +1,35 @@
 export class MasterClass {
-    
-    constructor(props={}) {
+
+    constructor(props = {}) {
 
         const {
-            id='',
-            NameMasterClass='',
-            DescriptionMasterClass='',
-            DateMasterClass='',
-            numberSeats=0,
-            images=[],
-            reservation={}
-          } = props;
+            id = '',
+            NameMasterClass = '',
+            DescriptionMasterClass = '',
+            DateMasterClass = null,
+            numberSeats = 0,
+            images = [],
+            reservation = {}
+        } = props;
+
 
 
         this.id = id;
         this.NameMasterClass = NameMasterClass;
         this.DescriptionMasterClass = DescriptionMasterClass;
-        this.DateMasterClass = DateMasterClass;
+
+        if (DateMasterClass) {
+            this.DateMasterClass = new Date(DateMasterClass.seconds * 1000);
+        }
+        else {
+            this.DateMasterClass = new Date();
+        }
+
         this.numberSeats = numberSeats;
         this.images = images;
-        
-        this.image = images.length?images[0].src:'';
-        
+
+        this.image = images.length ? images[0].src : '';
+
         this.reservation = reservation;
         this.isRes = (uid) => (uid in reservation);
         this.vacancies = props.numberSeats - Object.keys(reservation).length;
@@ -33,8 +41,8 @@ export class MasterClass {
 
 export const createMasterClassFromVal = (id, val) => {
 
-    const {reservation={}, basicData={}} = val;
-    return new MasterClass({...basicData, id:id, reservation:reservation});
+    const { reservation = {}, basicData = {} } = val;
+    return new MasterClass({ ...basicData, id: id, reservation: reservation });
 
 }
 

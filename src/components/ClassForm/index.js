@@ -7,7 +7,13 @@ import { setSaveRequest } from '../../redux/app/appActions'
 import { Alert, ProgressBar, Spinner, Button } from 'react-bootstrap';
 import { getMasterClassById } from '../../api/firebaseApi';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
-import { MasterClass} from "../../model/mastreClass"
+import { MasterClass } from "../../model/mastreClass"
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import ru from 'date-fns/locale/ru';
+
 
 const divStyle = {
     maxWidth: '90%',
@@ -16,7 +22,7 @@ const divStyle = {
 
 const validateField = (value) => {
 
-    return '';
+  //  return '';
 
     console.log('validateNameMasterClass');
     let error = '';
@@ -26,17 +32,20 @@ const validateField = (value) => {
     return error;
 }
 
-const  validateForm = (props) => {
+const validateForm = (props) => {
 
-    const errors = {};
-    
-    return errors;
+    let errors = {};
 
-    if (props.images.filter((item) => { return !item.del }).length===0)
-    {
+   // return errors;
+
+    if (props.images.filter((item) => { return !item.del }).length === 0) {
         errors.images = "Требуется выбрать файлы";
     }
 
+    if (!props.DateMasterClass) {
+        errors.DateMasterClass = 'Требуется заполнение';
+    }
+    
     return errors;
 
 }
@@ -76,7 +85,17 @@ const ClassForm = (props) => {
 
         if (id != '-1') {
 
-            getMasterClassById(props.match.params.id).then(masterClass=> setData(masterClass)).catch(error => console.log(error));
+            getMasterClassById(props.match.params.id).then(masterClass => {
+
+                console.log('DateMasterClass', masterClass.DateMasterClass);
+                console.log('DateMasterClass typeof', typeof (masterClass.DateMasterClass));
+
+
+
+                setData(masterClass)
+            })
+
+                .catch(error => console.log(error));
 
         }
     }, []);
@@ -91,7 +110,7 @@ const ClassForm = (props) => {
     const onSubmit = (values) => {
 
         if (uploading) {
-          //  return;
+            //  return;
         }
         dispatch(setSaveRequest());
 
@@ -126,8 +145,8 @@ const ClassForm = (props) => {
                 <Formik
                     initialValues={{
                         NameMasterClass: data.NameMasterClass,
-                        DescriptionMasterClass:  data.DescriptionMasterClass,
-                        DateMasterClass:data.DateMasterClass,
+                        DescriptionMasterClass: data.DescriptionMasterClass,
+                        DateMasterClass: data.DateMasterClass,
                         images: data.images.map((item) => { return { file: '', src: item.src, key: item.filename, del: false, local: false } }),
                         numberSeats: data.numberSeats,
 
@@ -153,8 +172,6 @@ const ClassForm = (props) => {
                                     className="alert alert-warning" />
 
 
-                                {console.log('errors',props.errors)}
-
                                 <fieldset className="form-group">
                                     <label>Наименование</label>
                                     <Field className="form-control" type="text" name="NameMasterClass" validate={validateField} />
@@ -163,17 +180,30 @@ const ClassForm = (props) => {
 
 
                                 <fieldset className="form-group">
-                                    <label>Описание</label>
+                                   
+                                  <label>Описание</label>
+
                                     <Field className="form-control" type="text" name="DescriptionMasterClass" component="textarea" validate={validateField} />
                                     {props.errors.DescriptionMasterClass && props.touched.DescriptionMasterClass && <Alert variant={'danger'}>{props.errors.DescriptionMasterClass}</Alert>}
 
+                                
+
                                 </fieldset>
 
-                                <fieldset className="form-group">
-                                    <label>Дата проведения</label>
-                                    <Field className="form-control" type="date" name="DateMasterClass" validate={validateField} />
+                                <div className="form-group">
+                                  
+                                    {/*dateFormat="Pp"*/}
+
+
+                                    <label>Дата</label>
+                                    <DatePicker showTimeSelect  locale={ru}  dateFormat='MM/dd/yyyy HH:mm:ss' selected={props.values.DateMasterClass} onChange={date => props.setFieldValue("DateMasterClass", date)} />
                                     {props.errors.DateMasterClass && props.touched.DateMasterClass && <Alert variant={'danger'}>{props.errors.DateMasterClass}</Alert>}
-                                </fieldset>
+                               
+                                
+                                </div>
+
+                              
+
 
 
                                 <fieldset className="form-group">
@@ -203,7 +233,7 @@ const ClassForm = (props) => {
                                     }} />
 
 
-                                {props.errors.images && <Alert variant={'danger'}>{props.errors.images}</Alert>}
+                                    {props.errors.images && <Alert variant={'danger'}>{props.errors.images}</Alert>}
 
 
                                 </div>
