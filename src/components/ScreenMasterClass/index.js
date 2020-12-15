@@ -11,7 +11,9 @@ import moment from "moment";
 import { db } from '../../firebase';
 import { connect } from 'react-redux'
 
-import ru from 'date-fns/locale/ru';
+
+import localization from 'moment/locale/ru'
+
 
 moment.locale('ru')
 
@@ -89,7 +91,9 @@ const ScreenMasterClass = (props) => {
             <ul className="list-group list-group-flush">
                 <li className="list-group-item">Свободных мет: {data.vacancies}</li>
                 <li className="list-group-item">Цена: 1000</li>
-                <li className="list-group-item">Дата: {moment(data.DateMasterClass).locale('ru').format('DD:MM:YYYY HH:mm')}</li>
+
+                {/*'DD:MM:YYYY HH:mm'*/}
+                <li className="list-group-item">Дата: {moment(data.DateMasterClass).locale("ru", localization).format('LLL')}</li>
             </ul>
 
         </div>

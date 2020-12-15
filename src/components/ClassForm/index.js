@@ -195,7 +195,7 @@ const ClassForm = (props) => {
                                     {/*dateFormat="Pp"*/}
 
 
-                                    <label>Дата</label>
+                                  {/*  <label>Дата</label>*/}
                                     <DatePicker showTimeSelect  locale={ru}  dateFormat='MM/dd/yyyy HH:mm:ss' selected={props.values.DateMasterClass} onChange={date => props.setFieldValue("DateMasterClass", date)} />
                                     {props.errors.DateMasterClass && props.touched.DateMasterClass && <Alert variant={'danger'}>{props.errors.DateMasterClass}</Alert>}
                                
