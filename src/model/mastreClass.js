@@ -31,8 +31,11 @@ export class MasterClass {
         this.image = images.length ? images[0].src : '';
 
         this.reservation = reservation;
+       
         this.isRes = (uid) => (uid in reservation);
+        
         this.vacancies = props.numberSeats - Object.keys(reservation).length;
+
 
 
 
