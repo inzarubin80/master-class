@@ -41,7 +41,7 @@ const getComent = (id, parentId, content) =>{
     return {
         id: id,
         parentId: parentId, 
-        actions: [<span>Reply to</span>],
+        actions: [<span onClick={()=>{console.log(id)}}>Reply to</span>],
         author: 'Han Solo',
         avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
         content: (
