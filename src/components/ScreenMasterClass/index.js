@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import './index.css';
 import { masterСlassСhangeReserve } from '../../api/firebaseApi';
 import Slider from "react-slick";
-import { MasterClass, createMasterClassFromVal } from "../../model/mastreClass"
+import {createMasterClassFromVal } from "../../model/mastreClass"
 import moment from "moment";
 
 import { db } from '../../firebase';
@@ -13,7 +13,14 @@ import { connect } from 'react-redux'
 
 
 import localization from 'moment/locale/ru'
+import ListComments from '../ListComments';
+import { useSelector} from 'react-redux'
 
+import {Tooltip, Form, Input, Button} from 'antd';
+
+
+
+const TextArea = Input.TextArea;
 
 moment.locale('ru')
 
@@ -30,6 +37,25 @@ const config = {
 };
 
 
+const getComent = (id, parentId, content) =>{
+    return {
+        id: id,
+        parentId: parentId, 
+        actions: [<span>Reply to</span>],
+        author: 'Han Solo',
+        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+        content: (
+          <p>{content}</p>
+        ),
+        datetime: (
+          <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
+            <span>{moment().subtract(1, 'days').fromNow()}</span>
+          </Tooltip>
+        )
+    }
+
+}
+
 const ScreenMasterClass = (props) => {
 
     const [settings, setSettings] = useState(config);
@@ -38,19 +64,10 @@ const ScreenMasterClass = (props) => {
     const [messageText, setMessageText] = useState(' ');
     const [comments, setComments] = useState([]);
 
-    const addComment = () => {
 
-        if (!messageText) {
-            return;
-        }
-        return db.collection('masterClassComments').doc(id).collection('comments').add({ text: messageText, uid: "user1", parentId: '' })
-            .then(docRef => docRef.get())
-            .then(doc => {
-                setMessageText('');
-                console.log(doc);
-            }
-            );
-    }
+    const user = useSelector(state => state.user.user);
+
+ 
 
     React.useEffect(() => {
 
@@ -70,8 +87,10 @@ const ScreenMasterClass = (props) => {
             .onSnapshot(querySnapshot => {
                 querySnapshot.docChanges().forEach(change => {
                     if (change.type === 'added') {
-                        console.log('New comment: ', change.doc.data());
-                        setComments((prev) => [...prev, { ...change.doc.data(), id: change.doc.id }])
+
+                        let data = change.doc.data();
+                        console.log('New comment: ', data);
+                        setComments((prev) => [...prev, getComent(change.doc.id, data.parentId, data.content)])
                     }
                     if (change.type === 'modified') {
 
@@ -90,7 +109,7 @@ const ScreenMasterClass = (props) => {
 
                         console.log('Removed comment: ', change.doc.data());
                         setComments((prev) => prev.filter(item => item.id !== change.doc.id));
-                        
+
                     }
                 });
 
@@ -121,6 +140,10 @@ const ScreenMasterClass = (props) => {
 
     console.log("ScreenMasterClass", id);
 
+    console.log("comments в ScreenMasterClass ...................", comments);
+
+
+
     if (data) {
         return (<div className="card">
             <Slider {...settings}>
@@ -144,16 +167,8 @@ const ScreenMasterClass = (props) => {
                 <li className="list-group-item">Дата: {moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</li>
             </ul>
 
-
-
-
-            <h4>Комментарии</h4>
-
-            {comments.map((coment) => <li key={coment.id}>{coment.text}</li>)}
-
-            <input type="text" value={messageText} onChange={(event) => { setMessageText(event.target.value) }} />
-            <button type="button" className="btn btn-success" onClick={addComment}>Добавить комментарий</button>
-
+            <ListComments comments = {comments} id={id} user = {user}/> 
+        
         </div>
 
         )
