@@ -17,7 +17,7 @@ const CommentList = ({ comments }) =>
 return (
     <List
         dataSource={dataSource}
-        header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
+        header={`${comments.length} ${comments.length > 1 ? 'Коментариев' : 'Коментарий'}`}
         itemLayout="horizontal"
         renderItem={props => <CommentApp {...props} comments = {comments} key = {props.id} />}
     />
