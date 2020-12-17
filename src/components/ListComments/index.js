@@ -7,7 +7,9 @@ import { db } from '../../firebase';
 import CommentApp from '../CommentApp';
 const TextArea = Input.TextArea;
 
+//ууу
 
+const a = 1;
 
 const CommentList = ({ comments }) => 
 {
