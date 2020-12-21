@@ -1,6 +1,12 @@
 import { db, auth, storage } from '../firebase';
 import {createMasterClassFromVal } from '../model/mastreClass';
 
+
+export const addComment = (id, data) => {
+
+    return db.collection('masterClassComments').doc(id).collection('comments').add(data)
+
+}
 /* Auth */
 export function logInUser(email, password) {
 

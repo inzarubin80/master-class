@@ -4,8 +4,15 @@ import {
 
     ADD_ClASS,
     UPDATE_ClASS,
-    GET_LISTS_ClASSES
+    GET_LISTS_ClASSES,
 
+    SET_QUOTE_TEXT,
+
+    SET_COMMENT_TEXT,
+    
+    SET_PARENT_ID,
+    CANCEL_QUOTE
+    
 } from '../types'
 
 
@@ -13,7 +20,13 @@ const initialState = {
 
     uploading: false,
     error: '',
-    masterClasses: []
+    masterClasses: [],
+    
+    quoteText:'',
+    parentId:'',
+    commentText:''
+
+    
 
 };
 
@@ -32,6 +45,28 @@ export default (state = initialState, action) => {
         case ADD_ClASS: {
          
             return {...state, uploading: false,  masterClasses:[...state.masterClasses, action.payload]}
+        }
+
+        case SET_QUOTE_TEXT: {
+         
+            return {...state, quoteText: action.payload}
+        }
+
+        case SET_COMMENT_TEXT: {
+         
+            return {...state, commentText: action.payload}
+        }
+
+
+        case SET_PARENT_ID: {
+         
+            return {...state, parentId: action.payload}
+        }
+
+        case CANCEL_QUOTE: {
+         
+            return {...state, parentId: '', quoteText:''}
+
         }
 
         case GET_LISTS_ClASSES: {

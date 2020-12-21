@@ -1,30 +1,17 @@
 import {
-    Comment, Avatar, Form, Button, List, Input,
+    Comment, Avatar, Form, Button, List, Input, Modal
 } from 'antd';
-import moment from 'moment';
-import React, { useState } from "react";
-import { db } from '../../firebase';
+
+import React from "react";
+
 import CommentApp from '../CommentApp';
+
+import { useSelector, useDispatch } from 'react-redux';
+import * as appActions from "../../redux/app/appActions"
+
+import { addComment } from '../../api/firebaseApi'
+
 const TextArea = Input.TextArea;
-
-//ууу
-
-const a = 1;
-
-const CommentList = ({ comments }) => 
-{
-
-    const dataSource = comments.filter(item => !item.parentId);
-
-return (
-    <List
-        dataSource={dataSource}
-        header={`${comments.length} ${comments.length > 1 ? 'Коментариев' : 'Коментарий'}`}
-        itemLayout="horizontal"
-        renderItem={props => <CommentApp {...props} comments = {comments} key = {props.id} />}
-    />
-)
-};
 
 
 const Editor = ({
@@ -49,44 +36,61 @@ const Editor = ({
 
 const ListComments = ({ comments, user, id }) => {
 
-    const [messageText, setMessageText] = useState('');
-    const [submitting, setSubmitting] = useState(false);
+    const dispatch = useDispatch();
+    const commentText = useSelector(state => state.app.commentText);
+    const parentId = useSelector(state => state.app.parentId);
+    const quoteText = useSelector(state => state.app.quoteText);
 
 
-    const handleSubmit = () => {
+    const handleSubmit = (id, uid, parentId, messageText) => {
 
         if (messageText == '') {
             return;
         }
-
-        setSubmitting(true);
-
-        return db.collection('masterClassComments').doc(id).collection('comments').add(
+        return addComment(id,
             {
                 content: messageText,
-                uid: user.uid,
-                parentId: ''
+                uid: uid,
+                parentId: parentId
             }
-
         )
             .then(docRef => docRef.get())
             .then(doc => {
-                setMessageText('');
-                setSubmitting(false);
                 console.log(doc);
+
+                if (parentId){
+                    dispatch(appActions.setQuoteText(''));
+                    dispatch(appActions.setParentId(''));
+                    
+                }
+
+                else {
+                    dispatch(appActions.setCommentText('')); 
+                }
+
+                
+
             }
             );
     }
 
-    const handleChange = (e) => {
-        setMessageText(e.target.value);
-    }
+    
+    return (<div>
+            {comments.length > 0 && <div>
+                <Modal title={parentId && comments.find(item => item.id == parentId).content} onOk={() => handleSubmit(id, user.uid, parentId, quoteText)} onCancel={() => dispatch(appActions.cancelQuote())} visible={parentId}>
+                    <Form.Item>
+                        <TextArea rows={4} onChange={(e) => dispatch(appActions.setQuoteText(e.target.value))} value={quoteText} />
+                    </Form.Item>
+                </Modal>
+                <List
 
+                    dataSource={comments.filter(item => !item.parentId)}
+                    header={`${comments.length} ${comments.length > 1 ? 'Коментариев' : 'Коментарий'}`}
+                    itemLayout="horizontal"
+                    renderItem={props => <CommentApp {...props} comments={comments} key={props.id} />}
+                />
+            </div>}
 
-
-    return (
-        <div>
-            {comments.length > 0 && <CommentList comments={comments} />}
             <Comment
                 avatar={(
                     <Avatar
@@ -96,10 +100,10 @@ const ListComments = ({ comments, user, id }) => {
                 )}
                 content={(
                     <Editor
-                        onChange={handleChange}
-                        onSubmit={handleSubmit}
-                        submitting={submitting}
-                        value={messageText}
+                        onChange={(e) => dispatch(appActions.setCommentText(e.target.value))}
+                        onSubmit={() => handleSubmit(id, user.uid, '', commentText)}
+                        //submitting={submitting}
+                        value={commentText}
                     />
 
                 )}

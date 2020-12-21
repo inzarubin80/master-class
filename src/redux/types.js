@@ -8,6 +8,13 @@ export const FETCH_SAVE_ClASS_REQUEST      = 'APP/FETCH_SAVE_ClASS_REQUEST';
 export const FETCH_SAVE_ClASS_FAILURE      = 'APP/FETCH_SAVE_ClASS_FAILURE';
 export const FETCH_SAVE_ClASS_SUCCESS      = 'APP/FETCH_SAVE_ClASS_SUCCESS';
 
+export const SET_QUOTE_TEXT     = 'APP/QUOTE_TEXT';
+export const SET_PARENT_ID      = 'APP/SET_PARENT_ID';
+export const CANCEL_QUOTE       = 'APP/CANCEL_QUOTE';
+
+export const SET_COMMENT_TEXT = 'APP/SET_COMMENT_TEXT';
+
+
 
 export const LOGIN_SUCCESS       = 'USER/LOGIN_SUCCESS';
 export const LOGIN_REQUEST       = 'USER/LOGIN_REQUEST';

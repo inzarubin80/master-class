@@ -11,16 +11,17 @@ import moment from "moment";
 import { db } from '../../firebase';
 import { connect } from 'react-redux'
 
+import {useDispatch} from 'react-redux'
 
 import localization from 'moment/locale/ru'
 import ListComments from '../ListComments';
 import { useSelector} from 'react-redux'
 
-import {Tooltip, Form, Input, Button} from 'antd';
+import {Tooltip, Form, Input, Button, Modal} from 'antd';
 
 
+import * as appActions from "../../redux/app/appActions"
 
-const TextArea = Input.TextArea;
 
 moment.locale('ru')
 
@@ -37,38 +38,39 @@ const config = {
 };
 
 
-const getComent = (id, parentId, content) =>{
-    return {
-        id: id,
-        parentId: parentId, 
-        actions: [<span onClick={()=>{console.log(id)}}>Reply to</span>],
-        author: 'Han Solo',
-        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        content: (
-          <p>{content}</p>
-        ),
-        datetime: (
-          <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
-            <span>{moment().subtract(1, 'days').fromNow()}</span>
-          </Tooltip>
-        )
-    }
 
-}
 
 const ScreenMasterClass = (props) => {
 
     const [settings, setSettings] = useState(config);
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
-    const [messageText, setMessageText] = useState(' ');
     const [comments, setComments] = useState([]);
 
+    const dispatch = useDispatch();
 
     const user = useSelector(state => state.user.user);
 
- 
-
+    const getComent = (id, parentId, content) =>{
+        return {
+            id: id,
+            parentId: parentId, 
+            actions: [<span onClick={() => dispatch(appActions.setParentId(id))}>Reply to</span>],
+            author: 'Han Solo',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            content: (
+              <p>{content}</p>
+            ),
+    
+            datetime: (
+              <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
+                <span>{moment().subtract(1, 'days').fromNow()}</span>
+              </Tooltip>
+            )
+        }
+    
+    }
+    
     React.useEffect(() => {
 
 
@@ -153,6 +155,9 @@ const ScreenMasterClass = (props) => {
             </Slider>
 
 
+          
+
+
             <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
             <div className="card-body">
                 <h5 className="card-title">{data.NameMasterClass}</h5>
@@ -167,7 +172,7 @@ const ScreenMasterClass = (props) => {
                 <li className="list-group-item">Дата: {moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</li>
             </ul>
 
-            <ListComments comments = {comments} id={id} user = {user}/> 
+            <ListComments comments = {comments}  id={id} user = {user} handleCancel = {() => {}} /> 
         
         </div>
 
@@ -179,6 +184,8 @@ const ScreenMasterClass = (props) => {
     }
 
 }
+
+//handleCancel = {() => setParentId('')} 
 
 const mapStateToProps = state => {
     return {

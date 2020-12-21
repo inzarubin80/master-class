@@ -4,12 +4,45 @@ import {
   FETCH_SAVE_ClASS_SUCCESS,
   ADD_ClASS,
   UPDATE_ClASS,
-  GET_LISTS_ClASSES
+  GET_LISTS_ClASSES,
+
+  
+  SET_QUOTE_TEXT,
+  SET_COMMENT_TEXT,
+  SET_PARENT_ID,
+  CANCEL_QUOTE,
 
 } from '../types'
 
  import * as api  from '../../api/firebaseApi'
 
+
+export const setParentId = (parentId) => {
+  return {
+    type: SET_PARENT_ID,
+    payload: parentId
+  };
+};
+
+export const setQuoteText = (quoteText) => {
+  return {
+    type: SET_QUOTE_TEXT,
+    payload: quoteText
+  };
+};
+
+export const setCommentText = (commentText) => {
+  return {
+    type: SET_COMMENT_TEXT,
+    payload: commentText
+  };
+};
+
+export const cancelQuote = () => {
+  return {
+    type: CANCEL_QUOTE
+  };
+};
 
 export const setSaveRequest = () => {
   return {
@@ -17,12 +50,16 @@ export const setSaveRequest = () => {
   };
 };
 
+
+
+
 export const setSaveFailure = (error) => {
   return {
     type: FETCH_SAVE_ClASS_FAILURE,
     payload: error
   };
 };
+
 
 export const setSaveSUCCESS = () => {
   return {
