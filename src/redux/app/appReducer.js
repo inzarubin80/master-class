@@ -6,12 +6,10 @@ import {
     UPDATE_ClASS,
     GET_LISTS_ClASSES,
 
-    SET_QUOTE_TEXT,
+    SET_ID_ANSWER_COMMENT,
+    SET_ID_MODIFIED_COMMENT,
+    SET_ID_DEL_COMMENT,
 
-    SET_COMMENT_TEXT,
-    
-    SET_PARENT_ID,
-    CANCEL_QUOTE
     
 } from '../types'
 
@@ -21,13 +19,13 @@ const initialState = {
     uploading: false,
     error: '',
     masterClasses: [],
-    
-    quoteText:'',
-    parentId:'',
-    commentText:''
 
-    
 
+    delCommentId:     '',
+    answerComentId:   '',
+    modifiedCommentId:'',
+  
+    
 };
 
 export default (state = initialState, action) => {
@@ -47,27 +45,25 @@ export default (state = initialState, action) => {
             return {...state, uploading: false,  masterClasses:[...state.masterClasses, action.payload]}
         }
 
-        case SET_QUOTE_TEXT: {
+
+        case SET_ID_DEL_COMMENT: {
          
-            return {...state, quoteText: action.payload}
+            return {...state, delCommentId:action.payload}
+        }
+       
+       
+        case SET_ID_MODIFIED_COMMENT: {
+         
+            return {...state, modifiedCommentId: action.payload}
         }
 
-        case SET_COMMENT_TEXT: {
+
+        case SET_ID_ANSWER_COMMENT: {
          
-            return {...state, commentText: action.payload}
+            return {...state, answerComentId: action.payload}
         }
+        
 
-
-        case SET_PARENT_ID: {
-         
-            return {...state, parentId: action.payload}
-        }
-
-        case CANCEL_QUOTE: {
-         
-            return {...state, parentId: '', quoteText:''}
-
-        }
 
         case GET_LISTS_ClASSES: {
             return { ...state, masterClasses: action.payload}

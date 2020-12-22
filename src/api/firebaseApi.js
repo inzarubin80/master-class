@@ -3,13 +3,22 @@ import {createMasterClassFromVal } from '../model/mastreClass';
 
 
 export const addComment = (id, data) => {
-
     return db.collection('masterClassComments').doc(id).collection('comments').add(data)
-
 }
-/* Auth */
-export function logInUser(email, password) {
 
+export const updateComment = (id, idComment, data) => {
+    return db.collection('masterClassComments').doc(id).collection('comments').doc(idComment).update(data);
+}
+
+
+export function deleteComment(id, idComment) {
+    return db.collection('masterClassComments').doc(id).collection('comments').doc(idComment).delete()
+        .then(() => idComment);
+}
+
+
+
+export function logInUser(email, password) {
     return auth.signInWithEmailAndPassword(email, password);
 }
 
@@ -18,10 +27,6 @@ export function signOutUser() {
 }
 
 export function registerUser(email, password) {
-
-    console.log(email);
-    console.log(password);
-
     return auth.createUserWithEmailAndPassword(email, password);
 }
 

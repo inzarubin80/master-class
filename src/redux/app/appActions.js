@@ -5,44 +5,42 @@ import {
   ADD_ClASS,
   UPDATE_ClASS,
   GET_LISTS_ClASSES,
-
   
-  SET_QUOTE_TEXT,
-  SET_COMMENT_TEXT,
-  SET_PARENT_ID,
-  CANCEL_QUOTE,
+  SET_ID_ANSWER_COMMENT,
+  SET_ID_MODIFIED_COMMENT,
+  SET_ID_DEL_COMMENT,
+
+
 
 } from '../types'
 
  import * as api  from '../../api/firebaseApi'
 
 
-export const setParentId = (parentId) => {
+export const setAnswerCommentId = (id) => {
   return {
-    type: SET_PARENT_ID,
-    payload: parentId
+    type: SET_ID_ANSWER_COMMENT,
+    payload: id
   };
 };
 
-export const setQuoteText = (quoteText) => {
+
+export const setModifiedCommentId = (id) => {
   return {
-    type: SET_QUOTE_TEXT,
-    payload: quoteText
+    type: SET_ID_MODIFIED_COMMENT,
+    payload: id
   };
 };
 
-export const setCommentText = (commentText) => {
+export const setDelCommentId = (id) => {
   return {
-    type: SET_COMMENT_TEXT,
-    payload: commentText
+    type: SET_ID_DEL_COMMENT,
+    payload: id
   };
 };
 
-export const cancelQuote = () => {
-  return {
-    type: CANCEL_QUOTE
-  };
-};
+
+
 
 export const setSaveRequest = () => {
   return {

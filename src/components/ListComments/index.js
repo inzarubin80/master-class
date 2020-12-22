@@ -2,17 +2,15 @@ import {
     Comment, Avatar, Form, Button, List, Input, Modal
 } from 'antd';
 
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import CommentApp from '../CommentApp';
-
 import { useSelector, useDispatch } from 'react-redux';
 import * as appActions from "../../redux/app/appActions"
+import { addComment, updateComment, deleteComment } from '../../api/firebaseApi'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
-import { addComment } from '../../api/firebaseApi'
 
 const TextArea = Input.TextArea;
-
 
 const Editor = ({
     onChange, onSubmit, submitting, value,
@@ -37,12 +35,27 @@ const Editor = ({
 const ListComments = ({ comments, user, id }) => {
 
     const dispatch = useDispatch();
-    const commentText = useSelector(state => state.app.commentText);
-    const parentId = useSelector(state => state.app.parentId);
-    const quoteText = useSelector(state => state.app.quoteText);
+    
+    
+    const delCommentId = useSelector(state => state.app.delCommentId);
+    const answerComentId = useSelector(state => state.app.answerComentId);
+    const modifiedCommentId = useSelector(state => state.app.modifiedCommentId);
+    
+    
+    
+    const [newContent, setNewContent] = useState('');
+    const [editContent, setEditContent] = useState('');
+    const [replyContent, setreplyContent] = useState('');
 
 
-    const handleSubmit = (id, uid, parentId, messageText) => {
+    const delcomment = comments.find(item => item.id == delCommentId); 
+    
+    const delContent = delcomment?delcomment.content:null;
+
+    
+
+  
+    const handleAddSubmit = (id, uid, answerComentId, messageText) => {
 
         if (messageText == '') {
             return;
@@ -51,65 +64,104 @@ const ListComments = ({ comments, user, id }) => {
             {
                 content: messageText,
                 uid: uid,
-                parentId: parentId
+                parentId: answerComentId
             }
         )
             .then(docRef => docRef.get())
             .then(doc => {
-                console.log(doc);
+                if (answerComentId) {
 
-                if (parentId){
-                    dispatch(appActions.setQuoteText(''));
-                    dispatch(appActions.setParentId(''));
+                    setreplyContent('');
+                    dispatch(appActions.setAnswerCommentId(''));
                     
                 }
-
                 else {
-                    dispatch(appActions.setCommentText('')); 
+                    setNewContent('');
                 }
-
-                
-
             }
             );
     }
 
+
+    const handleUpdateSubmit = () => {
+
+        if (editContent == '') {
+            return;
+        }
+        return updateComment(id, modifiedCommentId, {content: editContent})
+            .then(docRef => {
+                dispatch(appActions.setModifiedCommentId(''));
+                setEditContent('')
+            })
+    }
     
+
+    
+    const handleDeleteSubmit = () => {
+        return deleteComment(id, delCommentId)
+            .then(docRef => {
+                dispatch(appActions.setDelCommentId(''));
+            })
+    }
+
+    useEffect(() => {
+        if (modifiedCommentId){
+            const content  = comments.find(item => item.id == modifiedCommentId).content;
+            setEditContent(content.props.children);
+        }
+        
+    }, [modifiedCommentId]);
+
+
+
+
     return (<div>
-            {comments.length > 0 && <div>
-                <Modal title={parentId && comments.find(item => item.id == parentId).content} onOk={() => handleSubmit(id, user.uid, parentId, quoteText)} onCancel={() => dispatch(appActions.cancelQuote())} visible={parentId}>
-                    <Form.Item>
-                        <TextArea rows={4} onChange={(e) => dispatch(appActions.setQuoteText(e.target.value))} value={quoteText} />
-                    </Form.Item>
-                </Modal>
-                <List
+        {comments.length > 0 && <div>
 
-                    dataSource={comments.filter(item => !item.parentId)}
-                    header={`${comments.length} ${comments.length > 1 ? 'Коментариев' : 'Коментарий'}`}
-                    itemLayout="horizontal"
-                    renderItem={props => <CommentApp {...props} comments={comments} key={props.id} />}
-                />
-            </div>}
+            <Modal okText = {'Да'} cancelText = {'Отмена'} title={answerComentId && comments.find(item => item.id == answerComentId).content} onOk={() => handleAddSubmit(id, user.uid, answerComentId, replyContent)} onCancel={() => dispatch(appActions.setAnswerCommentId(''))} visible={answerComentId}>
+                <Form.Item>
+                    <TextArea rows={4} onChange={(e) => setreplyContent(e.target.value)} value={replyContent} />
+                </Form.Item>
+            </Modal>
 
-            <Comment
-                avatar={(
-                    <Avatar
-                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                        alt="Han Solo"
-                    />
-                )}
-                content={(
-                    <Editor
-                        onChange={(e) => dispatch(appActions.setCommentText(e.target.value))}
-                        onSubmit={() => handleSubmit(id, user.uid, '', commentText)}
-                        //submitting={submitting}
-                        value={commentText}
-                    />
+            <Modal okText = {'Да'} cancelText = {'Отмена'}  onOk={() => handleUpdateSubmit()} onCancel={() => dispatch(appActions.setModifiedCommentId(''))} visible={modifiedCommentId}>
+                <Form.Item>
+                    <TextArea rows={4} onChange={(e) => setEditContent(e.target.value)} value={editContent} />
+                </Form.Item>
+            </Modal>
 
-                )}
+            <Modal  visible={delCommentId} title={'Удалить этот комментарий?'} onOk={() => handleDeleteSubmit()}  okText = {'Да'} okType = {'danger'} cancelText = {'Отмена'}  onCancel={() => dispatch(appActions.setDelCommentId(''))}>
+               {delContent}
+            </Modal>
 
+
+            <List
+
+                dataSource={comments.filter(item => !item.parentId)}
+                header={'Коментарии'}
+                itemLayout="horizontal"
+                renderItem={props => <CommentApp {...props} comments={comments} key={props.id} />}
             />
-        </div>
+        </div>}
+
+        <Comment
+            avatar={(
+                <Avatar
+                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                    alt="Han Solo"
+                />
+            )}
+            content={(
+                <Editor
+                    onChange={(e) => setNewContent(e.target.value)}
+                    onSubmit={() => handleAddSubmit(id, user.uid, '', newContent)}
+                    value={newContent}
+                />
+
+            )}
+
+        />
+    </div>
     );
 }
 

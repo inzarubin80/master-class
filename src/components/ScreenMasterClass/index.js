@@ -38,8 +38,6 @@ const config = {
 };
 
 
-
-
 const ScreenMasterClass = (props) => {
 
     const [settings, setSettings] = useState(config);
@@ -55,12 +53,23 @@ const ScreenMasterClass = (props) => {
         return {
             id: id,
             parentId: parentId, 
-            actions: [<span onClick={() => dispatch(appActions.setParentId(id))}>Reply to</span>],
+            actions: [
+
+            <span onClick={() => dispatch(appActions.setAnswerCommentId(id))}>Ответить</span>, 
+            <span onClick={() => dispatch(appActions.setModifiedCommentId(id))}>Изменить</span>, 
+            <span onClick={() => dispatch(appActions.setDelCommentId(id))}>Удалить</span>, 
+            
+            
+            ],
+
             author: 'Han Solo',
             avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
             content: (
               <p>{content}</p>
             ),
+
+            textContent:content,
+              
     
             datetime: (
               <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
@@ -76,7 +85,6 @@ const ScreenMasterClass = (props) => {
 
         const unsub = db.collection('masterClass').doc(id).onSnapshot(docSnapshot => {
 
-            console.log(docSnapshot);
             setData(createMasterClassFromVal(docSnapshot.id, docSnapshot.data()));
 
 
@@ -87,19 +95,22 @@ const ScreenMasterClass = (props) => {
 
         const observerComments = db.collection('masterClassComments').doc(id).collection('comments')
             .onSnapshot(querySnapshot => {
+                
+                let addComments = [];
+
                 querySnapshot.docChanges().forEach(change => {
                     if (change.type === 'added') {
 
                         let data = change.doc.data();
-                        console.log('New comment: ', data);
-                        setComments((prev) => [...prev, getComent(change.doc.id, data.parentId, data.content)])
+                        addComments.push(getComent(change.doc.id, data.parentId, data.content));
+
                     }
                     if (change.type === 'modified') {
+                        let data = change.doc.data();
 
-                        console.log('Modified comment: ', change.doc.data());
                         setComments((prev) => prev.map((item) => {
                             if (item.id == change.doc.id) {
-                                return { ...change.doc.data(), id: change.doc.id }
+                                return getComent(change.doc.id, data.parentId, data.content)
                             }
                             else {
                                 return item
@@ -109,11 +120,18 @@ const ScreenMasterClass = (props) => {
                     }
                     if (change.type === 'removed') {
 
-                        console.log('Removed comment: ', change.doc.data());
                         setComments((prev) => prev.filter(item => item.id !== change.doc.id));
 
                     }
                 });
+
+
+                if (addComments.length){
+
+                    setComments((prev) => [...prev,...addComments])
+                }
+
+
 
 
             });
@@ -139,8 +157,6 @@ const ScreenMasterClass = (props) => {
         }
     }
 
-
-    console.log("ScreenMasterClass", id);
 
     console.log("comments в ScreenMasterClass ...................", comments);
 
