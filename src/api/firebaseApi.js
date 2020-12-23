@@ -1,6 +1,24 @@
 import { db, auth, storage } from '../firebase';
-import {createMasterClassFromVal } from '../model/mastreClass';
+import { createMasterClassFromVal } from '../model/mastreClass';
 
+
+
+export const setProfile = (uid, collection, data) => {
+    return db.collection(collection).doc(uid).set(data);
+}
+
+
+//.where('uid', 'array-contains', uids)
+
+
+export const getOpenProfileInformation = (uids) => {
+    return db.collection('openProfileInformation')
+    .where('uid', 'in', uids)
+    .get()
+    .then(snapshot => {
+        return snapshot.docs.map(doc =>  doc.data());
+    });
+}
 
 export const addComment = (id, data) => {
     return db.collection('masterClassComments').doc(id).collection('comments').add(data)
@@ -47,7 +65,7 @@ export async function addFiles(filename, file) {
 export const addMasterClass = (data) => {
 
 
-    return db.collection('masterClass').add({ basicData: data, reservation:{}})
+    return db.collection('masterClass').add({ basicData: data, reservation: {} })
         .then(docRef => docRef.get())
         .then(doc => (createMasterClassFromVal(doc.id, doc.data())));
 
@@ -76,16 +94,16 @@ export const masterСlassСhangeReserve = async (key, uid) => {
         const res = await db.runTransaction(async t => {
             const doc = await t.get(ref);
 
-            const  masterClass = createMasterClassFromVal(key, doc.data())
+            const masterClass = createMasterClassFromVal(key, doc.data())
 
             if (masterClass.reservation && masterClass.reservation[uid]) {
                 delete masterClass.reservation[uid];
-               await t.update(ref, { reservation: masterClass.reservation });
+                await t.update(ref, { reservation: masterClass.reservation });
             }
             else {
 
                 if (Object.keys(masterClass.reservation).length < masterClass.numberSeats) {
-                    
+
                     masterClass.reservation[uid] = true;
                     await t.update(ref, { reservation: masterClass.reservation });
 
@@ -130,6 +148,6 @@ export const getMasterClassById = (id) => {
 
 export const getUserInfo = (uid) => {
     return db.collection('userRoles').doc(uid).collection('roles');
- 
+
 }
 

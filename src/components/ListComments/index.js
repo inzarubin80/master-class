@@ -7,7 +7,7 @@ import CommentApp from '../CommentApp';
 import { useSelector, useDispatch } from 'react-redux';
 import * as appActions from "../../redux/app/appActions"
 import { addComment, updateComment, deleteComment } from '../../api/firebaseApi'
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+
 
 
 const TextArea = Input.TextArea;
@@ -26,7 +26,7 @@ const Editor = ({
                 onClick={onSubmit}
                 type="primary"
             >
-                Add Comment
+                Добавить комментарий
         </Button>
         </Form.Item>
     </div>
@@ -40,21 +40,11 @@ const ListComments = ({ comments, user, id }) => {
     const delCommentId = useSelector(state => state.app.delCommentId);
     const answerComentId = useSelector(state => state.app.answerComentId);
     const modifiedCommentId = useSelector(state => state.app.modifiedCommentId);
-    
-    
-    
     const [newContent, setNewContent] = useState('');
     const [editContent, setEditContent] = useState('');
     const [replyContent, setreplyContent] = useState('');
-
-
     const delcomment = comments.find(item => item.id == delCommentId); 
-    
     const delContent = delcomment?delcomment.content:null;
-
-    
-
-  
     const handleAddSubmit = (id, uid, answerComentId, messageText) => {
 
         if (messageText == '') {

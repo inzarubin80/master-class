@@ -5,22 +5,24 @@ import "slick-carousel/slick/slick-theme.css";
 import './index.css';
 import { masterСlassСhangeReserve } from '../../api/firebaseApi';
 import Slider from "react-slick";
-import {createMasterClassFromVal } from "../../model/mastreClass"
+import { createMasterClassFromVal } from "../../model/mastreClass"
 import moment from "moment";
 
 import { db } from '../../firebase';
 import { connect } from 'react-redux'
 
-import {useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import localization from 'moment/locale/ru'
 import ListComments from '../ListComments';
-import { useSelector} from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import {Tooltip, Form, Input, Button, Modal} from 'antd';
+import { Tooltip, Form, Input, Button, Modal } from 'antd';
 
 
 import * as appActions from "../../redux/app/appActions"
+
+import { getOpenProfileInformation } from '../../api/firebaseApi'
 
 
 moment.locale('ru')
@@ -49,37 +51,46 @@ const ScreenMasterClass = (props) => {
 
     const user = useSelector(state => state.user.user);
 
-    const getComent = (id, parentId, content) =>{
+    console.log('user', user);
+
+    const getComent = (id, parentId, content, uid) => {
+
+        console.log('getComent', user);
+
+
         return {
             id: id,
-            parentId: parentId, 
+            parentId: parentId,
+
+            uid: uid,
+
             actions: [
 
-            <span onClick={() => dispatch(appActions.setAnswerCommentId(id))}>Ответить</span>, 
-            <span onClick={() => dispatch(appActions.setModifiedCommentId(id))}>Изменить</span>, 
-            <span onClick={() => dispatch(appActions.setDelCommentId(id))}>Удалить</span>, 
-            
-            
+                <span onClick={() => dispatch(appActions.setAnswerCommentId(id))}>Ответить</span>,
+                <span onClick={() => dispatch(appActions.setModifiedCommentId(id))}>Изменить</span>,
+                <span onClick={() => dispatch(appActions.setDelCommentId(id))}>Удалить</span>,
+
+
             ],
 
-            author: 'Han Solo',
-            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            author: '',
+            avatar: '',
             content: (
-              <p>{content}</p>
+                <p>{content}</p>
             ),
 
-            textContent:content,
-              
-    
+            textContent: content,
+
+
             datetime: (
-              <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
-                <span>{moment().subtract(1, 'days').fromNow()}</span>
-              </Tooltip>
+                <Tooltip title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}>
+                    <span>{moment().subtract(1, 'days').fromNow()}</span>
+                </Tooltip>
             )
         }
-    
+
     }
-    
+
     React.useEffect(() => {
 
 
@@ -95,14 +106,14 @@ const ScreenMasterClass = (props) => {
 
         const observerComments = db.collection('masterClassComments').doc(id).collection('comments')
             .onSnapshot(querySnapshot => {
-                
+
                 let addComments = [];
 
                 querySnapshot.docChanges().forEach(change => {
                     if (change.type === 'added') {
 
                         let data = change.doc.data();
-                        addComments.push(getComent(change.doc.id, data.parentId, data.content));
+                        addComments.push(getComent(change.doc.id, data.parentId, data.content, data.uid));
 
                     }
                     if (change.type === 'modified') {
@@ -110,7 +121,7 @@ const ScreenMasterClass = (props) => {
 
                         setComments((prev) => prev.map((item) => {
                             if (item.id == change.doc.id) {
-                                return getComent(change.doc.id, data.parentId, data.content)
+                                return getComent(change.doc.id, data.parentId, data.content, data.uid)
                             }
                             else {
                                 return item
@@ -126,14 +137,25 @@ const ScreenMasterClass = (props) => {
                 });
 
 
-                if (addComments.length){
+                if (addComments.length) {
 
-                    setComments((prev) => [...prev,...addComments])
+                    getOpenProfileInformation(addComments.map(item => item.uid)).then(profiles => {
+
+                      const comentsEndProfile =  addComments.map((comment) => {
+
+                            const find = profiles.find(item => item.uid == comment.uid);
+
+                            if (find) {
+                                comment.author = find.displayName;
+                                comment.avatar = find.photoURL;
+                            }
+                            return comment;
+                        }
+                        );
+                        setComments((prev) => [...prev, ...comentsEndProfile]);
+                    }
+                    );
                 }
-
-
-
-
             });
 
         return () => {
@@ -171,7 +193,7 @@ const ScreenMasterClass = (props) => {
             </Slider>
 
 
-          
+
 
 
             <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
@@ -188,8 +210,8 @@ const ScreenMasterClass = (props) => {
                 <li className="list-group-item">Дата: {moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</li>
             </ul>
 
-            <ListComments comments = {comments}  id={id} user = {user} handleCancel = {() => {}} /> 
-        
+            <ListComments comments={comments} id={id} user={user} handleCancel={() => { }} />
+
         </div>
 
         )

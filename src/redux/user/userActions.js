@@ -16,16 +16,16 @@ export function signOutUser() {
   return api.signOutUser().then(() => ({}));
 }
 
+
+
 export function registerUser(email, password) {
   return api.registerUser(email, password).then(() => ({}));
 }
 
+
 export function initAuth() {
 
   return (dispatch, getState) => {api.initAuth((user) => {
-
-
-  
     
     if (user)
     {  
@@ -36,8 +36,14 @@ export function initAuth() {
 
       const roles = docSnapshot.docs.map(doc => (doc.id));
       dispatch({type: SET_ROLES, payload: {roles, subscriptionRoles}})
-
+    
       } );
+
+
+      api.setProfile(user.uid, 'openProfileInformation', {uid:user.uid, displayName:user.displayName, photoURL:user.photoURL});
+      api.setProfile(user.uid, 'privateProfileInformation', {uid:user.uid, phoneNumber:user.phoneNumber, email:user.email});
+
+
     }
     else {
 

@@ -1,19 +1,14 @@
 import React, {useEffect, useRef } from 'react'
 import ListItemMasterСlass from '../ListItemMasterСlass';
-
 import useIntersect from "./useIntersect";
-
 import { useSelector, useDispatch } from 'react-redux'
 import {getLists} from '../../redux/app/appActions'
-
 
 
 const ListMasterClasses = (props) => {
 
     const masterClasses = useSelector(state => state.app.masterClasses);
     
-    
-
     const ref = useRef();
 
     const [isIntersecting, setIntersecting] = useIntersect(ref, "1%");
@@ -25,7 +20,7 @@ const ListMasterClasses = (props) => {
            dispatch(getLists());
        
     }, []);
-    
+
     const updateMasterClassClicked = (id) => {
         props.history.push(`/change/${id}`)
     }
@@ -34,11 +29,7 @@ const ListMasterClasses = (props) => {
         props.history.push(`/classes/${id}`);
     }
 
-
     return (<div >
-
-       
-
 
         {masterClasses.map((item, index) => (
          
