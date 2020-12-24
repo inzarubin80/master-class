@@ -1,5 +1,5 @@
 import {
-    Comment, Avatar, Form, Button, List, Input, Modal
+    Comment, Avatar, Form, Button, List, Input, Modal, Collapse
 } from 'antd';
 
 import React, { useState, useEffect } from "react";
@@ -35,21 +35,35 @@ const Editor = ({
 const ListComments = ({ comments, user, id }) => {
 
     const dispatch = useDispatch();
-    
-    
+
+
     const delCommentId = useSelector(state => state.app.delCommentId);
     const answerComentId = useSelector(state => state.app.answerComentId);
     const modifiedCommentId = useSelector(state => state.app.modifiedCommentId);
     const [newContent, setNewContent] = useState('');
     const [editContent, setEditContent] = useState('');
     const [replyContent, setreplyContent] = useState('');
-    const delcomment = comments.find(item => item.id == delCommentId); 
-    const delContent = delcomment?delcomment.content:null;
+
+    const [submitting, setSubmitting] = useState(false);
+    
+
+    const [displayedComments, setDisplayedComments] = useState([]);
+
+
+    const delcomment = comments.find(item => item.id == delCommentId);
+    const delContent = delcomment ? delcomment.content : null;
+
+    const { Panel } = Collapse;
+
     const handleAddSubmit = (id, uid, answerComentId, messageText) => {
+
 
         if (messageText == '') {
             return;
         }
+
+        setSubmitting(true);
+
         return addComment(id,
             {
                 content: messageText,
@@ -59,34 +73,47 @@ const ListComments = ({ comments, user, id }) => {
         )
             .then(docRef => docRef.get())
             .then(doc => {
-                if (answerComentId) {
 
+                setSubmitting(false);
+
+                if (answerComentId) {
                     setreplyContent('');
                     dispatch(appActions.setAnswerCommentId(''));
-                    
                 }
                 else {
                     setNewContent('');
                 }
+
             }
-            );
+            ).catch((e)=>{ setSubmitting(false)});
     }
 
 
     const handleUpdateSubmit = () => {
 
+
+
+        
+
+
         if (editContent == '') {
             return;
         }
-        return updateComment(id, modifiedCommentId, {content: editContent})
+
+
+        setSubmitting(true);
+
+        return updateComment(id, modifiedCommentId, { content: editContent })
             .then(docRef => {
+
+                setSubmitting(false);
                 dispatch(appActions.setModifiedCommentId(''));
                 setEditContent('')
-            })
+               
+            }).catch(e=>{ setSubmitting(false);})
     }
-    
 
-    
+
     const handleDeleteSubmit = () => {
         return deleteComment(id, delCommentId)
             .then(docRef => {
@@ -95,63 +122,84 @@ const ListComments = ({ comments, user, id }) => {
     }
 
     useEffect(() => {
-        if (modifiedCommentId){
-            const content  = comments.find(item => item.id == modifiedCommentId).content;
+        if (modifiedCommentId) {
+            const content = comments.find(item => item.id == modifiedCommentId).content;
             setEditContent(content.props.children);
         }
-        
+
     }, [modifiedCommentId]);
 
 
+    useEffect(() => {
+
+        const newDisplayedComments = comments.filter(item => !item.parentId || comments.find(itemParent => itemParent.id == item.parentId));
+        setDisplayedComments(newDisplayedComments);
+
+    }, [comments]);
 
 
-    return (<div>
-        {comments.length > 0 && <div>
 
-            <Modal okText = {'Да'} cancelText = {'Отмена'} title={answerComentId && comments.find(item => item.id == answerComentId).content} onOk={() => handleAddSubmit(id, user.uid, answerComentId, replyContent)} onCancel={() => dispatch(appActions.setAnswerCommentId(''))} visible={answerComentId}>
-                <Form.Item>
-                    <TextArea rows={4} onChange={(e) => setreplyContent(e.target.value)} value={replyContent} />
-                </Form.Item>
-            </Modal>
+    return (
 
-            <Modal okText = {'Да'} cancelText = {'Отмена'}  onOk={() => handleUpdateSubmit()} onCancel={() => dispatch(appActions.setModifiedCommentId(''))} visible={modifiedCommentId}>
-                <Form.Item>
-                    <TextArea rows={4} onChange={(e) => setEditContent(e.target.value)} value={editContent} />
-                </Form.Item>
-            </Modal>
+        <div>
+            <Collapse defaultActiveKey={[]} onChange={()=>{}}>
+                <Panel header={'Комментарии'} key="1">
 
-            <Modal  visible={delCommentId} title={'Удалить этот комментарий?'} onOk={() => handleDeleteSubmit()}  okText = {'Да'} okType = {'danger'} cancelText = {'Отмена'}  onCancel={() => dispatch(appActions.setDelCommentId(''))}>
-               {delContent}
-            </Modal>
+                {setDisplayedComments.length > 0 && <div>
+
+                    <Modal okText={'Да'} cancelText={'Отмена'} title={answerComentId && comments.find(item => item.id == answerComentId).content} onOk={() => handleAddSubmit(id, user.uid, answerComentId, replyContent)} onCancel={() => dispatch(appActions.setAnswerCommentId(''))} visible={answerComentId}>
+                        <Form.Item>
+                            <TextArea rows={4} onChange={(e) => setreplyContent(e.target.value)} value={replyContent} />
+                        </Form.Item>
+                    </Modal>
+
+                    <Modal okText={'Да'} cancelText={'Отмена'} onOk={() => handleUpdateSubmit()} onCancel={() => dispatch(appActions.setModifiedCommentId(''))} visible={modifiedCommentId}>
+                        <Form.Item>
+                            <TextArea rows={4} onChange={(e) => setEditContent(e.target.value)} value={editContent} />
+                        </Form.Item>
+                    </Modal>
+
+                    <Modal visible={delCommentId} title={'Удалить этот комментарий?'} onOk={() => handleDeleteSubmit()} okText={'Да'} okType={'danger'} cancelText={'Отмена'} onCancel={() => dispatch(appActions.setDelCommentId(''))}>
+                        {delContent}
+                    </Modal>
 
 
-            <List
+                    <List
+                        dataSource={displayedComments.filter(item => !item.parentId)}
+                        //header={`${displayedComments.length} Комментариев`}
+                        // itemLayout="horizontal"
+                        renderItem={props => <CommentApp {...props} comments={displayedComments} key={props.id} />}
+                    />
+                </div>}
 
-                dataSource={comments.filter(item => !item.parentId)}
-                header={'Коментарии'}
-                itemLayout="horizontal"
-                renderItem={props => <CommentApp {...props} comments={comments} key={props.id} />}
-            />
-        </div>}
+                <Comment
+                    avatar={(
+                        <Avatar
 
-        <Comment
-            avatar={(
-                <Avatar
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    alt="Han Solo"
+                            src={user ? user.photoURL : ""}
+                            alt={user ? user.displayName : ''}
+
+
+                        />
+                    )}
+                    content={(
+                        <Editor
+                            onChange={(e) => setNewContent(e.target.value)}
+                            onSubmit={() => handleAddSubmit(id, user.uid, '', newContent)}
+                            value={newContent}
+                            submitting = {submitting}
+                        />
+
+                    )}
+
                 />
-            )}
-            content={(
-                <Editor
-                    onChange={(e) => setNewContent(e.target.value)}
-                    onSubmit={() => handleAddSubmit(id, user.uid, '', newContent)}
-                    value={newContent}
-                />
+                
+                </Panel>
+            </Collapse>
 
-            )}
+        </div>
 
-        />
-    </div>
+
     );
 }
 

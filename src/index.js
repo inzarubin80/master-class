@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './bootstrap.css';
-import "antd/dist/antd.css";
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -14,6 +13,8 @@ import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk'
 import rootReducer from './redux/rootReducer';
 import { initAuth } from './redux/user/userActions';
+import { initUsersProfiles } from './redux/profiles/profilesAction';
+
 
 const logger = store => next => action => {
   console.log('dispatching', action)
@@ -25,6 +26,8 @@ const logger = store => next => action => {
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
 store.dispatch(initAuth());
+store.dispatch(initUsersProfiles());
+
 
 ReactDOM.render(<Provider store={store}> 
   <App/>

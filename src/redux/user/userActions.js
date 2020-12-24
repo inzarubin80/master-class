@@ -6,6 +6,8 @@ import {
   SET_ROLES
 } from '../types'
 
+
+
 import * as api from '../../api/firebaseApi';
 
 export function logInUser(email, password) {
@@ -25,40 +27,43 @@ export function registerUser(email, password) {
 
 export function initAuth() {
 
-  return (dispatch, getState) => {api.initAuth((user) => {
-    
-    if (user)
-    {  
+  return (dispatch, getState) => {
+    api.initAuth((user) => {
 
-       dispatch({type: LOGIN_SUCCESS, payload: user});
+      if (user) {
 
-       const subscriptionRoles = api.getUserInfo(user.uid).onSnapshot(docSnapshot => {
+        dispatch({ type: LOGIN_SUCCESS, payload: user });
 
-      const roles = docSnapshot.docs.map(doc => (doc.id));
-      dispatch({type: SET_ROLES, payload: {roles, subscriptionRoles}})
-    
-      } );
+        const subscriptionRoles = api.getUserInfo(user.uid).onSnapshot(docSnapshot => {
 
+          const roles = docSnapshot.docs.map(doc => (doc.id));
+          dispatch({ type: SET_ROLES, payload: { roles, subscriptionRoles } })
 
-      api.setProfile(user.uid, 'openProfileInformation', {uid:user.uid, displayName:user.displayName, photoURL:user.photoURL});
-      api.setProfile(user.uid, 'privateProfileInformation', {uid:user.uid, phoneNumber:user.phoneNumber, email:user.email});
+        });
 
 
-    }
-    else {
+        api.setProfile(user.uid, 'openProfileInformation', { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL });
+        api.setProfile(user.uid, 'privateProfileInformation', { uid: user.uid, phoneNumber: user.phoneNumber, email: user.email });
 
-      const subscriptionRoles = getState().user.userRoles.subscriptionRoles;
-      if (subscriptionRoles) {
-          subscriptionRoles();
+
       }
-      
-      dispatch({type: LOGIN_LOGOUT})
+      else {
 
-    };
+        const subscriptionRoles = getState().user.userRoles.subscriptionRoles;
+        if (subscriptionRoles) {
+          subscriptionRoles();
+        }
 
-  });
+        dispatch({ type: LOGIN_LOGOUT })
+
+      };
+
+    });
+  }
 }
-}
+
+
+
 
 
 export const setUserName = (userName) => {
@@ -68,7 +73,7 @@ export const setUserName = (userName) => {
   };
 };
 
-export  const setPassword = (password) => {
+export const setPassword = (password) => {
   return {
     type: SET_PASSWORD,
     payload: password,
