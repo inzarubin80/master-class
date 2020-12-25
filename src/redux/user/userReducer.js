@@ -11,6 +11,8 @@ const  initialState = {
 
 };
 
+let buld;
+
 export default (state = initialState, action) => {
 
     switch (action.type) {
