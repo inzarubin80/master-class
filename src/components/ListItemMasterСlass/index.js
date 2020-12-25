@@ -2,7 +2,7 @@ import React from 'react'
 import './index.css';
 import useIntersect from "../ListMasterClasses/useIntersect";
 import { useSelector } from 'react-redux'
-import { Card } from 'antd';
+import { Card} from 'antd';
 
 const ListItemMasterСlass = (props) => {
 
@@ -16,7 +16,7 @@ const ListItemMasterСlass = (props) => {
     console.log('roles', roles);
 
     return (
-        <div ref={ref}>
+        <div ref={ref} className='MasterClasses'>
             <Card
 
                 hoverable
@@ -28,6 +28,7 @@ const ListItemMasterСlass = (props) => {
 
             </Card>
             {(roles.indexOf('admin') !== -1) && <button type="submit" className="btn btn-primary" onClick={props.updateMasterClassClicked}>Изменить</button>}
+          
           
 
         </div>
