@@ -32,7 +32,10 @@ const Editor = ({
     </div>
 );
 
-const ListComments = ({ comments, user, id }) => {
+const ListComments = (props) => {
+
+
+    const {comments, user, id, history } = props;
 
     const dispatch = useDispatch();
 
@@ -55,9 +58,16 @@ const ListComments = ({ comments, user, id }) => {
 
     const { Panel } = Collapse;
 
-    const handleAddSubmit = (id, uid, answerComentId, messageText) => {
+    const handleAddSubmit = (id, answerComentId, messageText) => {
 
 
+        if (!user) {
+            props.history.push(`/login`);
+            return;
+        }
+
+       const uid = user.uid;
+        
         if (messageText == '') {
             return;
         }
@@ -147,7 +157,7 @@ const ListComments = ({ comments, user, id }) => {
 
                 {setDisplayedComments.length > 0 && <div>
 
-                    <Modal okText={'Да'} cancelText={'Отмена'} title={answerComentId && comments.find(item => item.id == answerComentId).content} onOk={() => handleAddSubmit(id, user.uid, answerComentId, replyContent)} onCancel={() => dispatch(appActions.setAnswerCommentId(''))} visible={answerComentId}>
+                    <Modal okText={'Да'} cancelText={'Отмена'} title={answerComentId && comments.find(item => item.id == answerComentId).content} onOk={() => handleAddSubmit(id, answerComentId, replyContent)} onCancel={() => dispatch(appActions.setAnswerCommentId(''))} visible={answerComentId}>
                         <Form.Item>
                             <TextArea rows={4} onChange={(e) => setreplyContent(e.target.value)} value={replyContent} />
                         </Form.Item>
@@ -185,7 +195,7 @@ const ListComments = ({ comments, user, id }) => {
                     content={(
                         <Editor
                             onChange={(e) => setNewContent(e.target.value)}
-                            onSubmit={() => handleAddSubmit(id, user.uid, '', newContent)}
+                            onSubmit={() => handleAddSubmit(id, '', newContent)}
                             value={newContent}
                             submitting = {submitting}
                         />

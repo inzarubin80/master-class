@@ -52,14 +52,7 @@ const ListMasterClasses = (props) => {
         }
 
 
-    {/*
 
-        <div className='EndLoader' ref={ref}>
-            {isIntersecting && <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-            </div>}
-        </div>
-*/}
     </div>);
 
 

@@ -10,14 +10,13 @@ import moment from "moment";
 import { db } from '../../firebase';
 import { connect } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import localization from 'moment/locale/ru'
 import ListComments from '../ListComments';
 import { useSelector } from 'react-redux'
-import { Tooltip, Form, Input, Button, Modal } from 'antd';
+import { Tooltip, Typography } from 'antd';
 import * as appActions from "../../redux/app/appActions";
 import UserList from "../UserList";
-
-
+import { Descriptions, Statistic } from 'antd';
+import localization from 'moment/locale/ru'
 
 
 moment.locale('ru')
@@ -35,6 +34,8 @@ const config = {
 };
 
 
+const { Title, Paragraph } = Typography;
+
 const ScreenMasterClass = (props) => {
 
     const [settings, setSettings] = useState(config);
@@ -51,7 +52,7 @@ const ScreenMasterClass = (props) => {
     const user = useSelector(state => state.user.user);
     const profiles = useSelector(state => state.profiles.profiles);
 
-
+    const roles = useSelector(state => state.user.userRoles.roles);
 
 
 
@@ -68,14 +69,7 @@ const ScreenMasterClass = (props) => {
 
             uid: uid,
 
-            actions: [
-
-                <span onClick={() => dispatch(appActions.setAnswerCommentId(id))}>Ответить</span>,
-                <span onClick={() => dispatch(appActions.setModifiedCommentId(id))}>Изменить</span>,
-                <span onClick={() => dispatch(appActions.setDelCommentId(id))}>Удалить</span>,
-
-
-            ],
+            actions: getActions(id, uid),
 
             author: '',
             avatar: '',
@@ -95,11 +89,34 @@ const ScreenMasterClass = (props) => {
 
     }
 
+    const getActions = (id, uid) => {
+
+        const actionAnswerCommen =  <span onClick={() => dispatch(appActions.setAnswerCommentId(id))}>Ответить</span>;
+        const actionModifiedComment =   <span onClick={() => dispatch(appActions.setModifiedCommentId(id))}>Изменить</span>;
+        const actionDelComment =    <span onClick={() => dispatch(appActions.setDelCommentId(id))}>Удалить</span>;
+
+        let action = [];
+
+        if (user) {
+           
+            if ((user.uid == uid) || (roles.indexOf('admin')!=-1))
+            {
+                action.push(actionModifiedComment);
+                action.push(actionDelComment);
+            }
+            action.push(actionAnswerCommen);
+        }
+
+        return action;
+
+    }
+
+
     React.useEffect(() => {
-          let usersReserv = [];
+        let usersReserv = [];
         if (data) {
             for (const carentUid in data.reservation) {
-                
+
                 const profil = profiles.find(item => item.uid == carentUid);
                 if (profil) {
                     usersReserv.push({ uid: carentUid, displayName: profil.displayName, photoURL: profil.photoURL });
@@ -210,28 +227,42 @@ const ScreenMasterClass = (props) => {
     if (data) {
         return (<div className="card">
 
+            <Title level={3}>{data.NameMasterClass}</Title>
+
             <Slider {...settings}>
                 {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
             </Slider>
 
             <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
 
+
             <div className="card-body">
-                <h5 className="card-title">{data.NameMasterClass}</h5>
-                <p className="card-text">{data.DescriptionMasterClass}</p>
+
+
+
+                <Paragraph>
+                    {data.DescriptionMasterClass}
+                </Paragraph>
+
+                <Descriptions>
+
+                    <Descriptions.Item label="Дата">{moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</Descriptions.Item>
+                    <Descriptions.Item label="Цена">1000</Descriptions.Item>
+                    <Descriptions.Item label="Адрес">улица Крупской, 24 г. Лобня</Descriptions.Item>
+
+                </Descriptions>
+
+                <Statistic title="Свободных мет" value={data.vacancies} precision={0} />
+
             </div>
 
-            <ul className="list-group list-group-flush">
-                <li className="list-group-item">Свободных мет: {data.vacancies}</li>
-                <li className="list-group-item">Цена: 1000</li>
 
-                {/*'DD:MM:YYYY HH:mm'*/}
-                <li className="list-group-item">Дата: {moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</li>
-            </ul>
 
-            <UserList usersReserv={usersReserv}/>
+            <UserList usersReserv={usersReserv} />
 
-            <ListComments comments={comments} id={id} user={user} handleCancel={() => { }} />
+            <ListComments history = {props.history} comments={comments} id={id} user={user} handleCancel={() => { }} />
+
+
 
         </div>
 
