@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux'
 import { Tooltip, Typography } from 'antd';
 import * as appActions from "../../redux/app/appActions";
 import UserList from "../UserList";
-import { Descriptions, Statistic } from 'antd';
+import { Descriptions, Statistic, Button} from 'antd';
 import localization from 'moment/locale/ru'
 
 
@@ -91,16 +91,15 @@ const ScreenMasterClass = (props) => {
 
     const getActions = (id, uid) => {
 
-        const actionAnswerCommen =  <span onClick={() => dispatch(appActions.setAnswerCommentId(id))}>Ответить</span>;
-        const actionModifiedComment =   <span onClick={() => dispatch(appActions.setModifiedCommentId(id))}>Изменить</span>;
-        const actionDelComment =    <span onClick={() => dispatch(appActions.setDelCommentId(id))}>Удалить</span>;
+        const actionAnswerCommen = <span onClick={() => dispatch(appActions.setAnswerCommentId(id))}>Ответить</span>;
+        const actionModifiedComment = <span onClick={() => dispatch(appActions.setModifiedCommentId(id))}>Изменить</span>;
+        const actionDelComment = <span onClick={() => dispatch(appActions.setDelCommentId(id))}>Удалить</span>;
 
         let action = [];
 
         if (user) {
-           
-            if ((user.uid == uid) || (roles.indexOf('admin')!=-1))
-            {
+
+            if ((user.uid === uid) || (roles.indexOf('admin') != -1)) {
                 action.push(actionModifiedComment);
                 action.push(actionDelComment);
             }
@@ -117,7 +116,7 @@ const ScreenMasterClass = (props) => {
         if (data) {
             for (const carentUid in data.reservation) {
 
-                const profil = profiles.find(item => item.uid == carentUid);
+                const profil = profiles.find(item => item.uid === carentUid);
                 if (profil) {
                     usersReserv.push({ uid: carentUid, displayName: profil.displayName, photoURL: profil.photoURL });
                 }
@@ -165,7 +164,7 @@ const ScreenMasterClass = (props) => {
                         let data = change.doc.data();
 
                         setComments((prev) => prev.map((item) => {
-                            if (item.id == change.doc.id) {
+                            if (item.id === change.doc.id) {
                                 return getComent(change.doc.id, data.parentId, data.content, data.uid)
                             }
                             else {
@@ -176,7 +175,7 @@ const ScreenMasterClass = (props) => {
                     }
                     if (change.type === 'removed') {
 
-                        setComments((prev) => prev.filter(item => item.id !== change.doc.id));
+                        setComments((prev) => prev.filter(item => item.id != change.doc.id));
 
                     }
                 });
@@ -184,7 +183,7 @@ const ScreenMasterClass = (props) => {
                 if (addComments.length) {
 
                     const comentsEndProfile = addComments.map((comment) => {
-                        const find = profiles.find(item => item.uid == comment.uid);
+                        const find = profiles.find(item => item.uid === comment.uid);
 
                         if (find) {
                             comment.author = find.displayName;
@@ -233,7 +232,7 @@ const ScreenMasterClass = (props) => {
                 {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
             </Slider>
 
-            <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
+            <Button onClick={masterСlassСhangeReserveHandler} type="primary" block> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</Button >
 
 
             <div className="card-body">
@@ -260,7 +259,7 @@ const ScreenMasterClass = (props) => {
 
             <UserList usersReserv={usersReserv} />
 
-            <ListComments history = {props.history} comments={comments} id={id} user={user} handleCancel={() => { }} />
+            <ListComments history={props.history} comments={comments} id={id} user={user} handleCancel={() => { }} />
 
 
 

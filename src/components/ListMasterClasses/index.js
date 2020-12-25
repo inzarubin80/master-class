@@ -3,7 +3,7 @@ import ListItemMasterСlass from '../ListItemMasterСlass';
 import useIntersect from "./useIntersect";
 import { useSelector, useDispatch } from 'react-redux'
 import {getLists} from '../../redux/app/appActions'
-
+import { Button } from 'antd';
 
 const ListMasterClasses = (props) => {
 
@@ -12,6 +12,9 @@ const ListMasterClasses = (props) => {
     const ref = useRef();
 
     const [isIntersecting, setIntersecting] = useIntersect(ref, "1%");
+
+
+    const roles = useSelector(state => state.user.userRoles.roles);
 
     const dispatch = useDispatch();
 
@@ -30,6 +33,13 @@ const ListMasterClasses = (props) => {
     }
 
     return (<div >
+
+
+            {(roles.indexOf('admin') !== -1) && <div className="ListMasterClasses">
+                <Button type="primary" block onClick={() => {props.history.push(`/change/-1`)}}>Добавить мастер класс</Button>
+            </div>}
+
+     
 
         {masterClasses.map((item, index) => (
          

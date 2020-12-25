@@ -4,7 +4,7 @@ import { saveMasterClass } from '../../redux/app/appActions'
 import uuid from 'react-uuid'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSaveRequest } from '../../redux/app/appActions'
-import { Alert, ProgressBar, Spinner, Button } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
 import { getMasterClassById } from '../../api/firebaseApi';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
 import { MasterClass } from "../../model/mastreClass"
@@ -55,7 +55,7 @@ const ClassForm = (props) => {
 
 
     const dispatch = useDispatch();
-    const [id, setId] = useState(props.match.params.id);
+    const [id] = useState(props.match.params.id);
     const [data, setData] = useState(new MasterClass());
     const uploading = useSelector(state => state.app.uploading);
     const error = useSelector(state => state.app.error);
@@ -71,19 +71,11 @@ const ClassForm = (props) => {
     ];
 
 
-    const settings = {
-        dots: true,
-        lazyLoad: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        initialSlide: 0
-    };
+    
 
     React.useEffect(() => {
 
-        if (id != '-1') {
+        if (id !== '-1') {
 
             getMasterClassById(props.match.params.id).then(masterClass => {
 

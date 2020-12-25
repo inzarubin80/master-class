@@ -82,7 +82,7 @@ export const saveMasterClass = (data, filesToAdd, removeFiles, key, goToClasses)
         .catch(error => dispatch(setSaveFailure(error)));
     }
 
-    if (Object.keys(urls).length !== filesToAdd.length ){
+    if (Object.keys(urls).length != filesToAdd.length ){
       return;
     }
 
@@ -96,7 +96,7 @@ export const saveMasterClass = (data, filesToAdd, removeFiles, key, goToClasses)
     });
 
 
-    if (!key || key == '-1') {
+    if (!key || key === '-1') {
       api.addMasterClass({ ...data, images: images }).then(masterClass => {
 
         console.log(masterClass);

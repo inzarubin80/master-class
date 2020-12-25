@@ -53,7 +53,7 @@ const ListComments = (props) => {
     const [displayedComments, setDisplayedComments] = useState([]);
 
 
-    const delcomment = comments.find(item => item.id == delCommentId);
+    const delcomment = comments.find(item => item.id === delCommentId);
     const delContent = delcomment ? delcomment.content : null;
 
     const { Panel } = Collapse;
@@ -68,7 +68,7 @@ const ListComments = (props) => {
 
        const uid = user.uid;
         
-        if (messageText == '') {
+        if (messageText === '') {
             return;
         }
 
@@ -106,7 +106,7 @@ const ListComments = (props) => {
         
 
 
-        if (editContent == '') {
+        if (editContent === '') {
             return;
         }
 
@@ -133,7 +133,7 @@ const ListComments = (props) => {
 
     useEffect(() => {
         if (modifiedCommentId) {
-            const content = comments.find(item => item.id == modifiedCommentId).content;
+            const content = comments.find(item => item.id === modifiedCommentId).content;
             setEditContent(content.props.children);
         }
 
@@ -142,7 +142,7 @@ const ListComments = (props) => {
 
     useEffect(() => {
 
-        const newDisplayedComments = comments.filter(item => !item.parentId || comments.find(itemParent => itemParent.id == item.parentId));
+        const newDisplayedComments = comments.filter(item => !item.parentId || comments.find(itemParent => itemParent.id === item.parentId));
         setDisplayedComments(newDisplayedComments);
 
     }, [comments]);
@@ -157,7 +157,7 @@ const ListComments = (props) => {
 
                 {setDisplayedComments.length > 0 && <div>
 
-                    <Modal okText={'Да'} cancelText={'Отмена'} title={answerComentId && comments.find(item => item.id == answerComentId).content} onOk={() => handleAddSubmit(id, answerComentId, replyContent)} onCancel={() => dispatch(appActions.setAnswerCommentId(''))} visible={answerComentId}>
+                    <Modal okText={'Да'} cancelText={'Отмена'} title={answerComentId && comments.find(item => item.id === answerComentId).content} onOk={() => handleAddSubmit(id, answerComentId, replyContent)} onCancel={() => dispatch(appActions.setAnswerCommentId(''))} visible={answerComentId}>
                         <Form.Item>
                             <TextArea rows={4} onChange={(e) => setreplyContent(e.target.value)} value={replyContent} />
                         </Form.Item>
