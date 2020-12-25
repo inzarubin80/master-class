@@ -1,5 +1,5 @@
 import {
-    Comment, Avatar, Form, Button, List, Input, Modal, Collapse
+    Comment, Avatar, Form, Button, List, Input, Modal, Collapse,Statistic
 } from 'antd';
 
 import React, { useState, useEffect } from "react";
@@ -143,7 +143,7 @@ const ListComments = ({ comments, user, id }) => {
 
         <div>
             <Collapse defaultActiveKey={[]} onChange={()=>{}}>
-                <Panel header={'Комментарии'} key="1">
+                <Panel header = {(<Statistic title="Комментарии" value={displayedComments.length} precision={0}/>)} key="1">
 
                 {setDisplayedComments.length > 0 && <div>
 

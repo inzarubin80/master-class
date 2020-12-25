@@ -7,22 +7,17 @@ import { masterСlassСhangeReserve } from '../../api/firebaseApi';
 import Slider from "react-slick";
 import { createMasterClassFromVal } from "../../model/mastreClass"
 import moment from "moment";
-
 import { db } from '../../firebase';
 import { connect } from 'react-redux'
-
 import { useDispatch } from 'react-redux'
-
 import localization from 'moment/locale/ru'
 import ListComments from '../ListComments';
 import { useSelector } from 'react-redux'
-
 import { Tooltip, Form, Input, Button, Modal } from 'antd';
+import * as appActions from "../../redux/app/appActions";
+import UserList from "../UserList";
 
 
-import * as appActions from "../../redux/app/appActions"
-
-import { getOpenProfileInformation } from '../../api/firebaseApi'
 
 
 moment.locale('ru')
@@ -47,9 +42,18 @@ const ScreenMasterClass = (props) => {
     const [data, setData] = useState(null);
     const [comments, setComments] = useState([]);
 
+
+    const [usersReserv, setUsersReserv] = useState([]);
+
+
     const dispatch = useDispatch();
 
     const user = useSelector(state => state.user.user);
+    const profiles = useSelector(state => state.profiles.profiles);
+
+
+
+
 
     console.log('user', user);
 
@@ -90,6 +94,30 @@ const ScreenMasterClass = (props) => {
         }
 
     }
+
+    React.useEffect(() => {
+          let usersReserv = [];
+        if (data) {
+            for (const carentUid in data.reservation) {
+                
+                const profil = profiles.find(item => item.uid == carentUid);
+                if (profil) {
+                    usersReserv.push({ uid: carentUid, displayName: profil.displayName, photoURL: profil.photoURL });
+                }
+                else {
+                    usersReserv.push({ uid: carentUid, displayName: '', photoURL: '' });
+                }
+
+            }
+
+
+        }
+
+        setUsersReserv(usersReserv);
+
+    },
+        [data, profiles]);
+
 
     React.useEffect(() => {
 
@@ -136,26 +164,21 @@ const ScreenMasterClass = (props) => {
                     }
                 });
 
-
                 if (addComments.length) {
 
-                    getOpenProfileInformation(addComments.map(item => item.uid)).then(profiles => {
+                    const comentsEndProfile = addComments.map((comment) => {
+                        const find = profiles.find(item => item.uid == comment.uid);
 
-                      const comentsEndProfile =  addComments.map((comment) => {
-
-                            const find = profiles.find(item => item.uid == comment.uid);
-
-                            if (find) {
-                                comment.author = find.displayName;
-                                comment.avatar = find.photoURL;
-                            }
-                            return comment;
+                        if (find) {
+                            comment.author = find.displayName;
+                            comment.avatar = find.photoURL;
                         }
-                        );
-                        setComments((prev) => [...prev, ...comentsEndProfile]);
+                        return comment;
                     }
                     );
+                    setComments((prev) => [...prev, ...comentsEndProfile]);
                 }
+
             });
 
         return () => {
@@ -186,17 +209,13 @@ const ScreenMasterClass = (props) => {
 
     if (data) {
         return (<div className="card">
+
             <Slider {...settings}>
-
                 {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
-
             </Slider>
 
-
-
-
-
             <button className="btn btn-primary" onClick={masterСlassСhangeReserveHandler}> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</button>
+
             <div className="card-body">
                 <h5 className="card-title">{data.NameMasterClass}</h5>
                 <p className="card-text">{data.DescriptionMasterClass}</p>
@@ -209,6 +228,8 @@ const ScreenMasterClass = (props) => {
                 {/*'DD:MM:YYYY HH:mm'*/}
                 <li className="list-group-item">Дата: {moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</li>
             </ul>
+
+            <UserList usersReserv={usersReserv}/>
 
             <ListComments comments={comments} id={id} user={user} handleCancel={() => { }} />
 
