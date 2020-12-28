@@ -247,12 +247,12 @@ const ScreenMasterClass = (props) => {
 
                     <Descriptions.Item label="Дата">{moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</Descriptions.Item>
                     <Descriptions.Item label="Цена">1000</Descriptions.Item>
+                    <Descriptions.Item label="Свободных меcт">{data.vacancies}</Descriptions.Item>
                     <Descriptions.Item label="Адрес">улица Крупской, 24 г. Лобня</Descriptions.Item>
-
+                
                 </Descriptions>
 
-                <Statistic title="Свободных мет" value={data.vacancies} precision={0} />
-
+                
             </div>
 
 
