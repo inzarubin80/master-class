@@ -39,25 +39,7 @@ code {
   cursor:pointer;  
   flex-direction: column;
 
-
 }
 
-
-@media screen and (max-width: 2000px) {.MasterClasses  {max-width: 30%;} } 
-@media screen and (max-width: 1600px) {.MasterClasses  {max-width: 30%;} } 
-@media screen and (max-width: 1280px) {.MasterClasses  {max-width: 30%;} } 
-@media screen and (max-width: 1140px) {.MasterClasses  {max-width: 35%;} } 
-@media screen and (max-width: 992px)  {.MasterClasses  {max-width: 50%;} } 
-
-@media screen and (max-width: 800)  {.MasterClasses  {max-width: 80%;} } 
-
-@media screen and (max-width: 768)  {.MasterClasses  {max-width: 90%;} } 
-
-@media screen and (max-width: 700)  {.MasterClasses  {max-width: 95%;} } 
-
-@media screen and (max-width: 500px)  {.MasterClasses  {max-width: 95%;} } 
-@media screen and (max-width: 411px)  {.MasterClasses  {max-width: 95%;} } 
+@media screen and (max-width: 3000px) {.MasterClasses  {max-width: 400px;} } 
 @media screen and (max-width: 400px)  {.MasterClasses  {max-width: 95%;} } 
-@media screen and (max-width: 300px)  {.MasterClasses  {max-width: 95%;} } 
-
-
