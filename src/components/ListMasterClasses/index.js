@@ -4,6 +4,7 @@ import useIntersect from "./useIntersect";
 import { useSelector, useDispatch } from 'react-redux'
 import {getLists} from '../../redux/app/appActions'
 import { Button } from 'antd';
+import './index.css';
 
 const ListMasterClasses = (props) => {
 
@@ -32,7 +33,7 @@ const ListMasterClasses = (props) => {
         props.history.push(`/classes/${id}`);
     }
 
-    return (<div >
+    return (<div className='ListMasterClasses'>
 
 
             {(roles.indexOf('admin') !== -1) && <div className="ListMasterClasses">

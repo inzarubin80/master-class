@@ -1,26 +1,5 @@
-.masterClass {
-
- /* max-width: 35%;
-  min-width: 35%;
-*/
-display: flex;
-text-align: center;
-}
-
-
-.img_{
-
- /* max-width: 90%;*/
-
-}
-.card-img-top {
- 
-  /*max-width: 90%;
- min-width: 90%;
-*/
-}
 
 .slick-slider .slick-track,
-  .slick-slider .slick-list { touch-action:pan-y;  transform: translate3d(0, 0, 0);}
+.slick-slider .slick-list { touch-action:pan-y;  transform: translate3d(0, 0, 0);}
 
 .slick-prev { left: 6% !important; z-index: 1; } .slick-next { right: 6% !important; z-index: 1; }

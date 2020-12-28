@@ -224,7 +224,7 @@ const ScreenMasterClass = (props) => {
 
 
     if (data) {
-        return (<div className="card">
+        return (<div className="ListMasterClasses"> <div className="MasterClasses">
 
             <Title level={3}>{data.NameMasterClass}</Title>
 
@@ -263,6 +263,7 @@ const ScreenMasterClass = (props) => {
 
 
 
+        </div>
         </div>
 
         )
