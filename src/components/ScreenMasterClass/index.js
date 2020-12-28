@@ -243,7 +243,7 @@ const ScreenMasterClass = (props) => {
                     {data.DescriptionMasterClass}
                 </Paragraph>
 
-                <Descriptions>
+                <Descriptions layout="vertical" bordered>
 
                     <Descriptions.Item label="Дата">{moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</Descriptions.Item>
                     <Descriptions.Item label="Цена">1000</Descriptions.Item>

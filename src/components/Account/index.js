@@ -14,7 +14,7 @@ export default function Account(props) {
 
 
             <Card>
-                <Descriptions>
+                <Descriptions  layout="vertical" bordered>
 
                     <Descriptions.Item label="Имя">{user ? user.displayName: ''}</Descriptions.Item>
                     <Descriptions.Item label="Телефон">{user ? user.phoneNumber : ''}</Descriptions.Item>
