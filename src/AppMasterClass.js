@@ -16,8 +16,10 @@ const MasterClass = ()=> {
              
                 <Router>
                     <>
-                        <HeaderComponent/>
+                        {/*<HeaderComponent/>*/}
                         
+                        <HeaderComponent/>
+
                         <Switch>
 
                             <Route path="/" exact component={ListMasterClasses}/>
@@ -36,6 +38,8 @@ const MasterClass = ()=> {
                               
                         </Switch>
                       
+                      
+
                        {/* <FooterComponent/> */}
                        
                     </>

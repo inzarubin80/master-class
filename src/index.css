@@ -41,5 +41,7 @@ code {
 
 }
 
-@media screen and (max-width: 3000px) {.MasterClasses  {max-width: 500px;} } 
-@media screen and (max-width: 500px)  {.MasterClasses  {max-width: 95%;} } 
+
+
+@media screen and (max-width: 3000px) {.MasterClasses  {max-width: 600px;} } 
+@media screen and (max-width: 600px)  {.MasterClasses  {max-width: 95%;} } 
