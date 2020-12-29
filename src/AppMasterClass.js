@@ -4,7 +4,7 @@ import HeaderComponent from './components/HeaderComponent'
 import ListMasterClasses from './components/ListMasterClasses'
 import ScreenMasterClass from './components/ScreenMasterClass'
 import ClassForm from './components/ClassForm'
-import Info from './components/Info'
+
 
 
 
@@ -30,8 +30,7 @@ const MasterClass = ()=> {
                             
                             <Route path="/classes" exact component={ListMasterClasses}/>
 
-                            <Route path="/info" exact component={Info}/>
-
+                            
                             <Route path="/login" component={Auth}/>
                       
                             <Route path="/classes/:id" component={ScreenMasterClass}/>

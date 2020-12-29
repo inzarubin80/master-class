@@ -1,9 +1,7 @@
 
 import React from "react";
 import { Avatar } from 'antd';
-import {
-    HomeOutlined,HomeTwoTone, InfoCircleOutlined, InfoCircleTwoTone, getTwoToneColor, setTwoToneColor 
-} from '@ant-design/icons';
+import { HomeOutlined, LoginOutlined } from '@ant-design/icons';
 
 import { Link, useRouteMatch } from "react-router-dom"
 
@@ -12,19 +10,17 @@ import { useSelector } from 'react-redux';
 
 const HeaderComponent = () => {
 
-
     const matchClasses = useRouteMatch({
-        path: '/classes'
-      });
+        path: '/classes',
+        exact: true
+    });
 
-    const matchInfo = useRouteMatch({
-        path: '/info'
-      });
+    const matchLogin = useRouteMatch({
+        path: '/login'
+    });
 
-
-    setTwoToneColor('#ff7f50');
-
-    console.log('matchClasses', matchClasses);
+    const style = { fontSize: '28px', color: '#808080' };
+    const selectStyle = { fontSize: '28px', color: '#3399FF' };
 
     const user = useSelector(state => state.user.user);
     return (
@@ -37,22 +33,9 @@ const HeaderComponent = () => {
 
                         <li className='nav-item'>
                             <Link className="nav-link" to="/classes">
-                                
-                            {matchClasses&&<HomeTwoTone  style={{fontSize: '26px'}} />}
-                            {!matchClasses&&   <HomeOutlined  style={{fontSize: '26px'}} />}
-
-                                
+                                <HomeOutlined style={matchClasses ? selectStyle : style} />
                             </Link>
                         </li>
-
-                        <li className='nav-item'>
-                            <Link className="nav-link" to="/info">
-                            
-                            {matchInfo&&<InfoCircleTwoTone  style={{fontSize: '26px'}} />}
-                            {!matchInfo&&<InfoCircleOutlined  style={{fontSize: '26px'}} />}
-
-                        </Link></li>
-
                     </ul>
 
 
@@ -60,7 +43,7 @@ const HeaderComponent = () => {
                         <li><Link className="nav-link" to="/login">
 
                             {user && <Avatar src={user.photoURL} />}
-                            {!user && 'Войти'}
+                            {!user && <LoginOutlined style={matchLogin ? selectStyle : style} />}
 
                         </Link></li>
                     </ul>
@@ -73,18 +56,6 @@ const HeaderComponent = () => {
 
 }
 
-function OldSchoolMenuLink({ label, to, activeOnlyWhenExact }) {
-    let match = useRouteMatch({
-        path: to,
-        exact: activeOnlyWhenExact
-    });
 
-    return (
-        <div className={match ? "active" : ""}>
-            {match && "> "}
-            <Link to={to}>{label}</Link>
-        </div>
-    );
-}
 
 export default HeaderComponent
