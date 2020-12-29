@@ -15,6 +15,11 @@ const HeaderComponent = () => {
         exact: true
     });
 
+    const matchClassesInit = useRouteMatch({
+        path: '/',
+        exact: true
+    });
+
     const matchLogin = useRouteMatch({
         path: '/login'
     });
@@ -33,7 +38,7 @@ const HeaderComponent = () => {
 
                         <li className='nav-item'>
                             <Link className="nav-link" to="/classes">
-                                <HomeOutlined style={matchClasses ? selectStyle : style} />
+                                <HomeOutlined style={(matchClasses||matchClassesInit) ? selectStyle : style} />
                             </Link>
                         </li>
                     </ul>
