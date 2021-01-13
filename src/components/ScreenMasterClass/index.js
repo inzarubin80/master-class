@@ -15,9 +15,10 @@ import { useSelector } from 'react-redux'
 import { Tooltip, Typography } from 'antd';
 import * as appActions from "../../redux/app/appActions";
 import UserList from "../UserList";
-import { Descriptions, Statistic, Button} from 'antd';
+import { Descriptions,  Button} from 'antd';
 import localization from 'moment/locale/ru'
 
+import ImageGallery from 'react-image-gallery';
 
 moment.locale('ru')
 
@@ -27,7 +28,9 @@ const config = {
     infinite: true,
     speed: 500,
     autoplay: false,
+    //slidesToShow: 1,
     slidesToShow: 1,
+
     slidesToScroll: 1,
     draggable: true
 
@@ -55,6 +58,20 @@ const ScreenMasterClass = (props) => {
     const roles = useSelector(state => state.user.userRoles.roles);
 
 
+    const images = [
+        {
+          original: 'https://picsum.photos/id/1018/1000/600/',
+          thumbnail:  'https://picsum.photos/id/1018/1000/600/',
+        },
+        {
+          original: 'https://picsum.photos/id/1015/1000/600/',
+          //thumbnail: 'https://picsum.photos/id/1015/250/150/',
+        },
+        {
+          original: 'https://picsum.photos/id/1019/1000/600/',
+          //thumbnail: 'https://picsum.photos/id/1019/250/150/',
+        },
+      ];
 
     console.log('user', user);
 
@@ -228,9 +245,15 @@ const ScreenMasterClass = (props) => {
 
             <Title level={3}>{data.NameMasterClass}</Title>
 
+    
+    {/*
             <Slider {...settings}>
                 {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
             </Slider>
+    */}
+
+        <ImageGallery items={data.images.map(item=>{return {original:item.src, thumbnail:item.src}})} />
+
 
             <Button onClick={masterСlassСhangeReserveHandler} type="primary" block> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</Button >
 
