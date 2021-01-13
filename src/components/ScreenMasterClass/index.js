@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import './index.css';
 import { masterСlassСhangeReserve } from '../../api/firebaseApi';
-import Slider from "react-slick";
 import { createMasterClassFromVal } from "../../model/mastreClass"
 import moment from "moment";
 import { db } from '../../firebase';
@@ -22,26 +19,11 @@ import ImageGallery from 'react-image-gallery';
 
 moment.locale('ru')
 
-const config = {
-    arrows: true,
-    dots: true,
-    infinite: true,
-    speed: 500,
-    autoplay: false,
-    //slidesToShow: 1,
-    slidesToShow: 1,
-
-    slidesToScroll: 1,
-    draggable: true
-
-};
-
 
 const { Title, Paragraph } = Typography;
 
 const ScreenMasterClass = (props) => {
 
-    const [settings, setSettings] = useState(config);
     const [id, setId] = useState(props.match.params.id);
     const [data, setData] = useState(null);
     const [comments, setComments] = useState([]);

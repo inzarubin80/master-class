@@ -14,6 +14,9 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import ru from 'date-fns/locale/ru';
 
+import { Upload, Modal } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+
 
 const divStyle = {
     maxWidth: '90%',
@@ -22,7 +25,7 @@ const divStyle = {
 
 const validateField = (value) => {
 
-  //  return '';
+    //  return '';
 
     console.log('validateNameMasterClass');
     let error = '';
@@ -36,7 +39,7 @@ const validateForm = (props) => {
 
     let errors = {};
 
-   // return errors;
+    // return errors;
 
     if (props.images.filter((item) => { return !item.del }).length === 0) {
         errors.images = "Требуется выбрать файлы";
@@ -45,7 +48,7 @@ const validateForm = (props) => {
     if (!props.DateMasterClass) {
         errors.DateMasterClass = 'Требуется заполнение';
     }
-    
+
     return errors;
 
 }
@@ -61,6 +64,8 @@ const ClassForm = (props) => {
     const error = useSelector(state => state.app.error);
 
 
+    const [fileList, setFileList] = useState([]);
+
     const mapData = {
         center: [56.009097, 37.472180],
         zoom: 13,
@@ -71,7 +76,7 @@ const ClassForm = (props) => {
     ];
 
 
-    
+
 
     React.useEffect(() => {
 
@@ -79,12 +84,14 @@ const ClassForm = (props) => {
 
             getMasterClassById(props.match.params.id).then(masterClass => {
 
-                console.log('DateMasterClass', masterClass.DateMasterClass);
-                console.log('DateMasterClass typeof', typeof (masterClass.DateMasterClass));
-
+          
 
 
                 setData(masterClass)
+                setFileList(masterClass.images.map(item=>{return {uid:item.filename,url:item.src}}));
+
+                console.log(masterClass);
+
             })
 
                 .catch(error => console.log(error));
@@ -93,7 +100,12 @@ const ClassForm = (props) => {
     }, []);
 
 
-
+    const uploadButton = (
+        <div>
+          <PlusOutlined />
+          <div style={{ marginTop: 8 }}>Upload</div>
+        </div>
+      );
 
     const goToClasses = () => {
         props.history.push(`/classes`)
@@ -172,29 +184,29 @@ const ClassForm = (props) => {
 
 
                                 <fieldset className="form-group">
-                                   
-                                  <label>Описание</label>
+
+                                    <label>Описание</label>
 
                                     <Field className="form-control" type="text" name="DescriptionMasterClass" component="textarea" validate={validateField} />
                                     {props.errors.DescriptionMasterClass && props.touched.DescriptionMasterClass && <Alert variant={'danger'}>{props.errors.DescriptionMasterClass}</Alert>}
 
-                                
+
 
                                 </fieldset>
 
                                 <div className="form-group">
-                                  
+
                                     {/*dateFormat="Pp"*/}
 
 
-                                  {/*  <label>Дата</label>*/}
-                                    <DatePicker showTimeSelect  locale={ru}  dateFormat='MM/dd/yyyy HH:mm:ss' selected={props.values.DateMasterClass} onChange={date => props.setFieldValue("DateMasterClass", date)} />
+                                    {/*  <label>Дата</label>*/}
+                                    <DatePicker showTimeSelect locale={ru} dateFormat='MM/dd/yyyy HH:mm:ss' selected={props.values.DateMasterClass} onChange={date => props.setFieldValue("DateMasterClass", date)} />
                                     {props.errors.DateMasterClass && props.touched.DateMasterClass && <Alert variant={'danger'}>{props.errors.DateMasterClass}</Alert>}
-                               
-                                
+
+
                                 </div>
 
-                              
+
 
 
 
@@ -257,12 +269,23 @@ const ClassForm = (props) => {
                                 </div>))}
 
 
+                                <Upload
+                                    listType="picture-card"
+                                    fileList={fileList}
+                                    onPreview={()=>{}}
+                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                    onChange={({fileList})=>{console.log(fileList); setFileList(fileList)}}
+
+                                    method = ''
+                                >
+                                    {fileList.length >= 8 ? null : uploadButton}
+                                </Upload>
+
+
 
                                 <fieldset className="form-group">
                                     <label>Место проведения</label>
                                     <YMaps>
-
-
                                         <Map defaultState={mapData}>
                                             {coordinates.map(coordinate => <Placemark geometry={coordinate} />)}
                                         </Map>

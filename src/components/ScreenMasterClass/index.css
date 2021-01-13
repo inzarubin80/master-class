@@ -1,8 +1,4 @@
 
 
-.slick-slider .slick-track,
-.slick-slider .slick-list { touch-action:pan-y;  transform: translate3d(0, 0, 0);}
-
-.slick-prev { left: 6% !important; z-index: 1; } .slick-next { right: 6% !important; z-index: 1; }
 
 
