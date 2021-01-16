@@ -17,6 +17,8 @@ import ru from 'date-fns/locale/ru';
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
+import {DropzoneArea} from 'material-ui-dropzone'
+//import Button1 from '@material-ui/core/Button';
 
 const divStyle = {
     maxWidth: '90%',
@@ -65,6 +67,9 @@ const ClassForm = (props) => {
 
 
     const [fileList, setFileList] = useState([]);
+    
+    const [files, setFiles] = useState([]);
+    
 
     const mapData = {
         center: [56.009097, 37.472180],
@@ -280,6 +285,11 @@ const ClassForm = (props) => {
                                 >
                                     {fileList.length >= 8 ? null : uploadButton}
                                 </Upload>
+
+
+                                <DropzoneArea
+                                    onChange={(files)=>{console.log('files', files)}}
+                                />
 
 
 
