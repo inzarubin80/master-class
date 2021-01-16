@@ -14,10 +14,17 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import ru from 'date-fns/locale/ru';
 
-import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-import { DropzoneArea } from 'material-ui-dropzone'
+import { DropzoneDialogBase } from 'material-ui-dropzone'
+
+
+//import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
+import ButtonFile from '@material-ui/core/Button';
+
 
 const divStyle = {
     maxWidth: '90%',
@@ -67,9 +74,8 @@ const ClassForm = (props) => {
 
     const [fileList, setFileList] = useState([]);
 
-    const [files, setFiles] = useState([]);
-    const [open, setOpen] = useState(false);
-
+    const [open, setOpen] = React.useState(false);
+    const [fileObjects, setFileObjects] = React.useState([]);
 
     const mapData = {
         center: [56.009097, 37.472180],
@@ -81,19 +87,18 @@ const ClassForm = (props) => {
     ];
 
 
+    const dialogTitle = () => (
+        <>
+            <span>Upload file</span>
+            <IconButton
+                style={{ right: '12px', top: '8px', position: 'absolute' }}
+                onClick={() => setOpen(false)}>
+                <CloseIcon />
+            </IconButton>
+        </>
+    );
 
-    const handleSave = (files) => {
 
-        setOpen(false);
-        setFiles(files);
-       
-    }
-
-  
-
-    const handleClose = () => {
-        setOpen(false);
-    }
 
 
     React.useEffect(() => {
@@ -234,6 +239,37 @@ const ClassForm = (props) => {
                                     {props.errors.numberSeats && props.touched.numberSeats && <Alert variant={'danger'}>{props.errors.numberSeats}</Alert>}
                                 </fieldset>
 
+                                <div>
+                                    <ButtonFile variant="contained" color="primary" onClick={() => setOpen(true)}>
+                                        Добавить картинку
+                                    </ButtonFile>
+                                    
+                                    {console.log('fileObjects', fileObjects)}
+                                    
+                                    <DropzoneDialogBase
+                                        dialogTitle={dialogTitle()}
+                                        acceptedFiles={['image/*']}
+                                        fileObjects={fileObjects}
+                                        cancelButtonText={"Отмена"}
+                                        submitButtonText={"Ок"}
+                                        maxFileSize={5000000}
+                                        open={open}
+                                        onAdd={newFileObjs => {
+                                            console.log('onAdd', newFileObjs);
+                                            setFileObjects([].concat(fileObjects, newFileObjs));
+                                        }}
+                                        onDelete={deleteFileObj => {
+                                            console.log('onDelete', deleteFileObj);
+                                        }}
+                                        onClose={() => {setOpen(false); setFileObjects([])}}
+                                        onSave={() => {
+                                            console.log('onSave', fileObjects);
+                                            setOpen(false);
+                                        }}
+                                        showPreviews={true}
+                                        showFileNamesInPreview={true}
+                                    />
+                                </div>
 
                                 <div className="form-group">
 
@@ -287,29 +323,8 @@ const ClassForm = (props) => {
                                 </div>))}
 
 
-                                <Upload
-                                    listType="picture-card"
-                                    fileList={fileList}
-                                    onPreview={() => { }}
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    onChange={({ fileList }) => { console.log(fileList); setFileList(fileList) }}
-
-                                    method=''
-                                >
-                                    {fileList.length >= 8 ? null : uploadButton}
-                                </Upload>
 
 
-                               
-                                    <DropzoneArea
-                                        open={open}
-                                        onSave={(file) => handleSave(file)}
-                                        acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-                                        maxFileSize={5000000}
-                                        onClose={() => handleClose()}
-
-                                    />
-                           
 
 
 
