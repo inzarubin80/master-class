@@ -17,8 +17,7 @@ import ru from 'date-fns/locale/ru';
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-import {DropzoneArea} from 'material-ui-dropzone'
-//import Button1 from '@material-ui/core/Button';
+import { DropzoneArea } from 'material-ui-dropzone'
 
 const divStyle = {
     maxWidth: '90%',
@@ -67,9 +66,10 @@ const ClassForm = (props) => {
 
 
     const [fileList, setFileList] = useState([]);
-    
+
     const [files, setFiles] = useState([]);
-    
+    const [open, setOpen] = useState(false);
+
 
     const mapData = {
         center: [56.009097, 37.472180],
@@ -82,6 +82,19 @@ const ClassForm = (props) => {
 
 
 
+    const handleSave = (files) => {
+
+        setOpen(false);
+        setFiles(files);
+       
+    }
+
+  
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
 
     React.useEffect(() => {
 
@@ -89,11 +102,11 @@ const ClassForm = (props) => {
 
             getMasterClassById(props.match.params.id).then(masterClass => {
 
-          
+
 
 
                 setData(masterClass)
-                setFileList(masterClass.images.map(item=>{return {uid:item.filename,url:item.src}}));
+                setFileList(masterClass.images.map(item => { return { uid: item.filename, url: item.src } }));
 
                 console.log(masterClass);
 
@@ -107,10 +120,10 @@ const ClassForm = (props) => {
 
     const uploadButton = (
         <div>
-          <PlusOutlined />
-          <div style={{ marginTop: 8 }}>Upload</div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
         </div>
-      );
+    );
 
     const goToClasses = () => {
         props.history.push(`/classes`)
@@ -277,19 +290,26 @@ const ClassForm = (props) => {
                                 <Upload
                                     listType="picture-card"
                                     fileList={fileList}
-                                    onPreview={()=>{}}
+                                    onPreview={() => { }}
                                     action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    onChange={({fileList})=>{console.log(fileList); setFileList(fileList)}}
+                                    onChange={({ fileList }) => { console.log(fileList); setFileList(fileList) }}
 
-                                    method = ''
+                                    method=''
                                 >
                                     {fileList.length >= 8 ? null : uploadButton}
                                 </Upload>
 
 
-                                <DropzoneArea
-                                    onChange={(files)=>{console.log('files', files)}}
-                                />
+                               
+                                    <DropzoneArea
+                                        open={open}
+                                        onSave={(file) => handleSave(file)}
+                                        acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                                        maxFileSize={5000000}
+                                        onClose={() => handleClose()}
+
+                                    />
+                           
 
 
 
