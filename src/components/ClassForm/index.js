@@ -89,7 +89,7 @@ const ClassForm = (props) => {
 
     const dialogTitle = () => (
         <>
-            <span>Upload file</span>
+            <span>Выбор картинок</span>
             <IconButton
                 style={{ right: '12px', top: '8px', position: 'absolute' }}
                 onClick={() => setOpen(false)}>
@@ -97,8 +97,6 @@ const ClassForm = (props) => {
             </IconButton>
         </>
     );
-
-
 
 
     React.useEffect(() => {
@@ -122,13 +120,6 @@ const ClassForm = (props) => {
         }
     }, []);
 
-
-    const uploadButton = (
-        <div>
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </div>
-    );
 
     const goToClasses = () => {
         props.history.push(`/classes`)
@@ -239,9 +230,9 @@ const ClassForm = (props) => {
                                     {props.errors.numberSeats && props.touched.numberSeats && <Alert variant={'danger'}>{props.errors.numberSeats}</Alert>}
                                 </fieldset>
 
-                                <div>
+                                <fieldset className="form-group">
                                     <ButtonFile variant="contained" color="primary" onClick={() => setOpen(true)}>
-                                        Добавить картинку
+                                        Добавить картинки
                                     </ButtonFile>
                                     
                                     {console.log('fileObjects', fileObjects)}
@@ -252,50 +243,38 @@ const ClassForm = (props) => {
                                         fileObjects={fileObjects}
                                         cancelButtonText={"Отмена"}
                                         submitButtonText={"Ок"}
-                                        maxFileSize={5000000}
+                                        maxFileSize={50000000}
+                                        filesLimit = {5}
+                                        dropzoneText = {'Перетащите сюда картинку или кликните'}
                                         open={open}
                                         onAdd={newFileObjs => {
-                                            console.log('onAdd', newFileObjs);
                                             setFileObjects([].concat(fileObjects, newFileObjs));
                                         }}
                                         onDelete={deleteFileObj => {
-                                            console.log('onDelete', deleteFileObj);
+                                            
+                                            
+                                            const fileList = [...fileObjects];
+                                            fileList.splice( deleteFileObj, 1 );
+                                            setFileObjects( fileList );
+
+                                       
                                         }}
                                         onClose={() => {setOpen(false); setFileObjects([])}}
+                                        
                                         onSave={() => {
-                                            console.log('onSave', fileObjects);
+
+                                            console.log(fileObjects[0]);
+
+                                            const newImage = fileObjects.map(file=>{return { file: file.file, src: URL.createObjectURL( file.file), key: uuid(), del: false, local: true}})
+                                            props.setFieldValue("images", [...newImage, ...props.values.images]);
                                             setOpen(false);
+                                            setFileObjects([]);
                                         }}
+
                                         showPreviews={true}
-                                        showFileNamesInPreview={true}
+                                        showFileNamesInPreview={false}
                                     />
-                                </div>
-
-                                <div className="form-group">
-
-
-                                    <input multiple name="file" type="file" style={{ display__: 'none' }} accept="image/png, image/jpeg" onChange={(event) => {
-
-                                        console.log(event.currentTarget.files);
-                                        let images_ = [];
-
-                                        for (let i = 0; i < event.currentTarget.files.length; i++) {
-
-                                            images_.unshift({ file: event.currentTarget.files[i], src: URL.createObjectURL(event.currentTarget.files[i]), key: uuid(), del: false, local: true });
-
-                                        }
-
-                                        props.setFieldValue("images", [...images_, ...props.values.images]);
-
-
-                                    }} />
-
-
-                                    {props.errors.images && <Alert variant={'danger'}>{props.errors.images}</Alert>}
-
-
-                                </div>
-
+                                 </fieldset>
 
 
                                 {props.values.images.filter((item) => { return !item.del }).map((item, index) => (<div key={item.key} className="form-group">
@@ -321,11 +300,6 @@ const ClassForm = (props) => {
                                     }}>Удалить картинку</Button>
 
                                 </div>))}
-
-
-
-
-
 
 
                                 <fieldset className="form-group">
