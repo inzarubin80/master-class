@@ -1,23 +1,51 @@
+import React from 'react'
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import HeaderComponent from './components/HeaderComponent'
+import ListMasterClasses from './components/ListMasterClasses'
+import ScreenMasterClass from './components/ScreenMasterClass'
+import ClassForm from './components/ClassForm'
 
-import AppMasterClass from './AppMasterClass';
-import React, { useEffect } from 'react';
+import Auth from './components/Auth'
 
-//import { initAuth } from './redux/user/userActions';
-//import { useDispatch } from 'react-redux';
+const App = ()=> {
+    
+        return (
+            <div className="TodoApp">
+             
+                <Router>
+                    <>
+                        {/*<HeaderComponent/>*/}
+                        
+                        <HeaderComponent/>
 
+                        <Switch>
 
-const App = () => {
- 
-   ///const dispatch = useDispatch();
-  
-   useEffect(() => {
-     // dispatch(initAuth());
-   }, []);
+                            <Route path="/" exact component={ListMasterClasses}/>
+                           
+                           {/* <Route path="/classes" exact component={ListMasterClasses}/>*/}
+                            
+                            <Route path="/classes" exact component={ListMasterClasses}/>
 
-   return (<div>
-        <AppMasterClass />
-      </div>);
+                            
+                            <Route path="/login" component={Auth}/>
+                      
+                            <Route path="/classes/:id" component={ScreenMasterClass}/>
 
-};
+                            <Route path="/change/:id" component={ClassForm}/>
+                            
+                              
+                        </Switch>
+                      
+                      
 
-export default App;
+                       {/* <FooterComponent/> */}
+                       
+                    </>
+                </Router>
+             
+            </div>
+        )
+    
+}
+
+export default App

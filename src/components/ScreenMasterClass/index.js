@@ -41,26 +41,12 @@ const ScreenMasterClass = (props) => {
     const roles = useSelector(state => state.user.userRoles.roles);
 
 
-    const images = [
-        {
-          original: 'https://picsum.photos/id/1018/1000/600/',
-          thumbnail:  'https://picsum.photos/id/1018/1000/600/',
-        },
-        {
-          original: 'https://picsum.photos/id/1015/1000/600/',
-          //thumbnail: 'https://picsum.photos/id/1015/250/150/',
-        },
-        {
-          original: 'https://picsum.photos/id/1019/1000/600/',
-          //thumbnail: 'https://picsum.photos/id/1019/250/150/',
-        },
-      ];
 
-    console.log('user', user);
+
 
     const getComent = (id, parentId, content, uid) => {
 
-        console.log('getComent', user);
+      
 
 
         return {
@@ -219,9 +205,7 @@ const ScreenMasterClass = (props) => {
     }
 
 
-    console.log("comments в ScreenMasterClass ...................", comments);
-
-
+   
 
     if (data) {
         return (<div className="ListMasterClasses"> <div className="MasterClasses">
@@ -229,12 +213,7 @@ const ScreenMasterClass = (props) => {
             <Title level={3}>{data.NameMasterClass}</Title>
 
     
-    {/*
-            <Slider {...settings}>
-                {data.images.map((item) => (<div key={item.src}> <img src={item.src} className='card-img-top' /> </div>))}
-            </Slider>
-    */}
-
+   
         <ImageGallery items={data.images.map(item=>{return {original:item.src, thumbnail:item.src}})} />
 
 
@@ -281,7 +260,6 @@ const ScreenMasterClass = (props) => {
 
 }
 
-//handleCancel = {() => setParentId('')} 
 
 const mapStateToProps = state => {
     return {
