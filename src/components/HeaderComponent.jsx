@@ -30,9 +30,8 @@ const HeaderComponent = () => {
     const user = useSelector(state => state.user.user);
     return (
 
-        <div className='footer'>
-            <header id='header'>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+
+                <nav className="navbar navbar-light" style={{ border: '4px, double, black', borderWidth:'10px', borderСolor: '#cacd58'}}>
 
                     <ul className="nav">
 
@@ -54,9 +53,7 @@ const HeaderComponent = () => {
                     </ul>
 
                 </nav>
-            </header>
-
-        </div>
+   
     )
 
 }
