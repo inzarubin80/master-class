@@ -12,9 +12,28 @@ const uiConfig = {
  // signInSuccessUrl: '/classes',
   // We will display Google and Facebook as auth providers.
   signInOptions: [
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    
+    
+    {
+      provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+      recaptchaParameters: {
+          type: 'image',
+          size: 'invisible',
+          badge: 'bottomleft'
+      },
+
+      defaultCountry: 'RU',
+    //  defaultCountry: '+7',
+    //  whitelistedCountries: ['RU','+7']
+  },
+    
+  firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+
+
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+  //  firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+
+
   ],
 };
 
