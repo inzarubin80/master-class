@@ -23,15 +23,14 @@ const uiConfig = {
       },
 
       defaultCountry: 'RU',
-    //  defaultCountry: '+7',
-    //  whitelistedCountries: ['RU','+7']
+   
   },
     
   firebase.auth.FacebookAuthProvider.PROVIDER_ID,
 
 
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-  //  firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+
 
 
   ],

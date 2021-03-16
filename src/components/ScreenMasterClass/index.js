@@ -192,8 +192,6 @@ const ScreenMasterClass = (props) => {
     }, []);
 
 
-
-
     const masterСlassСhangeReserveHandler = () => {
 
         if (!props.uid) {
@@ -203,10 +201,7 @@ const ScreenMasterClass = (props) => {
             masterСlassСhangeReserve(id, props.uid);
         }
     }
-
-
-   
-
+ 
     if (data) {
         return (<div className="ListMasterClasses"> <div className="MasterClasses">
 
