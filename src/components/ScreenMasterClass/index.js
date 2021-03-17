@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux'
 import { Tooltip, Typography } from 'antd';
 import * as appActions from "../../redux/app/appActions";
 import UserList from "../UserList";
-import { Descriptions,  Button} from 'antd';
+import { Descriptions,  Button, Divider} from 'antd';
 import localization from 'moment/locale/ru'
 
 
@@ -207,13 +207,16 @@ const ScreenMasterClass = (props) => {
 
             <Title level={3}>{data.NameMasterClass}</Title>
 
+            <Paragraph>
+                {data.isRes(props.uid) && <Button onClick={masterСlassСhangeReserveHandler} type="default " block danger>Отменить резерв</Button >}
+                {!data.isRes(props.uid) && <Button onClick={masterСlassСhangeReserveHandler} type="primary" block>Зарезервировать</Button >}
+            </Paragraph>
+
     
    
         <ImageGallery items={data.images.map(item=>{return {original:item.src, thumbnail:item.src}})} />
 
 
-           {data.isRes(props.uid) && <Button onClick={masterСlassСhangeReserveHandler} type="default " block danger>Отменить резерв</Button >}
-           {!data.isRes(props.uid) && <Button onClick={masterСlassСhangeReserveHandler} type="default " block>Зарезервировать</Button >}
            
 
             <div className="card-body">
@@ -224,6 +227,8 @@ const ScreenMasterClass = (props) => {
                     {data.DescriptionMasterClass}
                 </Paragraph>
 
+               
+                
                 <Descriptions layout="vertical" bordered>
 
                     <Descriptions.Item label="Дата">{moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</Descriptions.Item>
