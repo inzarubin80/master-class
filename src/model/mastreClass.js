@@ -7,6 +7,7 @@ export class MasterClass {
             NameMasterClass = '',
             DescriptionMasterClass = '',
             DateMasterClass = null,
+            cost = 0,
             numberSeats = 0,
             images = [],
             reservation = {}
@@ -27,6 +28,9 @@ export class MasterClass {
 
         this.numberSeats = numberSeats;
         this.images = images;
+
+        this.cost = cost;
+        
 
         this.image = images.length ? images[0].src : '';
 

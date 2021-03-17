@@ -226,7 +226,7 @@ const ScreenMasterClass = (props) => {
                 <Descriptions layout="vertical" bordered>
 
                     <Descriptions.Item label="Дата">{moment(data.DateMasterClass).locale("ru", localization).format('LLLL')}</Descriptions.Item>
-                    <Descriptions.Item label="Цена">1000</Descriptions.Item>
+                    <Descriptions.Item label="Цена">{data.cost}</Descriptions.Item>
                     <Descriptions.Item label="Свободных меcт">{data.vacancies}</Descriptions.Item>
                     <Descriptions.Item label="Адрес">улица Крупской, 24 г. Лобня</Descriptions.Item>
                 

@@ -106,8 +106,6 @@ const ClassForm = (props) => {
             getMasterClassById(props.match.params.id).then(masterClass => {
 
 
-
-
                 setData(masterClass)
                 setFileList(masterClass.images.map(item => { return { uid: item.filename, url: item.src } }));
 
@@ -139,9 +137,8 @@ const ClassForm = (props) => {
             NameMasterClass: values.NameMasterClass,
             DescriptionMasterClass: values.DescriptionMasterClass,
             DateMasterClass: values.DateMasterClass ? values.DateMasterClass : '',
-
             numberSeats: values.numberSeats ? values.numberSeats : 0,
-
+            cost:values.cost ? values.cost : 0,
             images: values.images.filter((item) => { return !item.del }).map((item) => { return { filename: item.key, src: item.src } })
 
         };
@@ -167,6 +164,8 @@ const ClassForm = (props) => {
                         DateMasterClass: data.DateMasterClass,
                         images: data.images.map((item) => { return { file: '', src: item.src, key: item.filename, del: false, local: false } }),
                         numberSeats: data.numberSeats,
+                        cost: data.cost,
+                        
 
                     }}
                     onSubmit={onSubmit}
@@ -213,7 +212,7 @@ const ClassForm = (props) => {
                                     {/*dateFormat="Pp"*/}
 
 
-                                    {/*  <label>Дата</label>*/}
+                                    <label>Дата проведения</label>
                                     <DatePicker showTimeSelect locale={ru} dateFormat='MM/dd/yyyy HH:mm:ss' selected={props.values.DateMasterClass} onChange={date => props.setFieldValue("DateMasterClass", date)} />
                                     {props.errors.DateMasterClass && props.touched.DateMasterClass && <Alert variant={'danger'}>{props.errors.DateMasterClass}</Alert>}
 
@@ -225,10 +224,18 @@ const ClassForm = (props) => {
 
 
                                 <fieldset className="form-group">
+                                    <label>Цена</label>
+                                    <Field className="form-control" type="number" name="cost" validate={validateField} />
+                                    {props.errors.cost && props.touched.cost && <Alert variant={'danger'}>{props.errors.cost}</Alert>}
+                                </fieldset>
+
+
+                                <fieldset className="form-group">
                                     <label>Количество мест</label>
                                     <Field className="form-control" type="number" name="numberSeats" validate={validateField} />
                                     {props.errors.numberSeats && props.touched.numberSeats && <Alert variant={'danger'}>{props.errors.numberSeats}</Alert>}
                                 </fieldset>
+
 
                                 <fieldset className="form-group">
                                     <ButtonFile variant="contained" color="primary" onClick={() => setOpen(true)}>

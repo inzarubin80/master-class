@@ -70,7 +70,8 @@ export const saveMasterClass = (data, filesToAdd, removeFiles, key, goToClasses)
 
   return async (dispatch, getState) => {
 
-    
+    console.log('data*****************', data);
+
   
     let urls = {};
 
