@@ -212,7 +212,7 @@ const ScreenMasterClass = (props) => {
         <ImageGallery items={data.images.map(item=>{return {original:item.src, thumbnail:item.src}})} />
 
 
-            <Button onClick={masterСlassСhangeReserveHandler} type="primary" block> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</Button >
+            <Button onClick={masterСlassСhangeReserveHandler} type="default" block> {data.isRes(props.uid) ? 'Отменить резерв' : 'Зарезервировать'}</Button >
 
 
             <div className="card-body">
